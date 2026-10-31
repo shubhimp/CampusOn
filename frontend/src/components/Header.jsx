@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Wifi, ShieldAlert, Sparkles, User, RefreshCw } from 'lucide-react';
+import { Bell, Wifi, ShieldAlert, Sparkles, User, RefreshCw, Download } from 'lucide-react';
 
 export default function Header({ currentUser, alertsCount = 2, onTriggerRefresh }) {
   const [time, setTime] = useState(new Date());
@@ -26,6 +26,19 @@ export default function Header({ currentUser, alertsCount = 2, onTriggerRefresh 
 
       {/* Right Controls: Live Telemetry Status, Clock, Alerts & User Avatar */}
       <div className="flex items-center gap-3.5">
+        {/* Master PDF Download Button */}
+        <a
+          href="/CampusOn_Master_Guidebook.pdf"
+          download="CampusOn_Master_Guidebook.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#8b1e3f] hover:bg-[#721832] text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+          title="Download Complete CampusOn Master & Viva Guidebook (PDF)"
+        >
+          <Download className="w-3.5 h-3.5" />
+          <span>Guidebook PDF</span>
+        </a>
+
         {/* Node Telemetry Heartbeat */}
         <div className="hidden md:flex items-center gap-1.5 bg-[#fdf3ed] border border-[#edd5c6] text-slate-700 px-3 py-1 rounded-full text-xs font-medium">
           <Wifi className="w-3.5 h-3.5 text-emerald-600" />

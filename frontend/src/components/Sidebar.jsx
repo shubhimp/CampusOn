@@ -13,7 +13,9 @@ import {
   LifeBuoy, 
   Settings,
   Activity,
-  Layers
+  Layers,
+  FileDown,
+  Download
 } from 'lucide-react';
 
 export default function Sidebar({ currentRole, setCurrentRole, activeTab, setActiveTab }) {
@@ -153,6 +155,28 @@ export default function Sidebar({ currentRole, setCurrentRole, activeTab, setAct
               LIVE
             </span>
           </button>
+        </div>
+
+        {/* Master Guidebook Download */}
+        <div className="pt-3 mt-2 border-t border-[#edd5c6]">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
+            PROJECT VIVA DOCS
+          </p>
+          <a
+            href="/CampusOn_Master_Guidebook.pdf"
+            download="CampusOn_Master_Guidebook.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-rose-50 text-rose-900 hover:bg-rose-100 border border-rose-200 transition-all cursor-pointer shadow-xs"
+          >
+            <div className="flex items-center gap-2.5">
+              <Download className="w-4 h-4 text-[#8b1e3f]" />
+              <span>Download PDF Guide</span>
+            </div>
+            <span className="text-[9px] bg-rose-200 text-[#8b1e3f] px-1.5 py-0.5 rounded font-mono font-bold">
+              PDF
+            </span>
+          </a>
         </div>
       </nav>
 

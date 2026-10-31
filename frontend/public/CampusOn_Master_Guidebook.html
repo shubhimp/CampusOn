@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CampusOn — System Operator & Master Guidebook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      line-height: 1.5;
+      font-size: 13px;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      border-bottom: 3px solid #8b1e3f;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #8b1e3f;
+      font-size: 26px;
+      font-weight: 800;
+      margin: 0 0 4px 0;
+      letter-spacing: -0.5px;
+    }
+    .subtitle {
+      color: #475569;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 0;
+    }
+    .meta-box {
+      background: #fdf3ed;
+      border: 1px solid #ebd7cc;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      font-size: 12px;
+      margin-bottom: 24px;
+    }
+    .meta-box p {
+      margin: 2px 0;
+    }
+    h2 {
+      color: #8b1e3f;
+      font-size: 17px;
+      font-weight: 700;
+      border-bottom: 1px solid #ebd7cc;
+      padding-bottom: 4px;
+      margin-top: 24px;
+      margin-bottom: 10px;
+    }
+    h3 {
+      color: #0f172a;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 14px;
+      margin-bottom: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 12px;
+    }
+    th {
+      background: #8b1e3f;
+      color: #ffffff;
+      font-weight: 600;
+      text-align: left;
+      padding: 8px 10px;
+    }
+    td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+    .callout {
+      background: #fdf2f4;
+      border-left: 4px solid #f43f5e;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      font-size: 12px;
+      margin: 12px 0;
+      color: #881337;
+    }
+    ul {
+      margin: 6px 0;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+    .print-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #8b1e3f;
+      color: white;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(139, 30, 63, 0.25);
+    }
+    .print-btn:hover {
+      background: #6c1b31;
+    }
+    @media print {
+      .print-btn {
+        display: none;
+      }
+      body {
+        font-size: 11px;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="print-btn" onclick="window.print()">📥 Print / Save as PDF</button>
+
+  <div class="container">
+    <div class="header">
+      <h1>CampusOn: System Operator & Master Guidebook</h1>
+      <p class="subtitle">An AI & IoT-Powered Intelligent Campus Operating System<br/><b>Madhav Institute of Technology & Science (MITS), Gwalior</b> (Centre for Internet of Things)</p>
+    </div>
+
+    <div class="meta-box">
+      <div>
+        <p><b>Student Developers:</b> Shubhi Mathur (BTEC25O1060) & Tamanna Sharma (BTEC25O1063)</p>
+        <p><b>Branch:</b> B.Tech Electrical & Computer Engineering (3rd Sem)</p>
+      </div>
+      <div>
+        <p><b>Faculty Mentor:</b> Dr. Murli Manohar</p>
+        <p><b>Live Web App:</b> <a href="https://campusonmits.vercel.app/" style="color:#8b1e3f; font-weight:bold;">https://campusonmits.vercel.app/</a></p>
+        <p><b>GitHub:</b> <a href="https://github.com/shubhimp/CampusOn" style="color:#8b1e3f; font-weight:bold;">shubhimp/CampusOn</a></p>
+      </div>
+    </div>
+
+    <h2>1. Executive Overview & 4-State Room Context Logic</h2>
+    <p>CampusOn eliminates fragmented university ERP forms by connecting physical classrooms with automated scheduling and student welfare. Its central innovation combines official timetables with real-time sensor telemetry to classify rooms into <b>4 operational states</b>:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Operational State</th>
+          <th>Sensor / Timetable Condition</th>
+          <th>System Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>State 1: Class in Session – Unavailable</b></td>
+          <td>Scheduled Lecture Active + Motion Detected</td>
+          <td>Official lecture in progress. Room unavailable for open student booking.</td>
+        </tr>
+        <tr>
+          <td><b>State 2: Occupied – Open Use</b></td>
+          <td>No Scheduled Class + Motion Detected</td>
+          <td>Room is being used by students for study or project work.</td>
+        </tr>
+        <tr>
+          <td><b>State 3: Available</b></td>
+          <td>No Scheduled Class + No Motion (PIR Quiet, Dist > 200cm)</td>
+          <td>Classroom is completely free. Students can request smart access.</td>
+        </tr>
+        <tr>
+          <td><b>State 4: Status Unknown</b></td>
+          <td>ESP32 Edge Node Offline / Stale Readings</td>
+          <td>Sensor communication interrupted. Failsafe locks room; do not assume empty.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>2. Walkthrough of the Four Portals</h2>
+
+    <h3>A. Student Dashboard (Shubhi Mathur — BTEC25O1060)</h3>
+    <ul>
+      <li><b>Academic Timetable:</b> Real-time daily/weekly view with period badges and room allocations.</li>
+      <li><b>Digital Student ID:</b> Generates a rotating cryptographic QR code with a 30-second countdown bar. If screenshotted, the token expires automatically to prevent proxy attendance.</li>
+      <li><b>AI Course Notes (RAG):</b> Queries uploaded course materials with source citations (e.g. ADC2 Wi-Fi pin conflicts).</li>
+      <li><b>Indoor Campus Map:</b> Interactive 2D floor plan of MITS Block B (Floor 2) with real-time availability colors and turn-by-turn waypoint routing.</li>
+      <li><b>Student Welfare:</b> Routes requests for scholarships, sports, and counseling. Personal mental health files are tagged as <i>Strictly Confidential</i>.</li>
+    </ul>
+
+    <h3>B. Faculty Dashboard (Dr. Murli Manohar — Centre for IoT)</h3>
+    <ul>
+      <li><b>Teaching Schedule:</b> Weekly assigned lectures adhering to the mandatory university policy of >= 3 free daily hours.</li>
+      <li><b>Timetable Preferences:</b> Faculty submit preferred slots and lab preferences directly to the Google OR-Tools solver.</li>
+      <li><b>Course Notes Repository:</b> Upload and publish new syllabus units for automated AI vectorization.</li>
+      <li><b>Classroom Cameras:</b> Permission-gated CCTV snapshot viewer into assigned labs (AB-204) with an automated compliance audit log.</li>
+    </ul>
+
+    <h3>C. Administration Dashboard (Control Tower)</h3>
+    <ul>
+      <li><b>Master Room Matrix:</b> Real-time table of all monitored rooms with PIR motion, temperature, humidity, and MQ-2 gas ppm.</li>
+      <li><b>Google OR-Tools Timetable Optimizer:</b> Constraint Satisfaction solver enforcing zero teacher/room collisions, max 2 consecutive periods, and lab room matching.</li>
+      <li><b>Campus Safety & Sirens:</b> Incident logging with a functional emergency siren / buzzer toggle for evacuation drills.</li>
+      <li><b>Analytics:</b> Recharts visualizing hourly classroom utilization curves and departmental attendance percentages.</li>
+    </ul>
+
+    <h3>D. Parent Portal (Mr. R. K. Mathur)</h3>
+    <ul>
+      <li>Verified student attendance records, semester marks, fee receipts, and official circulars.</li>
+      <li><b>Student Privacy Shield:</b> Personal student counseling conversations and sensitive grievance files are isolated from parental view via database Row-Level Security (RLS).</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <h2>3. Hardware Edge Node Wiring & Pinout Guide</h2>
+    <p>The classroom edge node uses an <b>ESP32 microcontroller</b> connected to breadboard sensors as defined in the MITS Milestone 3 schematic:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Hardware Sensor / Actuator</th>
+          <th>Component Pins</th>
+          <th>ESP32 Pin Connection</th>
+          <th>Role in System</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>PIR Motion Sensor (HC-SR501)</b></td>
+          <td>VCC, GND, OUT</td>
+          <td>5V, GND, <b>GPIO 27</b></td>
+          <td>Detects infrared from human movement</td>
+        </tr>
+        <tr>
+          <td><b>Ultrasonic Sensor (HC-SR04)</b></td>
+          <td>VCC, GND, TRIG, ECHO</td>
+          <td>5V, GND, <b>GPIO 12</b> (Trig), <b>GPIO 14</b> (Echo via 1k/2k divider)</td>
+          <td>Desk proximity and occupancy distance</td>
+        </tr>
+        <tr>
+          <td><b>MQ-2 Smoke & Gas Sensor</b></td>
+          <td>VCC, GND, AO, DO</td>
+          <td>5V, GND, <b>GPIO 34</b> (ADC1 Channel)</td>
+          <td>Monitors fire, LPG, and volatile gas hazard</td>
+        </tr>
+        <tr>
+          <td><b>DHT22 Temp & Humidity</b></td>
+          <td>VCC, GND, DATA</td>
+          <td>3.3V, GND, <b>GPIO 15</b></td>
+          <td>Ambient classroom climate measurement</td>
+        </tr>
+        <tr>
+          <td><b>RFID-RC522 Card Reader</b></td>
+          <td>3.3V, GND, RST, SDA, SCK, MISO, MOSI</td>
+          <td><b>3.3V ONLY</b>, GND, <b>GPIO 4, 5, 18, 19, 23</b></td>
+          <td>Student identity badge & digital attendance</td>
+        </tr>
+        <tr>
+          <td><b>Status LEDs (Green, Yellow, Red)</b></td>
+          <td>Anode (+), Cathode (-)</td>
+          <td><b>GPIO 21, 13, 2</b> (via 220Ω) to GND</td>
+          <td>Visual state (Green=Free, Yellow=In Use, Red=Alert)</td>
+        </tr>
+        <tr>
+          <td><b>Active Piezo Buzzer</b></td>
+          <td>Positive (+), Negative (-)</td>
+          <td><b>GPIO 26</b> to GND</td>
+          <td>Audio alarm for hazard and RFID tap chirp</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <b>⚠️ CRITICAL VOLTAGE NOTICE FOR ASSEMBLY:</b><br/>
+      1. <b>Never connect RFID-RC522 to 5V!</b> It is a 3.3V logic device. Connecting to 5V burns the chip.<br/>
+      2. <b>Voltage Divider on Echo:</b> HC-SR04 outputs 5V. Use 1kΩ and 2kΩ resistors to safely drop it to 3.33V on GPIO 14.
+    </div>
+
+    <h2>4. Top 10 Viva Questions & Model Answers</h2>
+
+    <h3>Q1: What makes CampusOn an Operating System rather than an ERP?</h3>
+    <p><i>Answer:</i> Standard college ERPs are passive web forms. CampusOn is an active operating system that connects edge IoT hardware (sensors, smart locks, cameras) with academic management (OR-Tools scheduling, dynamic QR attendance, AI RAG tutors) to make campus operations context-aware and automated.</p>
+
+    <h3>Q2: What mathematical algorithm generates the timetable?</h3>
+    <p><i>Answer:</i> We use Google OR-Tools CP-SAT (Constraint Programming - Satisfiability). Scheduling is modeled as an exact mathematical constraint satisfaction problem where hard constraints (no room or faculty clashes, lab allocation) and soft constraints (faculty preferences, minimizing gaps) are optimized simultaneously.</p>
+
+    <h3>Q3: Why is the QR code dynamic with a 30-second expiry?</h3>
+    <p><i>Answer:</i> Static QR codes can be screenshotted and shared on WhatsApp to mark fake proxy attendance. CampusOn's QR token regenerates every 30 seconds with a cryptographic hash verified by the backend. Once expired, a screenshot cannot be reused.</p>
+
+    <h3>Q4: How does CampusOn classify room occupancy into 4 states?</h3>
+    <p><i>Answer:</i> By fusing timetable data with real-time sensor telemetry: 1. Class in Session (timetable lecture active), 2. Occupied – Open Use (no lecture, but PIR/ultrasonic detect occupants), 3. Available (no lecture, sensors confirm empty), 4. Status Unknown (node offline).</p>
+
+    <h3>Q5: What is RAG in the AI Course Notes system?</h3>
+    <p><i>Answer:</i> RAG stands for Retrieval-Augmented Generation. Faculty notes are indexed into text chunks. When a student asks a technical question, the system retrieves only the relevant course paragraphs, passes them to Gemini AI, and answers with the exact source citation without hallucinating.</p>
+
+    <h3>Q6: How is student privacy protected regarding counseling?</h3>
+    <p><i>Answer:</i> The system uses Row-Level Security (RLS) in PostgreSQL. Support tickets tagged as Confidential (mental health, sensitive grievances) are isolated. Parents and general staff cannot query or view them—only designated, qualified counseling officers hold decryption access.</p>
+
+    <h3>Q7: Why can't ADC2 pins on ESP32 be used for the gas sensor?</h3>
+    <p><i>Answer:</i> On the ESP32, ADC2 pins (GPIO 0, 2, 4, 12-15, 25-27) share internal hardware with the Wi-Fi radio. When Wi-Fi is active, analog reads on ADC2 fail. Therefore, our circuit connects the MQ-2 analog output to ADC1 (GPIO 34), which operates continuously without Wi-Fi conflicts.</p>
+
+    <h3>Q8: Why did you use a voltage divider for the HC-SR04 ultrasonic sensor?</h3>
+    <p><i>Answer:</i> The HC-SR04 operates at 5V, so its Echo output is 5V logic. ESP32 GPIO pins tolerate a maximum of 3.6V. We use a 1kΩ and 2kΩ resistor voltage divider to step the 5V signal down to 3.33V, protecting the microcontroller from overvoltage damage.</p>
+
+    <h3>Q9: What happens if campus internet goes down?</h3>
+    <p><i>Answer:</i> The ESP32 edge nodes feature local autonomous failsafes. If Wi-Fi drops, the node continues local LED indication, buzzer alarming, and RFID access logging on internal flash memory, syncing back to the cloud as soon as connectivity resumes.</p>
+
+    <h3>Q10: How was this project validated?</h3>
+    <p><i>Answer:</i> Validated across 4 milestones at the Centre for Internet of Things, MITS Gwalior, including architectural design (Milestones 1 & 2), circuit schematic design (Milestone 3), and physical cardboard classroom prototype testing with live sensor telemetry (Milestone 4).</p>
+  </div>
+</body>
+</html>
