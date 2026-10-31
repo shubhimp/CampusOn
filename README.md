@@ -3,7 +3,8 @@
 > **Developed for Madhav Institute of Technology & Science (MITS), Gwalior**  
 > *Department of Electrical & Computer Engineering | Centre for Internet of Things*  
 > **Student Developers**: Shubhi Mathur (BTEC25O1060) & Tamanna Sharma (BTEC25O1063)  
-> **Faculty Mentor**: Dr. Murli Manohar
+> **Faculty Mentor**: Dr. Murli Manohar  
+> **Live Web Application**: [https://campusonmits.vercel.app/](https://campusonmits.vercel.app/)
 
 ---
 

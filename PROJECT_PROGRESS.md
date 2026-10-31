@@ -13,7 +13,7 @@
 
 | Module | Implementation Status | Live Port / File | Verification Result |
 | :--- | :---: | :---: | :--- |
-| **Frontend Web App** | ✅ 100% Operational | `http://127.0.0.1:5173/` | React 18, Vite 5, Tailwind CSS, Recharts, Lucide Icons. Tested: HTTP 200 OK. |
+| **Frontend Web App** | ✅ 100% Operational | [https://campusonmits.vercel.app/](https://campusonmits.vercel.app/) | React 18, Vite 5, Tailwind CSS, Recharts, Lucide Icons. Tested: HTTP 200 OK. |
 | **Backend REST API** | ✅ 100% Operational | `http://127.0.0.1:8000/` | FastAPI Python 3.11 with OpenAPI Swagger docs at `/docs`. Tested: OK. |
 | **Student Dashboard** | ✅ 100% Operational | Frontend: Student Tab | Daily schedule, attendance %, AI RAG tutor, welfare router, room discovery. |
 | **Faculty Dashboard** | ✅ 100% Operational | Frontend: Faculty Tab | Assigned lectures, timetable preferences form, course notes uploader, CCTV audit logs. |
