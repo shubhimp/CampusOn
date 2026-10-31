@@ -260,3 +260,20 @@ CREATE POLICY student_own_requests ON support_requests
     USING (
         student_id = auth.uid()
     );
+-- 14. SAMPLE SEED DATA FOR MITS GWALIOR DEMO
+INSERT INTO classrooms (id, name, capacity, room_type, current_status, has_camera, demo_lock_state)
+VALUES 
+    ('AB-204', 'IoT & Embedded Systems Laboratory', 45, 'Laboratory', 'Occupied – Open Use', TRUE, 'Locked'),
+    ('AB-101', 'Smart Lecture Hall 1', 65, 'Smart Classroom', 'Class in Session – Unavailable', TRUE, 'Unlocked'),
+    ('AB-102', 'ECE Seminar Hall', 120, 'Seminar Auditorium', 'Available', TRUE, 'Locked'),
+    ('AB-205', 'Computer Networks & Simulation Lab', 40, 'Laboratory', 'Available', FALSE, 'Locked')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO support_departments (id, name, officer_in_charge, is_strictly_confidential)
+VALUES
+    ('scholarship', 'Scholarships & Financial Aid Cell', 'Prof. V. Agrawal', FALSE),
+    ('sports', 'Sports & Extracurricular Activities Cell', 'Dr. Sunil Jain (Sports Officer)', FALSE),
+    ('mental_health', 'Counseling & Mental Well-being Cell', 'Dr. P. Sharma (Designated Counselor)', TRUE),
+    ('grievance', 'Student Grievance Redressal Cell', 'Dean of Student Welfare', TRUE),
+    ('placement', 'Career Guidance & Placements Cell', 'Training & Placement Office', FALSE)
+ON CONFLICT (id) DO NOTHING;
