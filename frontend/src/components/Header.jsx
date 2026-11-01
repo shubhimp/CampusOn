@@ -1,13 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Wifi, ShieldAlert, Sparkles, User, RefreshCw, Download } from 'lucide-react';
+import { Bell, Wifi, ShieldAlert, Sparkles, User, RefreshCw, Download, LogOut, ChevronDown } from 'lucide-react';
 
-export default function Header({ currentUser, alertsCount = 2, onTriggerRefresh }) {
+export default function Header({ currentUser, alertsCount = 2, onTriggerRefresh, onSignOut }) {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  const getSubtext = () => {
+    if (!currentUser) return 'Guest Session';
+    if (currentUser.role === 'student') {
+      return `Student • ${currentUser.enrollmentNo || 'BTEC25O1060'}`;
+    }
+    if (currentUser.role === 'faculty') {
+      return `${currentUser.designation || 'Faculty'} • ${currentUser.employeeCode || 'FAC-ECE-208'}`;
+    }
+    if (currentUser.role === 'admin') {
+      return `Administrator • ${currentUser.adminCode || 'Dean Office'}`;
+    }
+    if (currentUser.role === 'parent') {
+      return `Parent / Guardian • ${currentUser.relationship || 'Father'}`;
+    }
+    return currentUser.role;
+  };
 
   return (
     <header className="h-16 bg-white border-b border-[#ebd7cc] px-6 flex items-center justify-between shrink-0 shadow-sm">
@@ -82,21 +99,31 @@ export default function Header({ currentUser, alertsCount = 2, onTriggerRefresh 
 
         <div className="h-6 w-px bg-slate-200 mx-1" />
 
-        {/* User Profile Pill */}
-        <div className="flex items-center gap-2.5 pl-1">
+        {/* User Profile Pill & Sign Out */}
+        <div className="flex items-center gap-2 pl-1">
           <img
             src={currentUser?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
             alt={currentUser?.name}
             className="w-9 h-9 rounded-xl object-cover ring-2 ring-[#ffd8be] shadow-sm"
           />
           <div className="hidden sm:block text-left">
-            <p className="text-xs font-bold text-slate-800 leading-tight">
-              {currentUser?.name || 'User'}
+            <p className="text-xs font-bold text-slate-800 leading-tight max-w-[140px] truncate">
+              {currentUser?.name || 'Authorized User'}
             </p>
-            <p className="text-[10px] font-medium text-[#8b1e3f] capitalize">
-              {currentUser?.role || 'Guest'} {currentUser?.enrollmentNo ? `(${currentUser.enrollmentNo})` : ''}
+            <p className="text-[10px] font-medium text-[#8b1e3f] max-w-[150px] truncate">
+              {getSubtext()}
             </p>
           </div>
+
+          {onSignOut && (
+            <button
+              onClick={onSignOut}
+              title="Sign Out / Switch Campus Account"
+              className="p-1.5 ml-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all cursor-pointer"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
     </header>

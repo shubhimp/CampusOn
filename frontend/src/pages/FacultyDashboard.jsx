@@ -47,7 +47,11 @@ export default function FacultyDashboard({
   // Student requests assigned to this faculty
   const [assignedRequests, setAssignedRequests] = useState(ACCESS_REQUESTS);
 
-  const facultyTimetable = timetable.filter(
+  const lastName = user?.name ? user.name.split(' ').slice(-1)[0] : '';
+  const matchedSchedule = timetable.filter(
+    (t) => (lastName && t.faculty.toLowerCase().includes(lastName.toLowerCase()))
+  );
+  const facultyTimetable = matchedSchedule.length > 0 ? matchedSchedule : timetable.filter(
     (t) => t.faculty.includes('Murli Manohar') || t.faculty.includes('Manohar')
   );
 

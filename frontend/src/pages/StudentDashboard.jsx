@@ -45,7 +45,7 @@ export default function StudentDashboard({
   const [chatLog, setChatLog] = useState([
     {
       sender: 'ai',
-      text: 'Hello Shubhi! I am your AI Course Mentor. Ask me any question about your ECE-301 Microcontrollers or IoT course materials, and I will cite exact notes.',
+      text: `Hello ${user?.name ? user.name.split(' ')[0] : 'Student'}! I am your AI Course Mentor. Ask me any question about your ECE-301 Microcontrollers or IoT course materials, and I will cite exact notes.`,
       citation: 'Course Syllabus Unit 3'
     }
   ]);

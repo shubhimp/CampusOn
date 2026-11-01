@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Activity, 
   Layers, 
@@ -15,7 +15,14 @@ import {
   Sparkles,
   RefreshCw,
   TrendingUp,
-  Volume2
+  Volume2,
+  GraduationCap,
+  BookOpen,
+  Search,
+  UserCheck,
+  Hash,
+  Mail,
+  Shield
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -31,6 +38,7 @@ import {
 import HexagonBadge from '../components/HexagonBadge';
 import { RECENT_SAFETY_ALERTS } from '../mockData';
 import { optimizeTimetable } from '../services/api';
+import { getLocalDirectory } from '../services/supabaseClient';
 
 export default function AdminDashboard({ 
   classrooms, 
@@ -43,6 +51,15 @@ export default function AdminDashboard({
   const [isTimetableApproved, setIsTimetableApproved] = useState(true);
   const [sirenActive, setSirenActive] = useState(false);
   const [alerts, setAlerts] = useState(RECENT_SAFETY_ALERTS);
+
+  // Dynamic Campus Users Directory State
+  const [registeredUsers, setRegisteredUsers] = useState([]);
+  const [userSearch, setUserSearch] = useState('');
+  const [userRoleFilter, setUserRoleFilter] = useState('ALL');
+
+  useEffect(() => {
+    setRegisteredUsers(getLocalDirectory());
+  }, [activeTab]);
 
   // Utilization Chart Data
   const utilizationData = [
@@ -365,6 +382,157 @@ export default function AdminDashboard({
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Tab: Campus Users Directory */}
+      {activeTab === 'users' && (
+        <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#ebd7cc]">
+            <div>
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Users className="w-5 h-5 text-[#8b1e3f]" />
+                Dynamic Campus User Directory (Supabase Auth & Profiles)
+              </h3>
+              <p className="text-xs text-slate-500">
+                Live list of registered Students, Professors, Faculty, Administrators, and Parents created via Auth
+              </p>
+            </div>
+
+            <button
+              onClick={() => setRegisteredUsers(getLocalDirectory())}
+              className="px-3 py-1.5 rounded-lg border border-[#ebd7cc] text-xs font-semibold text-slate-700 hover:bg-[#fdf3ed] flex items-center gap-1.5 transition-all self-start sm:self-auto cursor-pointer"
+            >
+              <RefreshCw className="w-3.5 h-3.5 text-[#8b1e3f]" />
+              <span>Refresh Directory</span>
+            </button>
+          </div>
+
+          {/* Quick Metrics Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-3.5 rounded-xl bg-[#fdf3ed] border border-[#edd7ca]">
+              <p className="text-[10px] font-bold text-slate-500 uppercase">Total Accounts</p>
+              <p className="text-xl font-extrabold text-[#8b1e3f] mt-0.5">{registeredUsers.length}</p>
+            </div>
+            <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200">
+              <p className="text-[10px] font-bold text-blue-600 uppercase">Active Students</p>
+              <p className="text-xl font-extrabold text-blue-900 mt-0.5">
+                {registeredUsers.filter(u => u.role === 'student').length}
+              </p>
+            </div>
+            <div className="p-3.5 rounded-xl bg-purple-50 border border-purple-200">
+              <p className="text-[10px] font-bold text-purple-600 uppercase">Faculty / Professors</p>
+              <p className="text-xl font-extrabold text-purple-900 mt-0.5">
+                {registeredUsers.filter(u => u.role === 'faculty').length}
+              </p>
+            </div>
+            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+              <p className="text-[10px] font-bold text-emerald-600 uppercase">Admins & Parents</p>
+              <p className="text-xl font-extrabold text-emerald-900 mt-0.5">
+                {registeredUsers.filter(u => u.role === 'admin' || u.role === 'parent').length}
+              </p>
+            </div>
+          </div>
+
+          {/* Search & Filter Bar */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search by name, email, enrollment no, or employee code..."
+                value={userSearch}
+                onChange={(e) => setUserSearch(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
+              />
+            </div>
+
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+              {['ALL', 'student', 'faculty', 'admin', 'parent'].map(role => (
+                <button
+                  key={role}
+                  onClick={() => setUserRoleFilter(role)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                    userRoleFilter === role
+                      ? 'bg-[#8b1e3f] text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {role}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* User Directory Cards / Table */}
+          <div className="overflow-x-auto border border-slate-200 rounded-xl">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#fcf5f1] border-b border-[#edd7ca] text-slate-700">
+                <tr>
+                  <th className="py-3 px-4 font-bold">User Identity</th>
+                  <th className="py-3 px-4 font-bold">Assigned Role</th>
+                  <th className="py-3 px-4 font-bold">Academic / Staff Identifier</th>
+                  <th className="py-3 px-4 font-bold">Department</th>
+                  <th className="py-3 px-4 font-bold">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {registeredUsers
+                  .filter(u => {
+                    const matchRole = userRoleFilter === 'ALL' || u.role === userRoleFilter;
+                    const q = userSearch.toLowerCase();
+                    const matchSearch = !q || 
+                      (u.name && u.name.toLowerCase().includes(q)) ||
+                      (u.email && u.email.toLowerCase().includes(q)) ||
+                      (u.enrollmentNo && u.enrollmentNo.toLowerCase().includes(q)) ||
+                      (u.employeeCode && u.employeeCode.toLowerCase().includes(q));
+                    return matchRole && matchSearch;
+                  })
+                  .map((u, idx) => (
+                    <tr key={u.id || idx} className="hover:bg-slate-50 transition-colors">
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={u.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
+                            alt={u.name}
+                            className="w-8 h-8 rounded-full object-cover ring-1 ring-[#ebd7cc]"
+                          />
+                          <div>
+                            <p className="font-bold text-slate-900">{u.name}</p>
+                            <p className="text-[11px] text-slate-400 font-mono">{u.email}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                          u.role === 'student' ? 'bg-blue-100 text-blue-800' :
+                          u.role === 'faculty' ? 'bg-purple-100 text-purple-800' :
+                          u.role === 'admin' ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'
+                        }`}>
+                          {u.role === 'student' && <GraduationCap className="w-3 h-3" />}
+                          {u.role === 'faculty' && <BookOpen className="w-3 h-3" />}
+                          {u.role === 'admin' && <Shield className="w-3 h-3" />}
+                          {u.role === 'parent' && <Users className="w-3 h-3" />}
+                          <span>{u.role}</span>
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 font-mono font-medium text-slate-700">
+                        {u.enrollmentNo || u.employeeCode || u.adminCode || u.linkedStudent || '—'}
+                      </td>
+                      <td className="py-3 px-4 text-slate-600">
+                        {u.department || u.designation || 'Campus Infrastructure'}
+                      </td>
+                      <td className="py-3 px-4">
+                        <span className="inline-flex items-center gap-1 text-emerald-700 font-semibold text-[11px]">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                          <span>{u.status || 'Active Account'}</span>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

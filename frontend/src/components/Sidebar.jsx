@@ -15,10 +15,11 @@ import {
   Activity,
   Layers,
   FileDown,
-  Download
+  Download,
+  LogOut
 } from 'lucide-react';
 
-export default function Sidebar({ currentRole, setCurrentRole, activeTab, setActiveTab }) {
+export default function Sidebar({ currentRole, setCurrentRole, activeTab, setActiveTab, onSignOut }) {
   const roles = [
     { id: 'student', label: 'Student', icon: GraduationCap },
     { id: 'faculty', label: 'Faculty', icon: BookOpen },
@@ -47,6 +48,7 @@ export default function Sidebar({ currentRole, setCurrentRole, activeTab, setAct
     { id: 'overview', label: 'Campus Control Tower', icon: Activity },
     { id: 'timetable_solver', label: 'AI Timetable Optimizer', icon: Calendar },
     { id: 'occupancy', label: 'Live IoT Room Matrix', icon: Layers },
+    { id: 'users', label: 'Campus Users Directory', icon: Users },
     { id: 'safety', label: 'Safety & Hazard Alerts', icon: Bell },
     { id: 'analytics', label: 'Campus Analytics', icon: ShieldCheck },
   ];
@@ -178,6 +180,19 @@ export default function Sidebar({ currentRole, setCurrentRole, activeTab, setAct
             </span>
           </a>
         </div>
+
+        {/* Sign Out / Switch Role Button */}
+        {onSignOut && (
+          <div className="pt-2">
+            <button
+              onClick={onSignOut}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Switch / Sign Out</span>
+            </button>
+          </div>
+        )}
       </nav>
 
       {/* Footer / Institution Info */}

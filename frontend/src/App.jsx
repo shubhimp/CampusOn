@@ -6,6 +6,7 @@ import FacultyDashboard from './pages/FacultyDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ParentDashboard from './pages/ParentDashboard';
 import IoTSimulator from './pages/IoTSimulator';
+import AuthPage from './pages/AuthPage';
 import { 
   USERS, 
   INITIAL_CLASSROOMS, 
@@ -13,10 +14,20 @@ import {
   SUBJECTS_ATTENDANCE 
 } from './mockData';
 import { fetchClassrooms } from './services/api';
+import { getStoredSessionUser, logoutAccount } from './services/supabaseClient';
 
 export default function App() {
-  const [currentRole, setCurrentRole] = useState('student');
+  // Session User State (Loaded dynamically from Supabase / localStorage)
+  const [currentUser, setCurrentUser] = useState(() => getStoredSessionUser());
+  const [currentRole, setCurrentRole] = useState(() => currentUser?.role || 'student');
   const [activeTab, setActiveTab] = useState('overview');
+
+  // Sync role if user changes
+  useEffect(() => {
+    if (currentUser?.role && currentUser.role !== currentRole) {
+      setCurrentRole(currentUser.role);
+    }
+  }, [currentUser]);
 
   // Shared Central State (Simulates unified database & real-time telemetry)
   const [classrooms, setClassrooms] = useState(INITIAL_CLASSROOMS);
@@ -34,7 +45,21 @@ export default function App() {
     loadBackendData();
   }, []);
 
-  const currentUser = USERS[currentRole] || USERS.student;
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setCurrentRole(user.role);
+    setActiveTab(user.role === 'faculty' ? 'schedule' : 'overview');
+  };
+
+  const handleSignOut = async () => {
+    await logoutAccount();
+    setCurrentUser(null);
+  };
+
+  // If not authenticated, render the Dynamic Auth Page
+  if (!currentUser) {
+    return <AuthPage onLoginSuccess={handleLoginSuccess} />;
+  }
 
   // Real-time IoT telemetry synchronization handler
   const handleUpdateRoomTelemetry = (updatedTelemetry) => {
@@ -56,6 +81,7 @@ export default function App() {
         setCurrentRole={setCurrentRole}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onSignOut={handleSignOut}
       />
 
       {/* Main Content Area */}
@@ -64,6 +90,7 @@ export default function App() {
         <Header
           currentUser={currentUser}
           alertsCount={2}
+          onSignOut={handleSignOut}
           onTriggerRefresh={() => {
             // Optional sync trigger
           }}
