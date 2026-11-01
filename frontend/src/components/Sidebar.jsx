@@ -17,7 +17,8 @@ import {
   FileDown,
   Download,
   LogOut,
-  Lock
+  Lock,
+  ScanFace
 } from 'lucide-react';
 
 export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOut }) {
@@ -32,6 +33,7 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
 
   const facultyNav = [
     { id: 'schedule', label: 'My Teaching Schedule', icon: Calendar },
+    { id: 'face_attendance', label: 'ESP32 3D Face Attendance', icon: ScanFace },
     { id: 'preferences', label: 'Timetable Preferences', icon: Settings },
     { id: 'notes', label: 'Course Notes Manager', icon: BookOpen },
     { id: 'cameras', label: 'Authorized Classroom Feeds', icon: ShieldCheck },

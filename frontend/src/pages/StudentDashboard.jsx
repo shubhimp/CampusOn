@@ -302,10 +302,20 @@ export default function StudentDashboard({
 
           {/* Subject-Wise Attendance Breakdown */}
           <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6">
-            <h3 className="text-base font-bold text-slate-900 mb-1">Attendance Analytics & Requirements</h3>
-            <p className="text-xs text-slate-500 mb-5">
-              Minimum 75% attendance mandatory for semester end examination.
-            </p>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 mb-1">Attendance Analytics & Requirements</h3>
+                <p className="text-xs text-slate-500">
+                  Minimum 75% attendance mandatory for semester end examination.
+                </p>
+              </div>
+
+              {/* Live ESP32-CAM 3D Face Biometric Status Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span>ESP32-CAM 3D Face Verified: <strong>Room AB-204 (09:02 AM)</strong></span>
+              </div>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {subjects.map((sub) => (

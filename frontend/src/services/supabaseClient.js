@@ -21,8 +21,125 @@ export function normalizeEmail(email) {
   return clean;
 }
 
+export const EXAMINER_CREDENTIALS = [
+  {
+    role: 'student',
+    roleLabel: 'Student Dashboard',
+    name: 'Shubhi Mathur',
+    email: 'student@campuson.mits',
+    altEmail: 'shubhi.btec25o1060@mitsgwalior.in',
+    password: 'Password@123',
+    allottedId: 'BTEC25O1060',
+    rfidTag: 'RFID-9A-4F-2C-11',
+    department: 'Electrical & Computer Engineering',
+    semester: '3rd Semester',
+    badge: 'Student / IoT Major',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    description: 'Access timetable, 3D face biometric attendance, dynamic QR, indoor map & AI notes.'
+  },
+  {
+    role: 'faculty',
+    roleLabel: 'Faculty Dashboard',
+    name: 'Dr. Murli Manohar',
+    email: 'faculty@campuson.mits',
+    altEmail: 'murli.manohar@mitsgwalior.in',
+    password: 'Password@123',
+    allottedId: 'FAC-ECE-208',
+    department: 'Electrical & Computer Engineering',
+    designation: 'Associate Professor & IoT Mentor',
+    badge: 'Faculty / IoT Coordinator',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    description: 'Run ESP32-CAM 3D Face Recognition attendance, camera feeds, notes & queries.'
+  },
+  {
+    role: 'admin',
+    roleLabel: 'Administrator Dashboard',
+    name: 'Shubhi Mathur',
+    email: 'admin@campuson.mits',
+    altEmail: 'shubhimp13@gmail.com',
+    password: 'Password@123',
+    allottedId: 'ADM-MITS-02',
+    department: 'Central Administration & Campus Infrastructure',
+    accessLevel: 'Super Administrator',
+    badge: 'Campus Super Admin',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    description: 'Campus control tower, OR-Tools timetable optimizer, IoT room matrix & analytics.'
+  },
+  {
+    role: 'parent',
+    roleLabel: 'Parent Dashboard',
+    name: 'Mr. R. K. Mathur',
+    email: 'parent@campuson.mits',
+    altEmail: 'rkmathur.gwalior@gmail.com',
+    password: 'Password@123',
+    allottedId: 'PRT-98260',
+    linkedStudent: 'Shubhi Mathur (BTEC25O1060)',
+    relationship: 'Father',
+    badge: 'Verified Guardian',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+    description: 'Cumulative academic attendance records, fee ledger & college notices.'
+  }
+];
+
 // Default initial users for demo/evaluation
 const INITIAL_DIRECTORY = [
+  // 4 Examiner & Viva Dummy Credentials
+  {
+    id: 'usr_student_dummy',
+    role: 'student',
+    name: 'Shubhi Mathur',
+    email: 'student@campuson.mits',
+    altEmail: 'student.mits@mitsgwalior.in',
+    enrollmentNo: 'BTEC25O1060',
+    department: 'Electrical & Computer Engineering',
+    semester: '3rd Semester',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    rfidTag: 'RFID-9A-4F-2C-11',
+    createdAt: '2026-10-28T09:00:00Z',
+    status: 'Verified Student'
+  },
+  {
+    id: 'usr_faculty_dummy',
+    role: 'faculty',
+    name: 'Dr. Murli Manohar',
+    email: 'faculty@campuson.mits',
+    altEmail: 'faculty.mits@mitsgwalior.in',
+    employeeCode: 'FAC-ECE-208',
+    designation: 'Associate Professor & IoT Mentor',
+    department: 'Electrical & Computer Engineering',
+    cabin: 'Faculty Block B - Cabin 208',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    createdAt: '2026-10-25T11:00:00Z',
+    status: 'Active Faculty'
+  },
+  {
+    id: 'usr_admin_dummy',
+    role: 'admin',
+    name: 'Shubhi Mathur',
+    email: 'admin@campuson.mits',
+    altEmail: 'admin.mits@mitsgwalior.in',
+    adminCode: 'ADM-MITS-02',
+    department: 'Central Administration & Campus Infrastructure',
+    accessLevel: 'Super Administrator',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    createdAt: '2026-11-01T00:00:00Z',
+    status: 'Super Administrator'
+  },
+  {
+    id: 'usr_parent_dummy',
+    role: 'parent',
+    name: 'Mr. R. K. Mathur',
+    email: 'parent@campuson.mits',
+    altEmail: 'parent.mits@mitsgwalior.in',
+    parentCode: 'PRT-98260',
+    linkedStudent: 'Shubhi Mathur (BTEC25O1060)',
+    relationship: 'Father',
+    emergencyContact: '+91 98260 12345',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+    createdAt: '2026-10-29T14:30:00Z',
+    status: 'Verified Guardian'
+  },
+  // Existing registered identities
   {
     id: 'usr_student_01',
     role: 'student',
@@ -78,6 +195,7 @@ const INITIAL_DIRECTORY = [
     role: 'parent',
     name: 'Mr. R. K. Mathur',
     email: 'rkmathur.gwalior@gmail.com',
+    parentCode: 'PRT-98260',
     linkedStudent: 'Shubhi Mathur (BTEC25O1060)',
     relationship: 'Father',
     emergencyContact: '+91 98260 12345',
@@ -273,14 +391,32 @@ export async function loginAccount(identifier, password, expectedRole) {
   const directory = getLocalDirectory();
 
   // 1. Direct Smart Tag / ID / Email Resolution
-  let matchedUser = directory.find(u => 
-    (u.email && normalizeEmail(u.email) === cleanEmail) ||
-    (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
-    (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
-    (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
-    (u.adminCode && u.adminCode.toLowerCase() === query) ||
-    (query === 'shubhimp13@gmail' && u.email === 'shubhimp13@gmail.com')
+  let matchedUser = null;
+
+  // Direct check against EXAMINER_CREDENTIALS
+  const examinerMatch = EXAMINER_CREDENTIALS.find(c => 
+    normalizeEmail(c.email) === cleanEmail || 
+    (c.altEmail && normalizeEmail(c.altEmail) === cleanEmail) ||
+    (c.allottedId && c.allottedId.toLowerCase() === query) ||
+    (c.rfidTag && c.rfidTag.toLowerCase() === query)
   );
+
+  if (examinerMatch) {
+    matchedUser = directory.find(u => u.email.toLowerCase() === examinerMatch.email.toLowerCase()) || examinerMatch;
+  }
+
+  if (!matchedUser) {
+    matchedUser = directory.find(u => 
+      (u.email && normalizeEmail(u.email) === cleanEmail) ||
+      (u.altEmail && normalizeEmail(u.altEmail) === cleanEmail) ||
+      (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
+      (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
+      (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
+      (u.adminCode && u.adminCode.toLowerCase() === query) ||
+      (u.parentCode && u.parentCode.toLowerCase() === query) ||
+      (query === 'shubhimp13@gmail' && u.email === 'shubhimp13@gmail.com')
+    );
+  }
 
   if (!matchedUser) {
     // Check initial mock users
@@ -512,14 +648,28 @@ export async function loginWithOtp(identifier, otpCode) {
     };
     saveUserToDirectory(matchedUser);
   } else {
-    // Resolve from directory by email, RFID tag, or institute ID
-    matchedUser = directory.find(u => 
-      (u.email && normalizeEmail(u.email) === cleanEmail) ||
-      (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
-      (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
-      (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
-      (u.adminCode && u.adminCode.toLowerCase() === query)
+    // Check examiner credentials first
+    const examinerMatch = EXAMINER_CREDENTIALS.find(c => 
+      normalizeEmail(c.email) === cleanEmail || 
+      (c.altEmail && normalizeEmail(c.altEmail) === cleanEmail) ||
+      (c.allottedId && c.allottedId.toLowerCase() === query) ||
+      (c.rfidTag && c.rfidTag.toLowerCase() === query)
     );
+
+    if (examinerMatch) {
+      matchedUser = directory.find(u => u.email.toLowerCase() === examinerMatch.email.toLowerCase()) || examinerMatch;
+    } else {
+      // Resolve from directory by email, RFID tag, or institute ID
+      matchedUser = directory.find(u => 
+        (u.email && normalizeEmail(u.email) === cleanEmail) ||
+        (u.altEmail && normalizeEmail(u.altEmail) === cleanEmail) ||
+        (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
+        (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
+        (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
+        (u.adminCode && u.adminCode.toLowerCase() === query) ||
+        (u.parentCode && u.parentCode.toLowerCase() === query)
+      );
+    }
   }
 
   if (matchedUser && matchedUser.email) {

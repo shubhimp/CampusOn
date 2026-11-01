@@ -48,6 +48,40 @@
 | | All LEDs (-) Short Leg | **GND Rail** | Connected to common ground |
 | **7. Piezo Buzzer** | Positive (+) Long Leg | **GPIO 26** | Alarm output |
 | | Negative (-) Short Leg | **GND Rail** | |
+| **8. ESP32-CAM (OV2640)** | 5V / VCC | **5V (External 2A Supply)** | Requires clean 5V 2A power |
+| | GND | **GND (Common Ground)** | |
+| | U0T (Serial TX) | **FTDI RX / GPIO 1** | For initial flashing |
+| | U0R (Serial RX) | **FTDI TX / GPIO 3** | For initial flashing |
+| | GPIO 0 | **GND (During Flash only)** | Leave open during normal run |
+| | Flash LED | **GPIO 4** | On-board high-brightness flash |
+| **9. 5V Relay (Door Lock)** | VCC | **5V (VIN)** | |
+| | GND | **GND** | |
+| | IN (Relay Trigger) | **GPIO 23** | Actuates 12V Solenoid Door Lock |
+
+---
+
+## 📸 ESP32-CAM 3D Face Recognition & Door Actuator Integration
+
+```
++--------------------------------------------------------+
+|                   ESP32-CAM MODULE                     |
+|                                                        |
+|   [OV2640 Camera]  ---> Captures 1600x1200 Frames     |
+|         |                                              |
+|         v                                              |
+|   Wi-Fi HTTP Stream ---> CampusOn Backend / Browser    |
+|   (MJPEG Port 81)       (Runs 468-pt 3D Landmark Mesh) |
+|                                                        |
+|   GPIO 23 (Relay)  ---> 5V Optocoupler Relay           |
+|         |                     |                        |
+|         v                     v                        |
+|   Door Access Granted    12V Solenoid Electronic Lock   |
++--------------------------------------------------------+
+```
+
+1. **Camera Stream**: ESP32-CAM streams video at `http://<ESP32_IP>:81/stream` (or simulated AI engine).
+2. **Biometric Mesh**: CampusOn extracts 3D depth contours with anti-spoofing verification.
+3. **Automated Attendance**: Matches student in database, logs attendance, and pulses Relay on GPIO 23 to unlock the classroom door.
 | **8. Optional 16x2 I2C LCD** | VCC | **5V (VIN)** | |
 | | GND | **GND** | |
 | | SDA | **GPIO 21** (or designated I2C) | |

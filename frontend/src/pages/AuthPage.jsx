@@ -35,6 +35,7 @@ import {
   requestPasswordResetOtp,
   confirmPasswordReset
 } from '../services/supabaseClient';
+import { EXAMINER_CREDENTIALS } from '../mockData';
 
 export default function AuthPage({ onLoginSuccess }) {
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup' | 'forgot'
@@ -146,20 +147,51 @@ export default function AuthPage({ onLoginSuccess }) {
     }
   };
 
-  // Quick 1-Click Examiner / Demo Login
+  // Auto-Fill Examiner Dummy Credentials into Form
+  const handleAutoFillExaminer = (cred) => {
+    setFormData(prev => ({
+      ...prev,
+      email: cred.email,
+      password: cred.password
+    }));
+    setAuthMethod('password');
+    setSuccessMsg(`Auto-filled ${cred.roleLabel} credentials (${cred.email}). Click "Authenticate Smart Tag & Launch Portal" to sign in.`);
+  };
+
+  // 1-Click Direct Launch for Examiner
+  const handleLaunchExaminerCred = async (cred) => {
+    setLoading(true);
+    setErrorMsg('');
+    setShowOtpScreen(false);
+    try {
+      const res = await loginAccount(cred.email, cred.password);
+      if (res.success) {
+        setSuccessMsg(`Verified: Welcome, ${res.user.name}! Loading ${res.user.role.toUpperCase()} Dashboard...`);
+        setTimeout(() => {
+          onLoginSuccess(res.user);
+        }, 400);
+      }
+    } catch (err) {
+      setErrorMsg(err.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Quick 1-Click Examiner / Demo Login (Supports RFID Tag tap)
   const handleQuickDemoLogin = async (roleId) => {
     setLoading(true);
     setErrorMsg('');
     setShowOtpScreen(false);
     try {
       const demoAccounts = {
-        student: { email: 'shubhi.btec25o1060@mitsgwalior.in', pass: 'MITS@2026' },
-        faculty: { email: 'murli.manohar@mitsgwalior.in', pass: 'MITS@2026' },
-        admin: { email: 'shubhimp13@gmail.com', pass: 'MITS@2026' },
-        parent: { email: 'rkmathur.gwalior@gmail.com', pass: 'MITS@2026' }
+        student: { email: 'student@campuson.mits', pass: 'Password@123' },
+        faculty: { email: 'faculty@campuson.mits', pass: 'Password@123' },
+        admin: { email: 'admin@campuson.mits', pass: 'Password@123' },
+        parent: { email: 'parent@campuson.mits', pass: 'Password@123' }
       };
       const creds = demoAccounts[roleId];
-      const res = await loginAccount(creds.email, creds.pass, roleId);
+      const res = await loginAccount(creds.email, creds.pass);
       if (res.success) {
         onLoginSuccess(res.user);
       }
@@ -983,8 +1015,78 @@ export default function AuthPage({ onLoginSuccess }) {
             </form>
           )}
 
-          {/* Quick Simulated Smart Card Tap */}
+          {/* 🎓 Examiner & Viva Evaluation Master Credentials (4 Dummy Dashboards) */}
           <div className="mt-8 pt-6 border-t border-[#edd7ca]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+              <div className="flex items-center gap-2">
+                <span className="p-1 rounded-lg bg-[#8b1e3f] text-white">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                </span>
+                <span className="text-xs font-extrabold text-[#8b1e3f] uppercase tracking-wider">
+                  Examiner & Viva Demo Credentials (4 Single Dashboards)
+                </span>
+              </div>
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold self-start sm:self-auto">
+                EVALUATION READY • PASS: Password@123
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 mb-3.5">
+              Each dummy profile is locked strictly to its dedicated dashboard with zero unauthorized role switching. Click <strong>Launch</strong> to enter immediately or <strong>Auto-Fill</strong> to inspect:
+            </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {EXAMINER_CREDENTIALS.map((cred) => (
+                <div
+                  key={cred.role}
+                  className="p-3.5 rounded-2xl bg-gradient-to-b from-white to-[#fdf9f6] border border-[#ebd7cc] hover:border-[#8b1e3f] transition-all shadow-2xs flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#8b1e3f] bg-[#ffd8be] px-2 py-0.5 rounded">
+                        {cred.role.toUpperCase()}
+                      </span>
+                      <span className="text-[9px] font-mono text-slate-400 font-bold">
+                        {cred.allottedId}
+                      </span>
+                    </div>
+
+                    <h4 className="text-xs font-bold text-slate-900 line-clamp-1">{cred.name}</h4>
+                    <p className="text-[10px] text-slate-600 font-mono mt-0.5 truncate select-all" title={cred.email}>
+                      {cred.email}
+                    </p>
+                    <p className="text-[10px] text-slate-500 font-mono mt-0.5">
+                      Pass: <span className="font-bold text-slate-800">{cred.password}</span>
+                    </p>
+                  </div>
+
+                  <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleLaunchExaminerCred(cred)}
+                      disabled={loading}
+                      className="flex-1 py-1.5 px-2 rounded-lg bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-[10px] flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      <span>Launch</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleAutoFillExaminer(cred)}
+                      disabled={loading}
+                      className="py-1.5 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] transition-all cursor-pointer"
+                      title="Fill into Sign In Form"
+                    >
+                      Auto-Fill
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Simulated Smart Card Tap */}
+          <div className="mt-6 pt-5 border-t border-[#edd7ca]">
             <div className="flex items-center justify-between mb-3">
               <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
                 <Radio className="w-3.5 h-3.5 text-[#8b1e3f] animate-pulse" />

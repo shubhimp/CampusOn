@@ -15,6 +15,7 @@ import {
   Plus
 } from 'lucide-react';
 import HexagonBadge from '../components/HexagonBadge';
+import ESP32CamFaceAttendance from '../components/ESP32CamFaceAttendance';
 import { COURSE_NOTES, ACCESS_REQUESTS } from '../mockData';
 
 export default function FacultyDashboard({ 
@@ -177,6 +178,14 @@ export default function FacultyDashboard({
             ))}
           </div>
         </div>
+      )}
+
+      {/* Tab: ESP32-CAM 3D Face Recognition Attendance */}
+      {activeTab === 'face_attendance' && (
+        <ESP32CamFaceAttendance 
+          roomId="AB-204" 
+          roomName="IoT & Embedded Systems Laboratory" 
+        />
       )}
 
       {/* Tab: Timetable Preferences Submission */}
@@ -375,14 +384,23 @@ export default function FacultyDashboard({
       {/* Tab: Authorized Classroom CCTV Feeds */}
       {activeTab === 'cameras' && (
         <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6 space-y-6">
-          <div>
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <Video className="w-5 h-5 text-[#8b1e3f]" />
-              Authorized Classroom Security Feeds
-            </h3>
-            <p className="text-xs text-slate-500">
-              Restricted to assigned faculty and administration. All camera access is audited.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <Video className="w-5 h-5 text-[#8b1e3f]" />
+                Authorized Classroom Security Feeds
+              </h3>
+              <p className="text-xs text-slate-500">
+                Restricted to assigned faculty and administration. All camera access is audited.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveTab('face_attendance')}
+              className="px-3.5 py-2 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer self-start sm:self-auto"
+            >
+              <span>⚡ Launch 3D Face Biometric Attendance</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

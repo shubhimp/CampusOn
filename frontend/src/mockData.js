@@ -15,6 +15,66 @@ export const INITIAL_USER = {
   parentContact: '+91 98260 12345',
 };
 
+export const EXAMINER_CREDENTIALS = [
+  {
+    role: 'student',
+    roleLabel: 'Student Dashboard',
+    name: 'Shubhi Mathur',
+    email: 'student@campuson.mits',
+    altEmail: 'shubhi.btec25o1060@mitsgwalior.in',
+    password: 'Password@123',
+    allottedId: 'BTEC25O1060',
+    rfidTag: 'RFID-9A-4F-2C-11',
+    department: 'Electrical & Computer Engineering',
+    semester: '3rd Semester',
+    badge: 'Student / IoT Major',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    description: 'Access timetable, 3D face biometric attendance, dynamic QR, indoor map & AI notes.'
+  },
+  {
+    role: 'faculty',
+    roleLabel: 'Faculty Dashboard',
+    name: 'Dr. Murli Manohar',
+    email: 'faculty@campuson.mits',
+    altEmail: 'murli.manohar@mitsgwalior.in',
+    password: 'Password@123',
+    allottedId: 'FAC-ECE-208',
+    department: 'Electrical & Computer Engineering',
+    designation: 'Associate Professor & IoT Mentor',
+    badge: 'Faculty / IoT Coordinator',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    description: 'Run ESP32-CAM 3D Face Recognition attendance, camera feeds, notes & queries.'
+  },
+  {
+    role: 'admin',
+    roleLabel: 'Administrator Dashboard',
+    name: 'Shubhi Mathur',
+    email: 'admin@campuson.mits',
+    altEmail: 'shubhimp13@gmail.com',
+    password: 'Password@123',
+    allottedId: 'ADM-MITS-02',
+    department: 'Central Administration & Campus Infrastructure',
+    accessLevel: 'Super Administrator',
+    badge: 'Campus Super Admin',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    description: 'Campus control tower, OR-Tools timetable optimizer, IoT room matrix & analytics.'
+  },
+  {
+    role: 'parent',
+    roleLabel: 'Parent Dashboard',
+    name: 'Mr. R. K. Mathur',
+    email: 'parent@campuson.mits',
+    altEmail: 'rkmathur.gwalior@gmail.com',
+    password: 'Password@123',
+    allottedId: 'PRT-98260',
+    linkedStudent: 'Shubhi Mathur (BTEC25O1060)',
+    relationship: 'Father',
+    badge: 'Verified Guardian',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+    description: 'Cumulative academic attendance records, fee ledger & college notices.'
+  }
+];
+
 export const USERS = {
   student: {
     id: 'usr_student_01',
@@ -23,7 +83,8 @@ export const USERS = {
     enrollmentNo: 'BTEC25O1060',
     department: 'Electrical & Computer Engineering',
     semester: '3rd Semester',
-    email: 'shubhi.btec25o1060@mitsgwalior.in',
+    email: 'student@campuson.mits',
+    altEmail: 'shubhi.btec25o1060@mitsgwalior.in',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     rfidTag: 'RFID-9A-4F-2C-11'
   },
@@ -33,7 +94,9 @@ export const USERS = {
     name: 'Dr. Murli Manohar',
     designation: 'Associate Professor & IoT Mentor',
     department: 'Electrical & Computer Engineering',
-    email: 'murli.manohar@mitsgwalior.in',
+    email: 'faculty@campuson.mits',
+    altEmail: 'murli.manohar@mitsgwalior.in',
+    employeeCode: 'FAC-ECE-208',
     cabin: 'Faculty Block B - Cabin 208',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
     assignedResponsibility: 'Centre for Internet of Things Coordinator'
@@ -43,7 +106,8 @@ export const USERS = {
     role: 'admin',
     name: 'Shubhi Mathur',
     department: 'Central Administration & Campus Infrastructure',
-    email: 'shubhimp13@gmail.com',
+    email: 'admin@campuson.mits',
+    altEmail: 'shubhimp13@gmail.com',
     adminCode: 'ADM-MITS-02',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     accessLevel: 'Super Administrator'
@@ -54,7 +118,9 @@ export const USERS = {
     name: 'Mr. R. K. Mathur',
     linkedStudent: 'Shubhi Mathur (BTEC25O1060)',
     relationship: 'Father',
-    email: 'rkmathur.gwalior@gmail.com',
+    email: 'parent@campuson.mits',
+    altEmail: 'rkmathur.gwalior@gmail.com',
+    parentCode: 'PRT-98260',
     avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80'
   }
 };
