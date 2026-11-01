@@ -389,7 +389,23 @@ export async function requestOtpCode(identifier) {
   };
   localStorage.setItem(`campuson_otp_${cleanEmail}`, JSON.stringify(otpData));
 
-  // Also attempt Supabase native OTP dispatch
+  // 1. Dispatch Direct SMTP with 6-digit OTP code via FastAPI backend
+  let directSmtpDispatched = false;
+  try {
+    const smtpRes = await fetch('http://127.0.0.1:8000/api/auth/send-otp', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: cleanEmail, otpCode, purpose: 'login' })
+    });
+    const smtpData = await smtpRes.json();
+    if (smtpData.success) {
+      directSmtpDispatched = true;
+    }
+  } catch (backendErr) {
+    console.warn('Backend SMTP dispatch note:', backendErr.message);
+  }
+
+  // 2. Also attempt Supabase native OTP dispatch
   let supabaseDispatched = false;
   let isRateLimited = false;
   let errorMessage = '';
@@ -420,6 +436,7 @@ export async function requestOtpCode(identifier) {
     success: true,
     email: cleanEmail,
     otpCode,
+    directSmtpDispatched,
     supabaseDispatched,
     isRateLimited,
     errorMessage,
