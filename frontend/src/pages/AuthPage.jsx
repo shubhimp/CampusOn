@@ -170,33 +170,6 @@ export default function AuthPage({ onLoginSuccess }) {
     }
   };
 
-  // Direct Instant Registration (Bypasses email delivery bottleneck for fast onboarding & evaluation)
-  const handleDirectSignUp = async () => {
-    if (!formData.fullName || !formData.email || !formData.password) {
-      setErrorMsg('Please fill in your Full Name, Email, and Password.');
-      return;
-    }
-    setLoading(true);
-    setErrorMsg('');
-    try {
-      const res = await registerAccount({
-        ...formData,
-        role: selectedRole,
-        status: 'Active Account (Directly Registered)'
-      });
-      if (res.success) {
-        setSuccessMsg(`Welcome, ${res.user.name}! Your ${selectedRole.toUpperCase()} profile is created and active.`);
-        setTimeout(() => {
-          onLoginSuccess(res.user);
-        }, 600);
-      }
-    } catch (err) {
-      setErrorMsg(err.message || 'Direct account registration failed.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Trigger OTP Dispatch
   const handleInitiateOtp = async (targetEmail, action) => {
     if (!targetEmail || !targetEmail.includes('@')) {
@@ -271,32 +244,13 @@ export default function AuthPage({ onLoginSuccess }) {
     setErrorMsg('');
 
     try {
-      if (otpActionType === 'signup') {
-        // Validate OTP
-        await verifyOtpCode(otpTargetEmail, entered);
-
-        // Register profile
-        const res = await registerAccount({
-          ...formData,
-          role: selectedRole,
-          status: '2FA OTP Verified'
-        });
-
-        if (res.success) {
-          setSuccessMsg('Email & OTP verified successfully! Activating your campus portal...');
-          setTimeout(() => {
-            onLoginSuccess(res.user);
-          }, 800);
-        }
-      } else {
-        // Sign In via OTP
-        const res = await loginWithOtp(otpTargetEmail, entered, selectedRole);
-        if (res.success) {
-          setSuccessMsg('2FA OTP verified! Access authorized.');
-          setTimeout(() => {
-            onLoginSuccess(res.user);
-          }, 600);
-        }
+      // Sign In via OTP
+      const res = await loginWithOtp(otpTargetEmail, entered, selectedRole);
+      if (res.success) {
+        setSuccessMsg('2FA OTP verified! Access authorized.');
+        setTimeout(() => {
+          onLoginSuccess(res.user);
+        }, 600);
       }
     } catch (err) {
       setErrorMsg(err.message || 'OTP Verification failed.');
@@ -414,49 +368,39 @@ export default function AuthPage({ onLoginSuccess }) {
     }
   };
 
-  // Form Submit Handler
+  // Form Submit Handler (Institutional Sign In)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
 
-    if (mode === 'signup') {
-      if (!formData.fullName || !formData.email || !formData.password) {
-        setErrorMsg('Please fill in your Full Name, Email, and Password.');
-        return;
-      }
-      // Require 2FA OTP verification for account creation
-      await handleInitiateOtp(formData.email, 'signup');
-    } else {
-      // Sign In
-      if (!formData.email) {
-        setErrorMsg('Please enter your Institute Email.');
-        return;
-      }
+    if (!formData.email) {
+      setErrorMsg('Please enter your Institute Email.');
+      return;
+    }
 
-      if (authMethod === 'otp') {
-        // Passwordless OTP Login
-        await handleInitiateOtp(formData.email, 'signin');
-      } else {
-        // Standard Password Login
-        if (!formData.password) {
-          setErrorMsg('Please enter your Password.');
-          return;
+    if (authMethod === 'otp') {
+      // Passwordless OTP Login (Dispatches 6-digit OTP via Gmail SMTP)
+      await handleInitiateOtp(formData.email, 'signin');
+    } else {
+      // Standard Password Login
+      if (!formData.password) {
+        setErrorMsg('Please enter your Password.');
+        return;
+      }
+      setLoading(true);
+      try {
+        const res = await loginAccount(formData.email, formData.password, selectedRole);
+        if (res.success) {
+          setSuccessMsg('Credentials verified! Welcome to CampusOn.');
+          setTimeout(() => {
+            onLoginSuccess(res.user);
+          }, 500);
         }
-        setLoading(true);
-        try {
-          const res = await loginAccount(formData.email, formData.password, selectedRole);
-          if (res.success) {
-            setSuccessMsg('Credentials verified! Welcome to CampusOn.');
-            setTimeout(() => {
-              onLoginSuccess(res.user);
-            }, 500);
-          }
-        } catch (err) {
-          setErrorMsg(err.message || 'Invalid credentials. Please verify your email & password or use OTP.');
-        } finally {
-          setLoading(false);
-        }
+      } catch (err) {
+        setErrorMsg(err.message || 'Invalid credentials. Please verify your email & password or use OTP.');
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -488,55 +432,37 @@ export default function AuthPage({ onLoginSuccess }) {
 
       {/* Main Authentication Card */}
       <div className="max-w-3xl mx-auto w-full bg-white rounded-3xl shadow-xl border border-[#ebd7cc] overflow-hidden">
-        {/* Mode Selector Tabs (Sign In vs Sign Up) */}
-        <div className="p-2 border-b border-[#ebd7cc] bg-[#fbf3ee]">
-          <div className={`grid ${mode === 'forgot' ? 'grid-cols-3' : 'grid-cols-2'} gap-2 p-1 bg-[#f4e2d5] rounded-2xl`}>
+        {/* Institutional Sign-In Header Banner */}
+        <div className="px-6 py-4 border-b border-[#ebd7cc] bg-[#fbf3ee] flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#8b1e3f] text-white flex items-center justify-center shadow-xs">
+              <Lock className="w-4 h-4" />
+            </div>
+            <div>
+              <h2 className="text-sm font-extrabold text-[#8b1e3f] uppercase tracking-wider">
+                {mode === 'forgot' ? 'Account Password Recovery' : 'Institutional Single Sign-On'}
+              </h2>
+              <p className="text-[11px] font-medium text-slate-500">
+                {mode === 'forgot'
+                  ? 'Verify via 6-digit email OTP to set a new password'
+                  : 'Auto-provisioned student, faculty, admin & parent accounts'}
+              </p>
+            </div>
+          </div>
+          {mode === 'forgot' && (
             <button
               type="button"
               onClick={() => {
                 setMode('signin');
-                setShowOtpScreen(false);
                 setErrorMsg('');
                 setSuccessMsg('');
               }}
-              className={`py-3 px-4 text-center font-extrabold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                mode === 'signin'
-                  ? 'bg-[#8b1e3f] text-white shadow-md scale-[1.01]'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-[#ebd3c3]'
-              }`}
+              className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-[#8b1e3f] text-slate-700 text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
             >
-              <Lock className="w-4 h-4" />
-              <span>SIGN IN</span>
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Sign In</span>
             </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setMode('signup');
-                setShowOtpScreen(false);
-                setErrorMsg('');
-                setSuccessMsg('');
-              }}
-              className={`py-3 px-4 text-center font-extrabold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                mode === 'signup'
-                  ? 'bg-[#8b1e3f] text-white shadow-md scale-[1.01]'
-                  : 'text-slate-700 hover:text-slate-900 hover:bg-[#ebd3c3]'
-              }`}
-            >
-              <Sparkles className="w-4 h-4 text-amber-300" />
-              <span>SIGN UP</span>
-            </button>
-
-            {mode === 'forgot' && (
-              <button
-                type="button"
-                className="py-3 px-4 text-center font-extrabold text-sm rounded-xl bg-[#8b1e3f] text-white shadow-md flex items-center justify-center gap-2 cursor-default"
-              >
-                <Key className="w-4 h-4 text-amber-300" />
-                <span>RESET PASSWORD</span>
-              </button>
-            )}
-          </div>
+          )}
         </div>
 
         <div className="p-6 sm:p-8">
@@ -972,12 +898,8 @@ export default function AuthPage({ onLoginSuccess }) {
                           onClick={async () => {
                             setLoading(true);
                             try {
-                              if (otpActionType === 'signup') {
-                                await handleDirectSignUp();
-                              } else {
-                                const res = await loginAccount(otpTargetEmail, 'MITS@2026', selectedRole);
-                                if (res.success) onLoginSuccess(res.user);
-                              }
+                              const res = await loginAccount(otpTargetEmail, 'MITS@2026', selectedRole);
+                              if (res.success) onLoginSuccess(res.user);
                             } catch (e) {
                               setErrorMsg(e.message || 'Direct bypass failed');
                             } finally {
@@ -996,38 +918,13 @@ export default function AuthPage({ onLoginSuccess }) {
               </form>
             </div>
           ) : (
-            /* --- NORMAL AUTH FORM (Sign In / Sign Up) --- */
+            /* --- INSTITUTIONAL SINGLE SIGN-ON FORM --- */
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Full Name (Sign Up only) */}
-              {mode === 'signup' && (
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Full Name
-                  </label>
-                  <div className="relative">
-                    <User className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleInputChange}
-                      placeholder={
-                        selectedRole === 'student' ? 'e.g. Shubhi Mathur' :
-                        selectedRole === 'faculty' ? 'e.g. Dr. Murli Manohar' :
-                        selectedRole === 'admin' ? 'e.g. Prof. R. C. Gupta' : 'e.g. Mr. R. K. Mathur'
-                      }
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#8b1e3f] focus:ring-2 focus:ring-[#8b1e3f]/20 outline-none text-xs text-slate-800"
-                      required
-                    />
-                  </div>
-                </div>
-              )}
-
               {/* Email & Password / OTP Mode */}
-              <div className={`grid grid-cols-1 ${mode === 'signup' || authMethod === 'password' ? 'sm:grid-cols-2' : ''} gap-4`}>
+              <div className={`grid grid-cols-1 ${authMethod === 'password' ? 'sm:grid-cols-2' : ''} gap-4`}>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Institute / Personal Email
+                    Institute Official / Personal Email
                   </label>
                   <div className="relative">
                     <Mail className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
@@ -1043,27 +940,25 @@ export default function AuthPage({ onLoginSuccess }) {
                   </div>
                 </div>
 
-                {(mode === 'signup' || authMethod === 'password') && (
+                {authMethod === 'password' && (
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <label className="block text-xs font-semibold text-slate-700">
                         Password
                       </label>
-                      {mode === 'signin' && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setMode('forgot');
-                            setResetEmail(formData.email);
-                            setForgotStep('request');
-                            setErrorMsg('');
-                            setSuccessMsg('');
-                          }}
-                          className="text-[11px] font-semibold text-[#8b1e3f] hover:underline cursor-pointer"
-                        >
-                          Forgot Password?
-                        </button>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMode('forgot');
+                          setResetEmail(formData.email);
+                          setForgotStep('request');
+                          setErrorMsg('');
+                          setSuccessMsg('');
+                        }}
+                        className="text-[11px] font-semibold text-[#8b1e3f] hover:underline cursor-pointer"
+                      >
+                        Forgot Password?
+                      </button>
                     </div>
                     <div className="relative">
                       <Lock className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
@@ -1081,340 +976,32 @@ export default function AuthPage({ onLoginSuccess }) {
                 )}
               </div>
 
-              {/* --- Role Specific Fields for Sign Up --- */}
-              {mode === 'signup' && selectedRole === 'student' && (
-                <div className="p-4 bg-[#fdf8f5] rounded-2xl border border-[#edd7ca] space-y-3">
-                  <p className="text-[11px] font-bold text-[#8b1e3f] uppercase tracking-wider flex items-center gap-1.5">
-                    <GraduationCap className="w-3.5 h-3.5" />
-                    <span>Student Academic Credentials</span>
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Enrollment Number
-                      </label>
-                      <div className="relative">
-                        <Hash className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
-                        <input
-                          type="text"
-                          name="enrollmentNo"
-                          value={formData.enrollmentNo}
-                          onChange={handleInputChange}
-                          placeholder="e.g. BTEC25O1060"
-                          className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Current Semester
-                      </label>
-                      <select
-                        name="semester"
-                        value={formData.semester}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none bg-white"
-                      >
-                        <option value="1st Semester">1st Semester</option>
-                        <option value="2nd Semester">2nd Semester</option>
-                        <option value="3rd Semester">3rd Semester (Current)</option>
-                        <option value="4th Semester">4th Semester</option>
-                        <option value="5th Semester">5th Semester</option>
-                        <option value="6th Semester">6th Semester</option>
-                        <option value="7th Semester">7th Semester</option>
-                        <option value="8th Semester">8th Semester</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Department
-                      </label>
-                      <select
-                        name="department"
-                        value={formData.department}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none bg-white"
-                      >
-                        <option value="Electrical & Computer Engineering">Electrical & Computer Engineering</option>
-                        <option value="Electronics & Communication">Electronics & Communication</option>
-                        <option value="Computer Science & Engineering">Computer Science & Engineering</option>
-                        <option value="Information Technology">Information Technology</option>
-                        <option value="AI & Data Science">AI & Data Science</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        RFID Smart Card UID
-                      </label>
-                      <div className="relative">
-                        <Radio className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
-                        <input
-                          type="text"
-                          name="rfidTag"
-                          value={formData.rfidTag}
-                          onChange={handleInputChange}
-                          placeholder="RFID-9A-4F-2C-11"
-                          className="w-full pl-9 pr-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none font-mono"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {mode === 'signup' && selectedRole === 'faculty' && (
-                <div className="p-4 bg-[#fdf8f5] rounded-2xl border border-[#edd7ca] space-y-3">
-                  <p className="text-[11px] font-bold text-[#8b1e3f] uppercase tracking-wider flex items-center gap-1.5">
-                    <BookOpen className="w-3.5 h-3.5" />
-                    <span>Faculty & Professor Profile</span>
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Employee Code / Faculty ID
-                      </label>
-                      <input
-                        type="text"
-                        name="employeeCode"
-                        value={formData.employeeCode}
-                        onChange={handleInputChange}
-                        placeholder="e.g. FAC-ECE-208"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Designation
-                      </label>
-                      <select
-                        name="designation"
-                        value={formData.designation}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none bg-white"
-                      >
-                        <option value="Associate Professor & IoT Mentor">Associate Professor & IoT Mentor</option>
-                        <option value="Professor & Head of Department">Professor & Head of Department</option>
-                        <option value="Assistant Professor">Assistant Professor</option>
-                        <option value="Laboratory Coordinator">Laboratory Coordinator</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Department
-                      </label>
-                      <input
-                        type="text"
-                        name="department"
-                        value={formData.department}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Cabin Location
-                      </label>
-                      <input
-                        type="text"
-                        name="cabin"
-                        value={formData.cabin}
-                        onChange={handleInputChange}
-                        placeholder="e.g. Faculty Block B - Cabin 208"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {mode === 'signup' && selectedRole === 'admin' && (
-                <div className="p-4 bg-[#fdf8f5] rounded-2xl border border-[#edd7ca] space-y-3">
-                  <p className="text-[11px] font-bold text-[#8b1e3f] uppercase tracking-wider flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>Campus Administrator Authorization</span>
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Admin Staff ID
-                      </label>
-                      <input
-                        type="text"
-                        name="adminCode"
-                        value={formData.adminCode}
-                        onChange={handleInputChange}
-                        placeholder="e.g. ADM-MITS-01"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Administrative Division
-                      </label>
-                      <input
-                        type="text"
-                        name="adminDivision"
-                        value={formData.adminDivision}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {mode === 'signup' && selectedRole === 'parent' && (
-                <div className="p-4 bg-[#fdf8f5] rounded-2xl border border-[#edd7ca] space-y-3">
-                  <p className="text-[11px] font-bold text-[#8b1e3f] uppercase tracking-wider flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5" />
-                    <span>Parent & Ward Information</span>
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Linked Student
-                      </label>
-                      <input
-                        type="text"
-                        name="linkedStudent"
-                        value={formData.linkedStudent}
-                        onChange={handleInputChange}
-                        placeholder="e.g. Shubhi Mathur (BTEC25O1060)"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Relationship
-                      </label>
-                      <select
-                        name="relationship"
-                        value={formData.relationship}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none bg-white"
-                      >
-                        <option value="Father">Father</option>
-                        <option value="Mother">Mother</option>
-                        <option value="Local Guardian">Local Guardian</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] font-medium text-slate-600 mb-1">
-                        Emergency Contact
-                      </label>
-                      <input
-                        type="text"
-                        name="emergencyContact"
-                        value={formData.emergencyContact}
-                        onChange={handleInputChange}
-                        placeholder="+91 98260 12345"
-                        className="w-full px-3 py-2 rounded-lg border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Action Submit Buttons */}
-              {mode === 'signup' ? (
-                <div className="space-y-2.5 pt-2">
-                  <button
-                    type="button"
-                    onClick={handleDirectSignUp}
-                    disabled={loading}
-                    className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
-                  >
-                    {loading ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 text-amber-300" />
-                        <span>Instant Sign Up (Create Account & Launch)</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#8b1e3f] text-slate-700 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
-                  >
-                    <Smartphone className="w-3.5 h-3.5 text-[#8b1e3f]" />
-                    <span>Or Verify via 6-Digit Email OTP</span>
-                  </button>
-                </div>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
-                >
-                  {loading ? (
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      <span>
-                        {authMethod === 'otp'
-                          ? 'Send 6-Digit Login OTP'
-                          : 'Sign In & Launch Portal'}
-                      </span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              )}
-
-              {/* Direct Link Switcher: Sign In <-> Sign Up */}
-              <div className="text-center pt-3">
-                {mode === 'signin' ? (
-                  <p className="text-xs text-slate-600">
-                    Don't have an account yet?{' '}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMode('signup');
-                        setShowOtpScreen(false);
-                        setErrorMsg('');
-                        setSuccessMsg('');
-                      }}
-                      className="font-bold text-[#8b1e3f] hover:underline cursor-pointer ml-1 inline-flex items-center gap-1"
-                    >
-                      <span>Create Account (Sign Up)</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </p>
+              {/* Action Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
+              >
+                {loading ? (
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
-                  <p className="text-xs text-slate-600">
-                    Already registered with MITS?{' '}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMode('signin');
-                        setShowOtpScreen(false);
-                        setErrorMsg('');
-                        setSuccessMsg('');
-                      }}
-                      className="font-bold text-[#8b1e3f] hover:underline cursor-pointer ml-1 inline-flex items-center gap-1"
-                    >
-                      <span>Sign In here</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </p>
+                  <>
+                    <span>
+                      {authMethod === 'otp'
+                        ? 'Send 6-Digit Login OTP'
+                        : 'Sign In & Launch Portal'}
+                    </span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
                 )}
+              </button>
+
+              {/* Institutional Notice for Auto-Generated Accounts */}
+              <div className="text-center pt-3 border-t border-slate-100 mt-2">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-[11px]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                  <span>Institutional Portal: All user profiles are auto-generated from campus data feeds.</span>
+                </div>
               </div>
             </form>
           )}
