@@ -244,13 +244,13 @@ export default function AuthPage({ onLoginSuccess }) {
     setErrorMsg('');
 
     try {
-      // Sign In via OTP
-      const res = await loginWithOtp(otpTargetEmail, entered, selectedRole);
+      // Sign In via OTP (Auto-detects role and dashboard)
+      const res = await loginWithOtp(otpTargetEmail, entered);
       if (res.success) {
-        setSuccessMsg('2FA OTP verified! Access authorized.');
+        setSuccessMsg(`OTP Verified: Welcome, ${res.user.name}! Loading ${res.user.role.toUpperCase()} Dashboard...`);
         setTimeout(() => {
           onLoginSuccess(res.user);
-        }, 600);
+        }, 500);
       }
     } catch (err) {
       setErrorMsg(err.message || 'OTP Verification failed.');

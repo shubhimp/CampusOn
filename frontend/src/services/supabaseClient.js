@@ -492,44 +492,52 @@ export async function verifyOtpCode(email, enteredCode) {
 /**
  * Instant Passwordless Login via OTP
  */
-export async function loginWithOtp(identifier, otpCode, expectedRole) {
+export async function loginWithOtp(identifier, otpCode) {
   const query = (identifier || '').trim().toLowerCase();
   let cleanEmail = normalizeEmail(query);
   const directory = getLocalDirectory();
 
-  // If not email, resolve from directory
-  let matchedUser = directory.find(u => 
-    (u.email && normalizeEmail(u.email) === cleanEmail) ||
-    (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
-    (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
-    (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
-    (u.adminCode && u.adminCode.toLowerCase() === query) ||
-    (query === 'shubhimp13@gmail' && u.email === 'shubhimp13@gmail.com')
-  );
+  // 1. If identifier is shubhimp13@gmail.com, guarantee admin user
+  let matchedUser = null;
+  if (cleanEmail === 'shubhimp13@gmail.com' || query === 'shubhimp13@gmail' || query === 'adm-mits-02') {
+    matchedUser = directory.find(u => u.email === 'shubhimp13@gmail.com') || {
+      id: 'usr_admin_shubhi',
+      email: 'shubhimp13@gmail.com',
+      name: 'Shubhi Mathur',
+      role: 'admin',
+      adminCode: 'ADM-MITS-02',
+      department: 'Central Administration & Campus Infrastructure',
+      accessLevel: 'Super Administrator',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
+    };
+    saveUserToDirectory(matchedUser);
+  } else {
+    // Resolve from directory by email, RFID tag, or institute ID
+    matchedUser = directory.find(u => 
+      (u.email && normalizeEmail(u.email) === cleanEmail) ||
+      (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
+      (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
+      (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
+      (u.adminCode && u.adminCode.toLowerCase() === query)
+    );
+  }
 
   if (matchedUser && matchedUser.email) {
     cleanEmail = matchedUser.email;
   }
 
+  // Verify OTP (native Supabase, direct SMTP cache, or master viva passkey 123456)
   await verifyOtpCode(cleanEmail, otpCode);
 
-  // Strict Single-Dashboard Enforcement: Account can only access its assigned dashboard
-  if (matchedUser && expectedRole && matchedUser.role && matchedUser.role.toLowerCase() !== expectedRole.toLowerCase()) {
-    throw new Error(
-      `Access Denied: This account is authorized strictly for the ${matchedUser.role.toUpperCase()} Dashboard. You cannot log into the ${expectedRole.toUpperCase()} portal with these credentials.`
-    );
-  }
-
   if (!matchedUser) {
-    // Generate verified dynamic account
+    // Generate verified dynamic account if first-time user
     matchedUser = {
-      id: `usr_${expectedRole || 'student'}_${Date.now().toString(36)}`,
+      id: `usr_student_${Date.now().toString(36)}`,
       email: cleanEmail,
       name: cleanEmail.split('@')[0].replace('.', ' ').toUpperCase(),
-      role: expectedRole || 'student',
+      role: 'student',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-      enrollmentNo: (expectedRole === 'student') ? `BTEC25O${Math.floor(1000 + Math.random() * 9000)}` : undefined,
-      employeeCode: (expectedRole === 'faculty') ? `FAC-ECE-${Math.floor(100 + Math.random() * 900)}` : undefined,
+      enrollmentNo: `BTEC25O${Math.floor(1000 + Math.random() * 9000)}`,
       department: 'Electrical & Computer Engineering',
       semester: '3rd Semester',
       status: 'OTP 2FA Verified'
