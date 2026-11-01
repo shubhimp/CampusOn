@@ -14,6 +14,13 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 const STORAGE_SESSION_KEY = 'campuson_active_user';
 const STORAGE_USERS_KEY = 'campuson_registered_directory';
 
+export function normalizeEmail(email) {
+  if (!email) return '';
+  let clean = email.trim().toLowerCase();
+  if (clean === 'shubhimp13@gmail') clean = 'shubhimp13@gmail.com';
+  return clean;
+}
+
 // Default initial users for demo/evaluation
 const INITIAL_DIRECTORY = [
   {
@@ -55,6 +62,18 @@ const INITIAL_DIRECTORY = [
     status: 'Super Admin'
   },
   {
+    id: 'usr_admin_shubhi',
+    role: 'admin',
+    name: 'Shubhi Mathur',
+    email: 'shubhimp13@gmail.com',
+    adminCode: 'ADM-MITS-02',
+    department: 'Central Administration & Campus Infrastructure',
+    accessLevel: 'Super Administrator',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    createdAt: '2026-11-01T00:00:00Z',
+    status: 'Super Administrator'
+  },
+  {
     id: 'usr_parent_01',
     role: 'parent',
     name: 'Mr. R. K. Mathur',
@@ -71,11 +90,27 @@ const INITIAL_DIRECTORY = [
 export function getLocalDirectory() {
   try {
     const raw = localStorage.getItem(STORAGE_USERS_KEY);
-    if (!raw) {
+    let list = raw ? JSON.parse(raw) : [];
+    if (!Array.isArray(list) || list.length === 0) {
       localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(INITIAL_DIRECTORY));
       return INITIAL_DIRECTORY;
     }
-    return JSON.parse(raw);
+    // Ensure all initial users (especially shubhimp13@gmail.com as admin) are present & up to date
+    let updated = false;
+    for (const initUser of INITIAL_DIRECTORY) {
+      const idx = list.findIndex(u => u.email.toLowerCase() === initUser.email.toLowerCase());
+      if (idx === -1) {
+        list.unshift(initUser);
+        updated = true;
+      } else if (initUser.role === 'admin' && list[idx].role !== 'admin') {
+        list[idx] = { ...list[idx], ...initUser };
+        updated = true;
+      }
+    }
+    if (updated) {
+      localStorage.setItem(STORAGE_USERS_KEY, JSON.stringify(list));
+    }
+    return list;
   } catch (e) {
     return INITIAL_DIRECTORY;
   }
@@ -233,7 +268,7 @@ export async function registerAccount(details) {
  * Login account dynamically with Supabase or Directory
  */
 export async function loginAccount(email, password, expectedRole) {
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
 
   // 1. Attempt Supabase Auth
   let authUser = null;
@@ -326,7 +361,7 @@ export async function logoutAccount() {
  * OTP Verification Services (2FA & Passwordless Auth)
  */
 export async function requestOtpCode(email) {
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
   if (!cleanEmail || !cleanEmail.includes('@')) {
     throw new Error('Please provide a valid institute or personal email.');
   }
@@ -382,7 +417,7 @@ export async function requestOtpCode(email) {
 }
 
 export async function verifyOtpCode(email, enteredCode) {
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
   const trimmedCode = (enteredCode || '').trim();
 
   // 1. Universal backup passkey for evaluation & viva presentation
@@ -432,7 +467,7 @@ export async function verifyOtpCode(email, enteredCode) {
 export async function loginWithOtp(email, otpCode, expectedRole) {
   await verifyOtpCode(email, otpCode);
 
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
   const directory = getLocalDirectory();
   let matchedUser = directory.find(u => u.email.toLowerCase() === cleanEmail);
 
@@ -469,7 +504,7 @@ export async function loginWithOtp(email, otpCode, expectedRole) {
  * Password Reset Services (via 6-Digit OTP or Supabase Email Link)
  */
 export async function requestPasswordResetOtp(email) {
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
   if (!cleanEmail || !cleanEmail.includes('@')) {
     throw new Error('Please enter a valid institute or personal email.');
   }
@@ -519,7 +554,7 @@ export async function requestPasswordResetOtp(email) {
 }
 
 export async function confirmPasswordReset(email, enteredCode, newPassword) {
-  const cleanEmail = email.trim().toLowerCase();
+  const cleanEmail = normalizeEmail(email);
   if (!newPassword || newPassword.length < 6) {
     throw new Error('New password must be at least 6 characters long.');
   }

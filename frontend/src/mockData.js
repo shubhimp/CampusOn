@@ -39,12 +39,13 @@ export const USERS = {
     assignedResponsibility: 'Centre for Internet of Things Coordinator'
   },
   admin: {
-    id: 'usr_admin_01',
+    id: 'usr_admin_shubhi',
     role: 'admin',
-    name: 'Dean of Academic & Campus Infrastructure',
-    department: 'Central Administration',
-    email: 'dean.infra@mitsgwalior.in',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
+    name: 'Shubhi Mathur',
+    department: 'Central Administration & Campus Infrastructure',
+    email: 'shubhimp13@gmail.com',
+    adminCode: 'ADM-MITS-02',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     accessLevel: 'Super Administrator'
   },
   parent: {

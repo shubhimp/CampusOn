@@ -119,7 +119,7 @@ export default function AuthPage({ onLoginSuccess }) {
       label: 'Administrator',
       icon: ShieldCheck,
       tagline: 'Campus Controls, OR-Tools & Security',
-      defaultEmail: 'dean.infra@mitsgwalior.in'
+      defaultEmail: 'shubhimp13@gmail.com'
     },
     {
       id: 'parent',
@@ -155,7 +155,7 @@ export default function AuthPage({ onLoginSuccess }) {
       const demoAccounts = {
         student: { email: 'shubhi.btec25o1060@mitsgwalior.in', pass: 'MITS@2026' },
         faculty: { email: 'murli.manohar@mitsgwalior.in', pass: 'MITS@2026' },
-        admin: { email: 'dean.infra@mitsgwalior.in', pass: 'MITS@2026' },
+        admin: { email: 'shubhimp13@gmail.com', pass: 'MITS@2026' },
         parent: { email: 'rkmathur.gwalior@gmail.com', pass: 'MITS@2026' }
       };
       const creds = demoAccounts[roleId];
@@ -1053,7 +1053,7 @@ export default function AuthPage({ onLoginSuccess }) {
                   <ShieldCheck className="w-3 h-3 text-[#8b1e3f]" />
                   <span>Admin</span>
                 </p>
-                <p className="text-[10px] text-slate-500 truncate">Dean Infra</p>
+                <p className="text-[10px] text-slate-500 truncate">Shubhi Mathur</p>
               </button>
 
               <button
