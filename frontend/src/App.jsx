@@ -73,11 +73,15 @@ export default function App() {
     console.log('Room access requested:', newReq);
   };
 
+  // Effective role: strictly locked to authenticated user's role for non-admins
+  const effectiveRole = currentUser?.role === 'admin' ? currentRole : currentUser?.role || 'student';
+
   return (
     <div className="flex h-screen bg-[#F8F9FA] overflow-hidden font-sans">
-      {/* Light Peach Sidebar */}
+      {/* Light Peach Sidebar with Strict Role-Based Access Control */}
       <Sidebar
-        currentRole={currentRole}
+        currentUser={currentUser}
+        currentRole={effectiveRole}
         setCurrentRole={setCurrentRole}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -107,8 +111,8 @@ export default function App() {
               />
             )}
 
-            {/* Student View */}
-            {activeTab !== 'iot_simulator' && currentRole === 'student' && (
+            {/* Student View (Strictly for Students) */}
+            {activeTab !== 'iot_simulator' && effectiveRole === 'student' && (
               <StudentDashboard
                 user={currentUser}
                 timetable={timetable}
@@ -120,8 +124,8 @@ export default function App() {
               />
             )}
 
-            {/* Faculty View */}
-            {activeTab !== 'iot_simulator' && currentRole === 'faculty' && (
+            {/* Faculty / Professor View (Strictly for Faculty) */}
+            {activeTab !== 'iot_simulator' && effectiveRole === 'faculty' && (
               <FacultyDashboard
                 user={currentUser}
                 timetable={timetable}
@@ -131,8 +135,8 @@ export default function App() {
               />
             )}
 
-            {/* Admin View */}
-            {activeTab !== 'iot_simulator' && currentRole === 'admin' && (
+            {/* Admin View (Strictly for Super Admins) */}
+            {activeTab !== 'iot_simulator' && effectiveRole === 'admin' && (
               <AdminDashboard
                 classrooms={classrooms}
                 timetable={timetable}
@@ -141,8 +145,8 @@ export default function App() {
               />
             )}
 
-            {/* Parent View */}
-            {activeTab !== 'iot_simulator' && currentRole === 'parent' && (
+            {/* Parent View (Strictly for Parents) */}
+            {activeTab !== 'iot_simulator' && effectiveRole === 'parent' && (
               <ParentDashboard
                 user={currentUser}
                 subjects={subjects}

@@ -16,10 +16,11 @@ import {
   Layers,
   FileDown,
   Download,
-  LogOut
+  LogOut,
+  Lock
 } from 'lucide-react';
 
-export default function Sidebar({ currentRole, setCurrentRole, activeTab, setActiveTab, onSignOut }) {
+export default function Sidebar({ currentUser, currentRole, setCurrentRole, activeTab, setActiveTab, onSignOut }) {
   const roles = [
     { id: 'student', label: 'Student', icon: GraduationCap },
     { id: 'faculty', label: 'Faculty', icon: BookOpen },
@@ -59,8 +60,11 @@ export default function Sidebar({ currentRole, setCurrentRole, activeTab, setAct
     { id: 'notices', label: 'College Notices', icon: Bell },
   ];
 
+  // Strictly enforce navigation items based on authenticated user's role
+  const effectiveRole = currentUser?.role === 'admin' ? currentRole : currentUser?.role || 'student';
+
   const getNavItems = () => {
-    switch (currentRole) {
+    switch (effectiveRole) {
       case 'faculty': return facultyNav;
       case 'admin': return adminNav;
       case 'parent': return parentNav;
@@ -82,40 +86,81 @@ export default function Sidebar({ currentRole, setCurrentRole, activeTab, setAct
         </div>
       </div>
 
-      {/* Role Switcher Pill */}
-      <div className="p-3 border-b border-[#ebd3c3]/70 bg-[#faebe0]">
-        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-1 block mb-1.5">
-          Active Portal Mode
-        </label>
-        <div className="grid grid-cols-2 gap-1.5 bg-[#f5dfd0] p-1 rounded-lg">
-          {roles.map((r) => {
-            const Icon = r.icon;
-            const isActive = currentRole === r.id;
-            return (
-              <button
-                key={r.id}
-                onClick={() => {
-                  setCurrentRole(r.id);
-                  setActiveTab(r.id === 'faculty' ? 'schedule' : 'overview');
-                }}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
-                  isActive
-                    ? 'bg-[#8b1e3f] text-white shadow-sm font-semibold'
-                    : 'text-slate-700 hover:bg-[#edd5c6] hover:text-slate-900'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5 shrink-0" />
-                <span className="truncate">{r.label}</span>
-              </button>
-            );
-          })}
+      {/* Role Access Section (Role-Based Access Control) */}
+      {currentUser?.role === 'admin' ? (
+        /* Super Admin Role Switcher (Preview Portals) */
+        <div className="p-3 border-b border-[#ebd3c3]/70 bg-[#faebe0]">
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-1">
+              Admin Portal Switcher
+            </label>
+            <span className="text-[9px] bg-rose-200 text-rose-800 font-bold px-1.5 py-0.5 rounded">
+              SUPER ADMIN
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-1.5 bg-[#f5dfd0] p-1 rounded-lg">
+            {roles.map((r) => {
+              const Icon = r.icon;
+              const isActive = currentRole === r.id;
+              return (
+                <button
+                  key={r.id}
+                  onClick={() => {
+                    setCurrentRole(r.id);
+                    setActiveTab(r.id === 'faculty' ? 'schedule' : 'overview');
+                  }}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                    isActive
+                      ? 'bg-[#8b1e3f] text-white shadow-sm font-semibold'
+                      : 'text-slate-700 hover:bg-[#edd5c6] hover:text-slate-900'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">{r.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      ) : (
+        /* Non-Admin Locked Profile View (Strict RBAC: Student, Faculty, Parent) */
+        <div className="p-3.5 border-b border-[#ebd3c3]/70 bg-[#faebe0]">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+              Authenticated Profile
+            </span>
+            <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full">
+              <Lock className="w-2.5 h-2.5" />
+              <span>ROLE LOCKED</span>
+            </span>
+          </div>
+          <div className="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#edd7ca] shadow-2xs">
+            <div className="p-2 rounded-lg bg-[#8b1e3f] text-white shrink-0">
+              {currentUser?.role === 'student' && <GraduationCap className="w-4 h-4" />}
+              {currentUser?.role === 'faculty' && <BookOpen className="w-4 h-4" />}
+              {currentUser?.role === 'parent' && <Users className="w-4 h-4" />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-slate-900 truncate uppercase">
+                {currentUser?.role === 'student' ? 'Student Workspace' :
+                 currentUser?.role === 'faculty' ? 'Faculty Portal' :
+                 currentUser?.role === 'parent' ? 'Parent Portal' : 'Campus Portal'}
+              </p>
+              <p className="text-[10px] text-slate-500 truncate font-mono">
+                {currentUser?.enrollmentNo || currentUser?.employeeCode || currentUser?.email}
+              </p>
+            </div>
+          </div>
+          <p className="text-[10px] text-slate-400 mt-1.5 px-0.5">
+            Locked to your authenticated role. To switch, click Sign Out below.
+          </p>
+        </div>
+      )}
 
       {/* Navigation Links */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
-          {currentRole.toUpperCase()} SERVICES
+          {effectiveRole.toUpperCase()} SERVICES
         </p>
         {getNavItems().map((item) => {
           const Icon = item.icon;
@@ -124,7 +169,7 @@ export default function Sidebar({ currentRole, setCurrentRole, activeTab, setAct
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all text-left ${
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all text-left cursor-pointer ${
                 isActive
                   ? 'bg-[#8b1e3f] text-white shadow-sm font-semibold'
                   : 'text-slate-700 hover:bg-[#fae5d8] hover:text-[#8b1e3f]'
