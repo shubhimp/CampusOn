@@ -19,15 +19,10 @@ import { getStoredSessionUser, logoutAccount } from './services/supabaseClient';
 export default function App() {
   // Session User State (Loaded dynamically from Supabase / localStorage)
   const [currentUser, setCurrentUser] = useState(() => getStoredSessionUser());
-  const [currentRole, setCurrentRole] = useState(() => currentUser?.role || 'student');
-  const [activeTab, setActiveTab] = useState('overview');
-
-  // Sync role if user changes
-  useEffect(() => {
-    if (currentUser?.role && currentUser.role !== currentRole) {
-      setCurrentRole(currentUser.role);
-    }
-  }, [currentUser]);
+  const [activeTab, setActiveTab] = useState(() => {
+    const role = currentUser?.role || 'student';
+    return role === 'faculty' ? 'schedule' : 'overview';
+  });
 
   // Shared Central State (Simulates unified database & real-time telemetry)
   const [classrooms, setClassrooms] = useState(INITIAL_CLASSROOMS);
@@ -47,7 +42,6 @@ export default function App() {
 
   const handleLoginSuccess = (user) => {
     setCurrentUser(user);
-    setCurrentRole(user.role);
     setActiveTab(user.role === 'faculty' ? 'schedule' : 'overview');
   };
 
@@ -73,16 +67,14 @@ export default function App() {
     console.log('Room access requested:', newReq);
   };
 
-  // Effective role: strictly locked to authenticated user's role for non-admins
-  const effectiveRole = currentUser?.role === 'admin' ? currentRole : currentUser?.role || 'student';
+  // Single Dashboard Enforcement: strictly bound to authenticated account role
+  const effectiveRole = currentUser?.role || 'student';
 
   return (
     <div className="flex h-screen bg-[#F8F9FA] overflow-hidden font-sans">
       {/* Light Peach Sidebar with Strict Role-Based Access Control */}
       <Sidebar
         currentUser={currentUser}
-        currentRole={effectiveRole}
-        setCurrentRole={setCurrentRole}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onSignOut={handleSignOut}

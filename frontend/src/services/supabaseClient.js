@@ -296,13 +296,14 @@ export async function loginAccount(email, password, expectedRole) {
   }
 
   if (!matchedUser) {
-    throw new Error('Invalid email or credentials. Please check your details or create a new account.');
+    throw new Error('Invalid email or credentials. Please check your credentials or contact administrator.');
   }
 
-  // Ensure role consistency
-  if (expectedRole && matchedUser.role !== expectedRole) {
-    // allow switching role if desired or update
-    matchedUser.role = expectedRole;
+  // Strict Single-Dashboard Enforcement: Account can only access its assigned dashboard
+  if (expectedRole && matchedUser.role && matchedUser.role.toLowerCase() !== expectedRole.toLowerCase()) {
+    throw new Error(
+      `Access Denied: This account is authorized strictly for the ${matchedUser.role.toUpperCase()} Dashboard. You cannot log into the ${expectedRole.toUpperCase()} portal with these credentials.`
+    );
   }
 
   setStoredSessionUser(matchedUser);
@@ -434,6 +435,13 @@ export async function loginWithOtp(email, otpCode, expectedRole) {
   const cleanEmail = email.trim().toLowerCase();
   const directory = getLocalDirectory();
   let matchedUser = directory.find(u => u.email.toLowerCase() === cleanEmail);
+
+  // Strict Single-Dashboard Enforcement: Account can only access its assigned dashboard
+  if (matchedUser && expectedRole && matchedUser.role && matchedUser.role.toLowerCase() !== expectedRole.toLowerCase()) {
+    throw new Error(
+      `Access Denied: This account is authorized strictly for the ${matchedUser.role.toUpperCase()} Dashboard. You cannot log into the ${expectedRole.toUpperCase()} portal with these credentials.`
+    );
+  }
 
   if (!matchedUser) {
     // Generate verified dynamic account
