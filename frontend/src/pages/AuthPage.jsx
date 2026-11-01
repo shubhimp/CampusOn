@@ -368,19 +368,19 @@ export default function AuthPage({ onLoginSuccess }) {
     }
   };
 
-  // Form Submit Handler (Institutional Sign In)
+  // Form Submit Handler (Allotted Smart Tag & ID Authentication)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
 
     if (!formData.email) {
-      setErrorMsg('Please enter your Institute Email.');
+      setErrorMsg('Please enter your Allotted RFID Tag UID, Institute ID, or Email.');
       return;
     }
 
     if (authMethod === 'otp') {
-      // Passwordless OTP Login (Dispatches 6-digit OTP via Gmail SMTP)
+      // Passwordless OTP Login
       await handleInitiateOtp(formData.email, 'signin');
     } else {
       // Standard Password Login
@@ -390,15 +390,15 @@ export default function AuthPage({ onLoginSuccess }) {
       }
       setLoading(true);
       try {
-        const res = await loginAccount(formData.email, formData.password, selectedRole);
+        const res = await loginAccount(formData.email, formData.password);
         if (res.success) {
-          setSuccessMsg('Credentials verified! Welcome to CampusOn.');
+          setSuccessMsg(`Smart Tag Verified: Welcome, ${res.user.name}! Loading ${res.user.role.toUpperCase()} Dashboard...`);
           setTimeout(() => {
             onLoginSuccess(res.user);
           }, 500);
         }
       } catch (err) {
-        setErrorMsg(err.message || 'Invalid credentials. Please verify your email & password or use OTP.');
+        setErrorMsg(err.message || 'Invalid credentials or unrecognized tag.');
       } finally {
         setLoading(false);
       }
@@ -466,44 +466,21 @@ export default function AuthPage({ onLoginSuccess }) {
         </div>
 
         <div className="p-6 sm:p-8">
-          {/* Role Selection Grid (Shown only for Sign In & Sign Up) */}
+          {/* Allotted Smart Tag Identity Notice */}
           {!showOtpScreen && mode !== 'forgot' && (
-            <div className="mb-6">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5">
-                Select Your Campus Role
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-                {roles.map((r) => {
-                  const Icon = r.icon;
-                  const isSelected = selectedRole === r.id;
-                  return (
-                    <button
-                      key={r.id}
-                      type="button"
-                      onClick={() => handleRoleSelect(r.id)}
-                      className={`p-3 rounded-2xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
-                        isSelected
-                          ? 'border-[#8b1e3f] bg-[#fdf3ed] ring-2 ring-[#8b1e3f]/20 shadow-sm'
-                          : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className={`p-2 rounded-xl ${isSelected ? 'bg-[#8b1e3f] text-white' : 'bg-slate-100 text-slate-600'}`}>
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        {isSelected && <CheckCircle2 className="w-4 h-4 text-[#8b1e3f]" />}
-                      </div>
-                      <div>
-                        <p className={`text-xs font-bold ${isSelected ? 'text-[#8b1e3f]' : 'text-slate-800'}`}>
-                          {r.label}
-                        </p>
-                        <p className="text-[10px] text-slate-500 line-clamp-1 mt-0.5">
-                          {r.tagline}
-                        </p>
-                      </div>
-                    </button>
-                  );
-                })}
+            <div className="mb-5 p-4 rounded-2xl bg-gradient-to-r from-[#fdf6f0] via-[#faede3] to-[#f7e3d6] border border-[#ecd5c6] flex items-center justify-between shadow-2xs">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#8b1e3f] text-white flex items-center justify-center shadow-xs">
+                  <Radio className="w-5 h-5 animate-pulse" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-[#8b1e3f] uppercase tracking-wider">
+                    Allotted Campus Smart Tag & ID Gateway
+                  </h3>
+                  <p className="text-[11px] text-slate-600 mt-0.5">
+                    Enter your allotted RFID Smart Tag UID, Institute ID, or Email. Your single authorized dashboard will be loaded automatically.
+                  </p>
+                </div>
               </div>
             </div>
           )}
@@ -920,20 +897,20 @@ export default function AuthPage({ onLoginSuccess }) {
           ) : (
             /* --- INSTITUTIONAL SINGLE SIGN-ON FORM --- */
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Email & Password / OTP Mode */}
+              {/* Allotted Smart Tag / ID / Email & Password */}
               <div className={`grid grid-cols-1 ${authMethod === 'password' ? 'sm:grid-cols-2' : ''} gap-4`}>
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Institute Official / Personal Email
+                    Allotted RFID Smart Tag UID / Institute ID / Email
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+                    <Radio className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
                     <input
-                      type="email"
+                      type="text"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      placeholder="name@mitsgwalior.in"
+                      placeholder="e.g. RFID-9A-4F-2C-11, BTEC25O1060, FAC-ECE-208, or shubhimp13@gmail.com"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#8b1e3f] focus:ring-2 focus:ring-[#8b1e3f]/20 outline-none text-xs text-slate-800"
                       required
                     />
@@ -989,7 +966,7 @@ export default function AuthPage({ onLoginSuccess }) {
                     <span>
                       {authMethod === 'otp'
                         ? 'Send 6-Digit Login OTP'
-                        : 'Sign In & Launch Portal'}
+                        : 'Authenticate Smart Tag & Launch Portal'}
                     </span>
                     <ArrowRight className="w-4 h-4" />
                   </>
@@ -1000,20 +977,22 @@ export default function AuthPage({ onLoginSuccess }) {
               <div className="text-center pt-3 border-t border-slate-100 mt-2">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-[11px]">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#8b1e3f]" />
-                  <span>Institutional Portal: All user profiles are auto-generated from campus data feeds.</span>
+                  <span>MITS Smart Campus OS: All user profiles are pre-allotted with dedicated IoT tags & IDs.</span>
                 </div>
               </div>
             </form>
           )}
 
-          {/* Quick 1-Click Evaluation / Viva Test Logins */}
-          <div className="mt-8 pt-6 border-t border-slate-100">
+          {/* Quick Simulated Smart Card Tap */}
+          <div className="mt-8 pt-6 border-t border-[#edd7ca]">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                One-Click Viva & Faculty Demo Logins
+              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
+                <Radio className="w-3.5 h-3.5 text-[#8b1e3f] animate-pulse" />
+                Simulate Smart Card Tap (Pre-Allotted Hardware Tags)
               </span>
-              <span className="text-[10px] text-slate-400">Pre-seeded accounts</span>
+              <span className="text-[10px] bg-[#8b1e3f]/10 text-[#8b1e3f] px-2 py-0.5 rounded font-mono font-bold">
+                AUTO-IDENTIFY
+              </span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -1021,52 +1000,56 @@ export default function AuthPage({ onLoginSuccess }) {
                 type="button"
                 onClick={() => handleQuickDemoLogin('student')}
                 disabled={loading}
-                className="px-2.5 py-2 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer"
+                className="px-2.5 py-2.5 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer shadow-2xs"
               >
                 <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1">
-                  <GraduationCap className="w-3 h-3 text-[#8b1e3f]" />
-                  <span>Student</span>
+                  <GraduationCap className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                  <span>Tap Student Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 truncate">Shubhi Mathur</p>
+                <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">RFID-9A-4F-2C-11</p>
+                <p className="text-[9px] text-[#8b1e3f] font-semibold truncate">Shubhi Mathur</p>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('faculty')}
                 disabled={loading}
-                className="px-2.5 py-2 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer"
+                className="px-2.5 py-2.5 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer shadow-2xs"
               >
                 <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1">
-                  <BookOpen className="w-3 h-3 text-[#8b1e3f]" />
-                  <span>Faculty</span>
+                  <BookOpen className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                  <span>Tap Faculty Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 truncate">Dr. M. Manohar</p>
+                <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">FAC-ECE-208</p>
+                <p className="text-[9px] text-[#8b1e3f] font-semibold truncate">Dr. M. Manohar</p>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('admin')}
                 disabled={loading}
-                className="px-2.5 py-2 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer"
+                className="px-2.5 py-2.5 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer shadow-2xs"
               >
                 <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3 text-[#8b1e3f]" />
-                  <span>Admin</span>
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                  <span>Tap Admin Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 truncate">Shubhi Mathur</p>
+                <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">ADM-MITS-02</p>
+                <p className="text-[9px] text-[#8b1e3f] font-semibold truncate">Shubhi Mathur</p>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('parent')}
                 disabled={loading}
-                className="px-2.5 py-2 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer"
+                className="px-2.5 py-2.5 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer shadow-2xs"
               >
                 <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1">
-                  <Users className="w-3 h-3 text-[#8b1e3f]" />
-                  <span>Parent</span>
+                  <Users className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                  <span>Tap Parent Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 truncate">R. K. Mathur</p>
+                <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">rkmathur.gwalior</p>
+                <p className="text-[9px] text-[#8b1e3f] font-semibold truncate">Mr. R. K. Mathur</p>
               </button>
             </div>
           </div>

@@ -267,71 +267,66 @@ export async function registerAccount(details) {
 /**
  * Login account dynamically with Supabase or Directory
  */
-export async function loginAccount(email, password, expectedRole) {
-  const cleanEmail = normalizeEmail(email);
-
-  // 1. Attempt Supabase Auth
-  let authUser = null;
-  try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: cleanEmail,
-      password
-    });
-    if (!error && data?.user) {
-      authUser = data.user;
-    }
-  } catch (e) {
-    console.warn('Supabase signInWithPassword notice:', e.message);
-  }
-
-  // 2. Lookup in Directory / Mock data
+export async function loginAccount(identifier, password, expectedRole) {
+  const query = (identifier || '').trim().toLowerCase();
+  const cleanEmail = normalizeEmail(query);
   const directory = getLocalDirectory();
-  let matchedUser = directory.find(u => u.email.toLowerCase() === cleanEmail);
+
+  // 1. Direct Smart Tag / ID / Email Resolution
+  let matchedUser = directory.find(u => 
+    (u.email && normalizeEmail(u.email) === cleanEmail) ||
+    (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
+    (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
+    (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
+    (u.adminCode && u.adminCode.toLowerCase() === query) ||
+    (query === 'shubhimp13@gmail' && u.email === 'shubhimp13@gmail.com')
+  );
 
   if (!matchedUser) {
     // Check initial mock users
     for (const key of Object.keys(USERS)) {
-      if (USERS[key].email.toLowerCase() === cleanEmail) {
-        matchedUser = USERS[key];
+      const u = USERS[key];
+      if (
+        (u.email && normalizeEmail(u.email) === cleanEmail) ||
+        (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
+        (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query)
+      ) {
+        matchedUser = u;
         break;
       }
     }
   }
 
-  // If user authenticated via Supabase but not yet in local directory
-  if (authUser && !matchedUser) {
-    const meta = authUser.user_metadata || {};
+  // Special handler for shubhimp13@gmail.com (Super Administrator)
+  if (!matchedUser && (cleanEmail === 'shubhimp13@gmail.com' || cleanEmail === 'shubhimp13@gmail')) {
     matchedUser = {
-      id: authUser.id,
-      email: authUser.email,
-      name: meta.full_name || authUser.email.split('@')[0],
-      role: meta.role || expectedRole || 'student',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-      enrollmentNo: meta.enrollment_number,
-      employeeCode: meta.employee_code,
-      department: meta.department || 'Electrical & Computer Engineering'
+      id: 'usr_admin_shubhi',
+      email: 'shubhimp13@gmail.com',
+      name: 'Shubhi Mathur',
+      role: 'admin',
+      adminCode: 'ADM-MITS-02',
+      department: 'Central Administration & Campus Infrastructure',
+      accessLevel: 'Super Administrator',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
     };
     saveUserToDirectory(matchedUser);
   }
 
-  // If still not matched, check if role was selected and synthesize fallback for demo flexibility
-  if (!matchedUser && cleanEmail.includes('@')) {
-    matchedUser = {
-      id: `usr_${expectedRole || 'student'}_${Date.now().toString(36)}`,
-      email: cleanEmail,
-      name: cleanEmail.split('@')[0].replace('.', ' ').toUpperCase(),
-      role: expectedRole || 'student',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-      enrollmentNo: (expectedRole === 'student') ? `BTEC25O${Math.floor(1000 + Math.random() * 9000)}` : undefined,
-      employeeCode: (expectedRole === 'faculty') ? `FAC-ECE-${Math.floor(100 + Math.random() * 900)}` : undefined,
-      department: 'Electrical & Computer Engineering',
-      semester: '3rd Semester'
-    };
-    saveUserToDirectory(matchedUser);
+  // 2. Attempt Supabase Auth if email format
+  const authTargetEmail = matchedUser?.email || (cleanEmail.includes('@') ? cleanEmail : null);
+  if (authTargetEmail) {
+    try {
+      await supabase.auth.signInWithPassword({
+        email: authTargetEmail,
+        password: password || 'MITS@2026'
+      });
+    } catch (e) {
+      console.warn('Supabase signIn notice:', e.message);
+    }
   }
 
   if (!matchedUser) {
-    throw new Error('Invalid email or credentials. Please check your credentials or contact administrator.');
+    throw new Error('Unrecognized Smart Tag or Institute ID. Please verify your allotted credentials.');
   }
 
   // Strict Single-Dashboard Enforcement: Account can only access its assigned dashboard
@@ -360,10 +355,26 @@ export async function logoutAccount() {
 /**
  * OTP Verification Services (2FA & Passwordless Auth)
  */
-export async function requestOtpCode(email) {
-  const cleanEmail = normalizeEmail(email);
+export async function requestOtpCode(identifier) {
+  const query = (identifier || '').trim().toLowerCase();
+  let cleanEmail = normalizeEmail(query);
+
+  // Resolve RFID Tag / ID to registered email if necessary
+  if (!cleanEmail.includes('@')) {
+    const directory = getLocalDirectory();
+    const matched = directory.find(u => 
+      (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
+      (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
+      (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
+      (u.adminCode && u.adminCode.toLowerCase() === query)
+    );
+    if (matched && matched.email) {
+      cleanEmail = matched.email;
+    }
+  }
+
   if (!cleanEmail || !cleanEmail.includes('@')) {
-    throw new Error('Please provide a valid institute or personal email.');
+    throw new Error('Please provide a valid institute or personal email address.');
   }
 
   // Generate 6-digit cryptographic security code
@@ -464,12 +475,26 @@ export async function verifyOtpCode(email, enteredCode) {
 /**
  * Instant Passwordless Login via OTP
  */
-export async function loginWithOtp(email, otpCode, expectedRole) {
-  await verifyOtpCode(email, otpCode);
-
-  const cleanEmail = normalizeEmail(email);
+export async function loginWithOtp(identifier, otpCode, expectedRole) {
+  const query = (identifier || '').trim().toLowerCase();
+  let cleanEmail = normalizeEmail(query);
   const directory = getLocalDirectory();
-  let matchedUser = directory.find(u => u.email.toLowerCase() === cleanEmail);
+
+  // If not email, resolve from directory
+  let matchedUser = directory.find(u => 
+    (u.email && normalizeEmail(u.email) === cleanEmail) ||
+    (u.rfidTag && u.rfidTag.toLowerCase() === query) ||
+    (u.enrollmentNo && u.enrollmentNo.toLowerCase() === query) ||
+    (u.employeeCode && u.employeeCode.toLowerCase() === query) ||
+    (u.adminCode && u.adminCode.toLowerCase() === query) ||
+    (query === 'shubhimp13@gmail' && u.email === 'shubhimp13@gmail.com')
+  );
+
+  if (matchedUser && matchedUser.email) {
+    cleanEmail = matchedUser.email;
+  }
+
+  await verifyOtpCode(cleanEmail, otpCode);
 
   // Strict Single-Dashboard Enforcement: Account can only access its assigned dashboard
   if (matchedUser && expectedRole && matchedUser.role && matchedUser.role.toLowerCase() !== expectedRole.toLowerCase()) {
