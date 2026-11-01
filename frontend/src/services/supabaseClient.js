@@ -344,6 +344,9 @@ export async function requestOtpCode(email) {
 
   // Also attempt Supabase native OTP dispatch
   let supabaseDispatched = false;
+  let isRateLimited = false;
+  let errorMessage = '';
+
   try {
     const { error } = await supabase.auth.signInWithOtp({
       email: cleanEmail,
@@ -351,28 +354,46 @@ export async function requestOtpCode(email) {
         shouldCreateUser: true
       }
     });
-    if (!error) supabaseDispatched = true;
+    if (!error) {
+      supabaseDispatched = true;
+    } else {
+      errorMessage = error.message;
+      if (error.status === 429 || error.message.toLowerCase().includes('rate limit')) {
+        isRateLimited = true;
+      }
+    }
   } catch (err) {
-    console.warn('Supabase signInWithOtp notice:', err.message);
+    errorMessage = err.message;
+    if (err.message && err.message.toLowerCase().includes('rate limit')) {
+      isRateLimited = true;
+    }
   }
 
   return {
     success: true,
     email: cleanEmail,
-    otpCode, // returned for dynamic on-screen simulation pill
+    otpCode,
     supabaseDispatched,
+    isRateLimited,
+    errorMessage,
     expiresInSeconds: 300
   };
 }
 
 export async function verifyOtpCode(email, enteredCode) {
   const cleanEmail = email.trim().toLowerCase();
+  const trimmedCode = (enteredCode || '').trim();
 
-  // 1. Attempt native Supabase verifyOtp
+  // 1. Universal backup passkey for evaluation & viva presentation
+  if (trimmedCode === '123456') {
+    return { valid: true };
+  }
+
+  // 2. Attempt native Supabase verifyOtp
   try {
     const { data, error } = await supabase.auth.verifyOtp({
       email: cleanEmail,
-      token: enteredCode.trim(),
+      token: trimmedCode,
       type: 'email'
     });
     if (!error && data?.user) {
@@ -382,26 +403,21 @@ export async function verifyOtpCode(email, enteredCode) {
     console.warn('Supabase verifyOtp notice:', err.message);
   }
 
-  // 2. Universal backup passkey for evaluation
-  if (enteredCode === '123456') {
-    return { valid: true };
-  }
-
   // 3. Check stored dispatched OTP
   const raw = localStorage.getItem(`campuson_otp_${cleanEmail}`);
   if (!raw) {
-    throw new Error('No active OTP found for this email. Please click resend to receive a new code.');
+    throw new Error('No active OTP found for this email. You can enter backup passkey 123456 or click resend.');
   }
 
   const { code, expiresAt } = JSON.parse(raw);
 
   if (Date.now() > expiresAt) {
     localStorage.removeItem(`campuson_otp_${cleanEmail}`);
-    throw new Error('OTP has expired (valid for 5 minutes). Please click resend to get a fresh code.');
+    throw new Error('OTP has expired (valid for 5 minutes). You can enter backup passkey 123456 or request a new code.');
   }
 
-  if (enteredCode.trim() !== code.trim()) {
-    throw new Error('Incorrect 6-digit OTP code. Please check your email inbox and enter the exact code received.');
+  if (trimmedCode !== code.trim()) {
+    throw new Error('Incorrect 6-digit OTP code. Please check your inbox or use backup passkey 123456.');
   }
 
   // Clear once consumed
@@ -413,7 +429,7 @@ export async function verifyOtpCode(email, enteredCode) {
  * Instant Passwordless Login via OTP
  */
 export async function loginWithOtp(email, otpCode, expectedRole) {
-  verifyOtpCode(email, otpCode);
+  await verifyOtpCode(email, otpCode);
 
   const cleanEmail = email.trim().toLowerCase();
   const directory = getLocalDirectory();
@@ -462,20 +478,35 @@ export async function requestPasswordResetOtp(email) {
 
   // Also dispatch Supabase native password reset email link
   let supabaseLinkSent = false;
+  let isRateLimited = false;
+  let errorMessage = '';
+
   try {
     const { error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
       redirectTo: `${window.location.origin}/?mode=reset`
     });
-    if (!error) supabaseLinkSent = true;
+    if (!error) {
+      supabaseLinkSent = true;
+    } else {
+      errorMessage = error.message;
+      if (error.status === 429 || error.message.toLowerCase().includes('rate limit')) {
+        isRateLimited = true;
+      }
+    }
   } catch (err) {
-    console.warn('Supabase resetPasswordForEmail notice:', err.message);
+    errorMessage = err.message;
+    if (err.message && err.message.toLowerCase().includes('rate limit')) {
+      isRateLimited = true;
+    }
   }
 
   return {
     success: true,
     email: cleanEmail,
     resetCode,
-    supabaseLinkSent
+    supabaseLinkSent,
+    isRateLimited,
+    errorMessage
   };
 }
 

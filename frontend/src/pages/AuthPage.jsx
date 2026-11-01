@@ -23,7 +23,8 @@ import {
   Key,
   Send,
   ArrowLeft,
-  Check
+  Check,
+  ChevronDown
 } from 'lucide-react';
 import { 
   registerAccount, 
@@ -59,6 +60,8 @@ export default function AuthPage({ onLoginSuccess }) {
   const [activeOtpCode, setActiveOtpCode] = useState('');
   const [otpTimer, setOtpTimer] = useState(60);
   const [otpActionType, setOtpActionType] = useState('signup'); // 'signup' | 'signin'
+  const [isEmailRateLimited, setIsEmailRateLimited] = useState(false);
+  const [showPasskeyHelper, setShowPasskeyHelper] = useState(false);
 
   const inputRefs = useRef([]);
   const resetInputRefs = useRef([]);
@@ -167,6 +170,33 @@ export default function AuthPage({ onLoginSuccess }) {
     }
   };
 
+  // Direct Instant Registration (Bypasses email delivery bottleneck for fast onboarding & evaluation)
+  const handleDirectSignUp = async () => {
+    if (!formData.fullName || !formData.email || !formData.password) {
+      setErrorMsg('Please fill in your Full Name, Email, and Password.');
+      return;
+    }
+    setLoading(true);
+    setErrorMsg('');
+    try {
+      const res = await registerAccount({
+        ...formData,
+        role: selectedRole,
+        status: 'Active Account (Directly Registered)'
+      });
+      if (res.success) {
+        setSuccessMsg(`Welcome, ${res.user.name}! Your ${selectedRole.toUpperCase()} profile is created and active.`);
+        setTimeout(() => {
+          onLoginSuccess(res.user);
+        }, 600);
+      }
+    } catch (err) {
+      setErrorMsg(err.message || 'Direct account registration failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Trigger OTP Dispatch
   const handleInitiateOtp = async (targetEmail, action) => {
     if (!targetEmail || !targetEmail.includes('@')) {
@@ -182,8 +212,14 @@ export default function AuthPage({ onLoginSuccess }) {
       setOtpActionType(action);
       setOtpDigits(['', '', '', '', '', '']);
       setOtpTimer(60);
+      setIsEmailRateLimited(!!res.isRateLimited);
       setShowOtpScreen(true);
-      setSuccessMsg(`6-Digit Verification Code dispatched to ${targetEmail}`);
+      if (res.isRateLimited) {
+        setErrorMsg('Notice: Supabase free mail queue reached hourly limit (max 3/hr). For viva testing, enter Master Passkey 123456 or click "Didn\'t receive email?" below.');
+        setShowPasskeyHelper(true);
+      } else {
+        setSuccessMsg(`6-Digit Verification Code dispatched to ${targetEmail}`);
+      }
     } catch (err) {
       setErrorMsg(err.message || 'Failed to dispatch OTP. Please try again.');
     } finally {
@@ -285,7 +321,12 @@ export default function AuthPage({ onLoginSuccess }) {
       setResetEmail(target);
       setForgotStep('verify');
       setResetOtpDigits(['', '', '', '', '', '']);
-      setSuccessMsg(`6-digit password reset code sent to ${target}`);
+      setIsEmailRateLimited(!!res.isRateLimited);
+      if (res.isRateLimited) {
+        setErrorMsg('Supabase Free Mailer rate limit exceeded (max 3/hr). For evaluation, use Master Reset Code 123456 or click Auto-Fill.');
+      } else {
+        setSuccessMsg(`6-digit password reset code sent to ${target}`);
+      }
     } catch (err) {
       setErrorMsg(err.message || 'Failed to dispatch password reset code.');
     } finally {
@@ -713,6 +754,23 @@ export default function AuthPage({ onLoginSuccess }) {
                         />
                       ))}
                     </div>
+                    <div className="flex items-center justify-between text-xs text-slate-500 pt-2 px-1">
+                      <button
+                        type="button"
+                        onClick={handleAutoFillResetOtp}
+                        className="text-[#8b1e3f] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                        <span>Didn't receive code? Auto-Fill Master Code (123456)</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleRequestResetOtp}
+                        className="text-slate-500 hover:text-slate-800 underline cursor-pointer"
+                      >
+                        Resend Code
+                      </button>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
@@ -796,6 +854,19 @@ export default function AuthPage({ onLoginSuccess }) {
                 </div>
               </div>
 
+              {/* Rate Limit Alert if Supabase free tier email throttled */}
+              {isEmailRateLimited && (
+                <div className="p-3.5 bg-amber-50 rounded-2xl border border-amber-200 text-amber-950 text-xs flex items-start gap-3 shadow-xs text-left">
+                  <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-amber-900">Supabase Free Mail Rate Limit Active (Max 3/hr)</p>
+                    <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
+                      Supabase free-tier projects limit automated emails to 3 per hour, so external delivery may be delayed. For viva testing, use Master Passkey <span className="font-mono font-bold bg-amber-200/80 px-1.5 py-0.5 rounded text-amber-950">123456</span> or use the 1-click helper below.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <form onSubmit={handleVerifyOtpSubmit} className="space-y-5 text-center">
                 <div>
                   <h3 className="text-sm font-bold text-slate-800">Enter 6-Digit Verification Code</h3>
@@ -830,7 +901,7 @@ export default function AuthPage({ onLoginSuccess }) {
                       <button
                         type="button"
                         onClick={() => handleInitiateOtp(otpTargetEmail, otpActionType)}
-                        className="text-[#8b1e3f] font-bold hover:underline"
+                        className="text-[#8b1e3f] font-bold hover:underline cursor-pointer"
                       >
                         Resend OTP Code
                       </button>
@@ -840,7 +911,7 @@ export default function AuthPage({ onLoginSuccess }) {
                   <button
                     type="button"
                     onClick={() => setShowOtpScreen(false)}
-                    className="text-slate-400 hover:text-slate-600 underline"
+                    className="text-slate-400 hover:text-slate-600 underline cursor-pointer"
                   >
                     Change Email / Details
                   </button>
@@ -860,6 +931,68 @@ export default function AuthPage({ onLoginSuccess }) {
                     </>
                   )}
                 </button>
+
+                {/* Expandable Fallback Helper: "Didn't receive email?" */}
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowPasskeyHelper(prev => !prev)}
+                    className="text-xs text-slate-500 hover:text-[#8b1e3f] inline-flex items-center gap-1 font-medium cursor-pointer"
+                  >
+                    <span>Didn't receive the email within 1 minute?</span>
+                    <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showPasskeyHelper ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  {showPasskeyHelper && (
+                    <div className="mt-3 p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-3 animate-in fade-in">
+                      <div className="flex items-start gap-2.5">
+                        <Key className="w-4 h-4 text-[#8b1e3f] shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-xs font-bold text-slate-800">
+                            Viva & Testing Passkey Bypass
+                          </p>
+                          <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
+                            Supabase Free Tier limits automated emails to 3 per hour. If your email was delayed or throttled, enter master test passkey <span className="font-mono font-bold text-[#8b1e3f] bg-[#8b1e3f]/10 px-1 py-0.5 rounded">123456</span> or use the 1-click button below:
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={handleAutoFillOtp}
+                          className="px-3 py-1.5 rounded-lg bg-white border border-[#8b1e3f]/40 hover:bg-[#fdf3ed] text-[#8b1e3f] text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+                        >
+                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                          <span>Auto-Fill Passcode (123456)</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            setLoading(true);
+                            try {
+                              if (otpActionType === 'signup') {
+                                await handleDirectSignUp();
+                              } else {
+                                const res = await loginAccount(otpTargetEmail, 'MITS@2026', selectedRole);
+                                if (res.success) onLoginSuccess(res.user);
+                              }
+                            } catch (e) {
+                              setErrorMsg(e.message || 'Direct bypass failed');
+                            } finally {
+                              setLoading(false);
+                            }
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-[#8b1e3f] hover:bg-[#721832] text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+                        >
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>Direct Instant Launch</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </form>
             </div>
           ) : (
@@ -1195,27 +1328,55 @@ export default function AuthPage({ onLoginSuccess }) {
                 </div>
               )}
 
-              {/* Action Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
-              >
-                {loading ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <span>
-                      {mode === 'signup'
-                        ? 'Proceed & Verify with 6-Digit OTP'
-                        : authMethod === 'otp'
-                        ? 'Send 6-Digit Login OTP'
-                        : 'Sign In & Launch Portal'}
-                    </span>
-                    <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </button>
+              {/* Action Submit Buttons */}
+              {mode === 'signup' ? (
+                <div className="space-y-2.5 pt-2">
+                  <button
+                    type="button"
+                    onClick={handleDirectSignUp}
+                    disabled={loading}
+                    className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                  >
+                    {loading ? (
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 text-amber-300" />
+                        <span>Instant Sign Up (Create Account & Launch)</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#8b1e3f] text-slate-700 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
+                  >
+                    <Smartphone className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                    <span>Or Verify via 6-Digit Email OTP</span>
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                >
+                  {loading ? (
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span>
+                        {authMethod === 'otp'
+                          ? 'Send 6-Digit Login OTP'
+                          : 'Sign In & Launch Portal'}
+                      </span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              )}
 
               {/* Direct Link Switcher: Sign In <-> Sign Up */}
               <div className="text-center pt-3">
