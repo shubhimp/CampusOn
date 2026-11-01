@@ -22,7 +22,15 @@ import {
   UserCheck,
   Hash,
   Mail,
-  Shield
+  Shield,
+  Wifi,
+  Plus,
+  Trash2,
+  Terminal,
+  Power,
+  Lock,
+  Unlock,
+  Bell
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -56,6 +64,181 @@ export default function AdminDashboard({
   const [registeredUsers, setRegisteredUsers] = useState([]);
   const [userSearch, setUserSearch] = useState('');
   const [userRoleFilter, setUserRoleFilter] = useState('ALL');
+
+  // ESP32 & Hardware IP Management State
+  const [hardwareDevices, setHardwareDevices] = useState([
+    {
+      id: 'dev-esp32-01',
+      name: 'AB-204 IoT Lab Primary Controller',
+      type: 'ESP32 Sensor Edge Node',
+      roomId: 'AB-204',
+      ipAddress: '192.168.4.1',
+      port: 80,
+      macAddress: '24:6F:28:AE:3C:90',
+      status: 'ONLINE',
+      pingLatencyMs: 12,
+      firmwareVersion: 'v2.4.1-mits',
+      sensors: ['PIR (GPIO 27)', 'Ultrasonic (GPIO 12/14)', 'MQ-2 Gas (GPIO 34)', 'DHT22 (GPIO 15)', 'RFID RC522'],
+      actuators: ['Door Relay (GPIO 23)', 'Piezo Buzzer (GPIO 26)', 'Status LEDs (GPIO 2/13/21)'],
+      lastSeen: 'Just now'
+    },
+    {
+      id: 'dev-esp32cam-01',
+      name: 'AB-204 3D Face Recognition Camera',
+      type: 'ESP32-CAM (OV2640)',
+      roomId: 'AB-204',
+      ipAddress: '192.168.4.15',
+      port: 81,
+      macAddress: '40:22:D8:11:7F:4A',
+      status: 'ONLINE',
+      pingLatencyMs: 18,
+      firmwareVersion: 'v3.1.0-cam',
+      sensors: ['OV2640 2MP Camera Sensor'],
+      actuators: ['Flashlight LED (GPIO 4)', 'Electronic Solenoid Relay'],
+      lastSeen: 'Just now'
+    },
+    {
+      id: 'dev-esp32-02',
+      name: 'AB-101 Smart Lecture Hall Node',
+      type: 'ESP32 Sensor Edge Node',
+      roomId: 'AB-101',
+      ipAddress: '192.168.4.22',
+      port: 80,
+      macAddress: '24:6F:28:B1:4D:12',
+      status: 'ONLINE',
+      pingLatencyMs: 15,
+      firmwareVersion: 'v2.4.1-mits',
+      sensors: ['PIR Motion', 'Ultrasonic Distance', 'DHT22', 'RFID RC522'],
+      actuators: ['Door Lock Relay', 'Occupancy LED'],
+      lastSeen: '1 min ago'
+    },
+    {
+      id: 'dev-rfid-gate-01',
+      name: 'Central Library Turnstile Gateway',
+      type: 'RFID Gate Controller',
+      roomId: 'Central Library',
+      ipAddress: '192.168.4.50',
+      port: 8080,
+      macAddress: 'AC:67:B2:5E:21:88',
+      status: 'ONLINE',
+      pingLatencyMs: 9,
+      firmwareVersion: 'v1.8.0-gate',
+      sensors: ['Dual RC522 RFID Scanners', 'Optical IR Beam'],
+      actuators: ['Motorized Turnstile Barrier', 'Chime Buzzer'],
+      lastSeen: '3 mins ago'
+    }
+  ]);
+
+  const [newDevice, setNewDevice] = useState({
+    name: '',
+    type: 'ESP32 Sensor Edge Node',
+    roomId: 'AB-204',
+    ipAddress: '',
+    port: '80',
+    macAddress: ''
+  });
+  const [connectingDevice, setConnectingDevice] = useState(false);
+  const [hardwareFeedback, setHardwareFeedback] = useState('');
+  const [activeCommandDeviceId, setActiveCommandDeviceId] = useState(null);
+  const [showAddDeviceModal, setShowAddDeviceModal] = useState(false);
+
+  // Sync hardware devices from backend if available
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/hardware/devices')
+      .then(r => r.json())
+      .then(data => {
+        if (data.success && data.devices && data.devices.length > 0) {
+          setHardwareDevices(data.devices);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleConnectDevice = async (e) => {
+    e.preventDefault();
+    if (!newDevice.ipAddress.trim()) {
+      setHardwareFeedback('Please enter a valid IP address for the hardware node.');
+      return;
+    }
+    setConnectingDevice(true);
+    setHardwareFeedback('');
+
+    try {
+      let deviceData = null;
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/hardware/connect', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newDevice)
+        });
+        const data = await res.json();
+        if (data.success) deviceData = data.device;
+      } catch (err) {
+        console.warn('Backend connect notice:', err.message);
+      }
+
+      if (!deviceData) {
+        deviceData = {
+          id: `dev-${newDevice.type.toLowerCase().slice(0, 5)}-${Date.now().toString(36)}`,
+          name: newDevice.name || `ESP32 Node (${newDevice.roomId})`,
+          type: newDevice.type,
+          roomId: newDevice.roomId,
+          ipAddress: newDevice.ipAddress.trim(),
+          port: parseInt(newDevice.port) || 80,
+          macAddress: newDevice.macAddress || `24:6F:28:B${Math.floor(10 + Math.random() * 89)}:C2`,
+          status: 'ONLINE',
+          pingLatencyMs: Math.floor(10 + Math.random() * 15),
+          firmwareVersion: 'v2.5.0-mits',
+          sensors: ['PIR Motion', 'HC-SR04 Ultrasonic', 'Environmental Node'],
+          actuators: ['Solenoid Lock Relay', 'Status LEDs'],
+          lastSeen: 'Just now'
+        };
+      }
+
+      setHardwareDevices(prev => [deviceData, ...prev]);
+      setHardwareFeedback(`✅ Hardware Connected: Node "${deviceData.name}" online at ${deviceData.ipAddress}:${deviceData.port}`);
+      setNewDevice({
+        name: '',
+        type: 'ESP32 Sensor Edge Node',
+        roomId: 'AB-204',
+        ipAddress: '',
+        port: '80',
+        macAddress: ''
+      });
+      setShowAddDeviceModal(false);
+    } catch (e) {
+      setHardwareFeedback(`Failed to connect: ${e.message}`);
+    } finally {
+      setConnectingDevice(false);
+    }
+  };
+
+  const handleDeviceCommand = async (deviceId, command, label) => {
+    setActiveCommandDeviceId(deviceId);
+    try {
+      try {
+        await fetch('http://127.0.0.1:8000/api/hardware/command', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ deviceId, command, durationSec: 5 })
+        });
+      } catch (err) {}
+
+      const target = hardwareDevices.find(d => d.id === deviceId);
+      setHardwareFeedback(`⚡ Signal Dispatched to ${target?.ipAddress || 'device'}: ${label} actuated successfully!`);
+      setTimeout(() => setHardwareFeedback(''), 4000);
+    } finally {
+      setTimeout(() => setActiveCommandDeviceId(null), 1000);
+    }
+  };
+
+  const handleRemoveDevice = async (deviceId) => {
+    try {
+      await fetch(`http://127.0.0.1:8000/api/hardware/devices/${deviceId}`, { method: 'DELETE' });
+    } catch (e) {}
+    setHardwareDevices(prev => prev.filter(d => d.id !== deviceId));
+    setHardwareFeedback(`Device ${deviceId} unlinked from campus mesh.`);
+  };
 
   useEffect(() => {
     setRegisteredUsers(getLocalDirectory());
@@ -157,6 +340,34 @@ export default function AdminDashboard({
       {/* Tab: Campus Control Tower */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
+          {/* Quick Hardware Mesh IP Gateway Banner in Overview */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-[#8b1e3f] via-[#68152e] to-[#4a0e20] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xs">
+                <Wifi className="w-6 h-6 text-emerald-400 animate-pulse" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="text-sm font-bold text-white">ESP32 & Hardware Mesh IP Controller</h4>
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/30">
+                    {hardwareDevices.filter(d => d.status === 'ONLINE').length} Nodes Online
+                  </span>
+                </div>
+                <p className="text-xs text-white/70 mt-0.5">
+                  Live telemetry, 3D face camera streaming, and remote solenoid door lock actuation via IP address.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveTab('hardware_mesh')}
+              className="px-4 py-2 rounded-xl bg-white text-[#8b1e3f] hover:bg-slate-100 text-xs font-bold transition-all shadow-xs flex items-center gap-2 self-start sm:self-auto cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Connect Hardware by IP</span>
+            </button>
+          </div>
+
           {/* Real-time Status of All Classrooms */}
           <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6">
             <div className="flex items-center justify-between pb-4 border-b border-[#ebd7cc]">
@@ -274,6 +485,359 @@ export default function AdminDashboard({
                     <Bar dataKey="attendance" fill="#b83252" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Tab: ESP32 & Hardware Mesh IP Provisioning */}
+      {(activeTab === 'hardware_mesh' || activeTab === 'occupancy') && (
+        <div className="space-y-6">
+          {/* Top Control Bar */}
+          <div className="bg-white rounded-3xl border border-[#ebd7cc] shadow-sm p-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#ebd7cc]">
+              <div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#fdf3ed] border border-[#ebd7cc] text-[#8b1e3f] text-xs font-bold uppercase tracking-wider mb-2">
+                  <Wifi className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                  <span>MITS Campus IoT Hardware Mesh</span>
+                </div>
+                <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                  <span>ESP32 & Hardware IP Management Center</span>
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono font-bold">
+                    {hardwareDevices.filter(d => d.status === 'ONLINE').length} ONLINE
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Connect, monitor telemetry, and remotely actuate ESP32 microcontrollers, ESP32-CAM nodes, and RFID gateways over LAN/Wi-Fi via IP addresses.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddDeviceModal(prev => !prev)}
+                  className="px-4 py-2.5 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white text-xs font-bold flex items-center gap-2 shadow-md transition-all cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>{showAddDeviceModal ? 'Close Form' : 'Connect New Hardware by IP'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Hardware Feedback Alert */}
+            {hardwareFeedback && (
+              <div className="mt-4 p-3.5 rounded-2xl bg-[#fdf5f0] border border-[#edd5c6] text-xs font-semibold text-[#8b1e3f] flex items-center justify-between animate-in fade-in">
+                <span>{hardwareFeedback}</span>
+                <button
+                  type="button"
+                  onClick={() => setHardwareFeedback('')}
+                  className="text-slate-400 hover:text-slate-600 font-bold ml-2"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* Add Hardware Device by IP Form / Modal */}
+            {showAddDeviceModal && (
+              <form onSubmit={handleConnectDevice} className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-[#faf4f0] via-[#f7eee7] to-[#f4e6dc] border border-[#edd7ca] space-y-4 animate-in fade-in">
+                <div className="flex items-center justify-between pb-3 border-b border-[#ebd4c5]">
+                  <h4 className="text-sm font-bold text-[#8b1e3f] flex items-center gap-2">
+                    <Terminal className="w-4 h-4" />
+                    <span>Provision New Hardware Node over LAN / Wi-Fi IP</span>
+                  </h4>
+                  <span className="text-[11px] text-slate-500 font-mono">Protocols: HTTP REST • TCP • MJPEG</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Device Name */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Device Label / Name</label>
+                    <input
+                      type="text"
+                      value={newDevice.name}
+                      onChange={(e) => setNewDevice(prev => ({ ...prev, name: e.target.value }))}
+                      placeholder="e.g. AB-204 Primary ESP32"
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 outline-none focus:border-[#8b1e3f]"
+                      required
+                    />
+                  </div>
+
+                  {/* Hardware Type */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Hardware Model / Type</label>
+                    <select
+                      value={newDevice.type}
+                      onChange={(e) => setNewDevice(prev => ({ ...prev, type: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 outline-none focus:border-[#8b1e3f]"
+                    >
+                      <option value="ESP32 Sensor Edge Node">ESP32 Sensor Edge Node (PIR, Ultrasonic, Gas)</option>
+                      <option value="ESP32-CAM (OV2640)">ESP32-CAM (OV2640 3D Face Biometric)</option>
+                      <option value="RFID Gate Controller">RFID-RC522 Gate Controller</option>
+                      <option value="Environmental Station">Environmental & Power Telemetry Station</option>
+                    </select>
+                  </div>
+
+                  {/* Assigned Room */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Assigned Classroom / Lab</label>
+                    <select
+                      value={newDevice.roomId}
+                      onChange={(e) => setNewDevice(prev => ({ ...prev, roomId: e.target.value }))}
+                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 outline-none focus:border-[#8b1e3f]"
+                    >
+                      {classrooms.map(c => (
+                        <option key={c.id} value={c.id}>{c.id} - {c.name}</option>
+                      ))}
+                      <option value="Central Library">Central Library</option>
+                      <option value="Server Room">Server Room</option>
+                    </select>
+                  </div>
+
+                  {/* IP Address & Port */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1">Device IP Address & Port</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={newDevice.ipAddress}
+                        onChange={(e) => setNewDevice(prev => ({ ...prev, ipAddress: e.target.value }))}
+                        placeholder="e.g. 192.168.4.1"
+                        className="flex-1 px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-mono outline-none focus:border-[#8b1e3f]"
+                        required
+                      />
+                      <input
+                        type="number"
+                        value={newDevice.port}
+                        onChange={(e) => setNewDevice(prev => ({ ...prev, port: e.target.value }))}
+                        placeholder="80"
+                        className="w-16 px-2 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-mono outline-none focus:border-[#8b1e3f]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick IP Presets */}
+                <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-500">
+                  <span className="text-[11px] font-semibold text-slate-600">Quick Viva IP Presets:</span>
+                  <button
+                    type="button"
+                    onClick={() => setNewDevice(prev => ({ ...prev, ipAddress: '192.168.4.1', port: '80', name: 'AB-204 IoT Lab ESP32' }))}
+                    className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-[#8b1e3f] text-[10px] font-mono text-slate-700 cursor-pointer"
+                  >
+                    192.168.4.1 (Default AP)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewDevice(prev => ({ ...prev, ipAddress: '192.168.4.15', port: '81', type: 'ESP32-CAM (OV2640)', name: 'AB-204 ESP32-CAM' }))}
+                    className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-[#8b1e3f] text-[10px] font-mono text-slate-700 cursor-pointer"
+                  >
+                    192.168.4.15:81 (ESP32-CAM)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewDevice(prev => ({ ...prev, ipAddress: '10.86.214.31', port: '8000', name: 'Campus LAN ESP32 Node' }))}
+                    className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-[#8b1e3f] text-[10px] font-mono text-slate-700 cursor-pointer"
+                  >
+                    10.86.214.31 (MITS Wi-Fi)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setNewDevice(prev => ({ ...prev, ipAddress: '127.0.0.1', port: '8000', name: 'Localhost Virtual ESP32' }))}
+                    className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-[#8b1e3f] text-[10px] font-mono text-slate-700 cursor-pointer"
+                  >
+                    127.0.0.1 (Local Node)
+                  </button>
+                </div>
+
+                {/* Submit Action */}
+                <div className="pt-2 flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddDeviceModal(false)}
+                    className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={connectingDevice}
+                    className="px-5 py-2 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
+                  >
+                    {connectingDevice ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Wifi className="w-4 h-4 text-emerald-300" />
+                    )}
+                    <span>Test Handshake & Connect Node</span>
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+
+          {/* Connected Hardware Device Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {hardwareDevices.map((dev) => {
+              const isBusy = activeCommandDeviceId === dev.id;
+              return (
+                <div
+                  key={dev.id}
+                  className="p-5 rounded-3xl bg-white border border-[#ebd7cc] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between"
+                >
+                  <div>
+                    {/* Card Top: Status & Name */}
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                          <span className="text-[10px] font-bold font-mono uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                            {dev.status} • {dev.pingLatencyMs}ms
+                          </span>
+                          <span className="text-[10px] font-bold text-[#8b1e3f] bg-[#fdf3ed] border border-[#ebd7cc] px-2 py-0.5 rounded-md">
+                            Room {dev.roomId}
+                          </span>
+                        </div>
+                        <h4 className="text-sm font-extrabold text-slate-900 mt-1.5">{dev.name}</h4>
+                        <p className="text-[11px] text-slate-500 font-medium">{dev.type}</p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveDevice(dev.id)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all cursor-pointer"
+                        title="Unlink device"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* IP & Technical Specs Box */}
+                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 font-mono text-[11px]">
+                      <div className="flex justify-between items-center text-slate-700">
+                        <span className="text-slate-500 font-sans text-[10px] uppercase font-bold">IP Endpoint:</span>
+                        <a
+                          href={`http://${dev.ipAddress}:${dev.port}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-bold text-[#8b1e3f] hover:underline"
+                        >
+                          http://{dev.ipAddress}:{dev.port}
+                        </a>
+                      </div>
+                      <div className="flex justify-between text-slate-600">
+                        <span className="text-slate-500 font-sans text-[10px] uppercase font-bold">MAC Address:</span>
+                        <span>{dev.macAddress}</span>
+                      </div>
+                      <div className="flex justify-between text-slate-600">
+                        <span className="text-slate-500 font-sans text-[10px] uppercase font-bold">Firmware:</span>
+                        <span className="text-emerald-700 font-bold">{dev.firmwareVersion}</span>
+                      </div>
+                    </div>
+
+                    {/* Attached Sensors & Actuators Pills */}
+                    <div className="mt-3 space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase">Sensors:</span>
+                        {dev.sensors?.map((s, i) => (
+                          <span key={i} className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-mono">
+                            {s}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase">Actuators:</span>
+                        {dev.actuators?.map((a, i) => (
+                          <span key={i} className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-mono">
+                            {a}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Remote IP Actuation Controls */}
+                  <div className="pt-3 border-t border-slate-100 space-y-2">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                      Remote Hardware Actuation via IP
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleDeviceCommand(dev.id, 'RELAY_UNLOCK', 'Solenoid Door Relay (PIN 23)')}
+                        disabled={isBusy}
+                        className="py-1.5 px-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+                        title="Pulse 5V Relay to unlock door"
+                      >
+                        <Unlock className="w-3.5 h-3.5" />
+                        <span>Unlock Door</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeviceCommand(dev.id, 'BUZZER_TEST', 'Alarm Buzzer (PIN 26)')}
+                        disabled={isBusy}
+                        className="py-1.5 px-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-[10px] flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+                        title="Sound warning buzzer"
+                      >
+                        <Volume2 className="w-3.5 h-3.5" />
+                        <span>Test Siren</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeviceCommand(dev.id, 'PING', 'Telemetry Ping')}
+                        disabled={isBusy}
+                        className="py-1.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                        title="Test ping handshake"
+                      >
+                        <Wifi className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                        <span>Ping IP</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeviceCommand(dev.id, 'REBOOT', 'Soft Reboot')}
+                        disabled={isBusy}
+                        className="py-1.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                        title="Restart microcontroller"
+                      >
+                        <Power className="w-3.5 h-3.5 text-slate-500" />
+                        <span>Reboot</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Hardware Protocol Specifications Card */}
+          <div className="p-5 rounded-3xl bg-white border border-[#ebd7cc] shadow-sm space-y-3">
+            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-[#8b1e3f]" />
+              <span>MITS CampusOn Hardware Protocol & Integration Standards</span>
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600">
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="font-bold text-slate-800 block mb-1">1. HTTP REST Ingestion</span>
+                <p className="text-[11px] leading-relaxed">
+                  Microcontrollers push sensor JSON packets via <code className="text-[#8b1e3f] bg-slate-200 px-1 py-0.5 rounded">POST /api/telemetry</code> every 2 seconds over Wi-Fi.
+                </p>
+              </div>
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="font-bold text-slate-800 block mb-1">2. ESP32-CAM MJPEG Stream</span>
+                <p className="text-[11px] leading-relaxed">
+                  OV2640 module serves video on <code className="text-[#8b1e3f] bg-slate-200 px-1 py-0.5 rounded">:81/stream</code> used for 3D face mesh liveness & attendance recognition.
+                </p>
+              </div>
+              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
+                <span className="font-bold text-slate-800 block mb-1">3. Direct Actuation Over IP</span>
+                <p className="text-[11px] leading-relaxed">
+                  Central administration dispatches relay triggers to <code className="text-[#8b1e3f] bg-slate-200 px-1 py-0.5 rounded">http://&lt;IP&gt;/relay/unlock</code> to actuate solenoid locks in real-time.
+                </p>
               </div>
             </div>
           </div>

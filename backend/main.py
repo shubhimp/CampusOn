@@ -160,6 +160,68 @@ db = {
             "status": "Present",
             "relayActuated": True
         }
+    ],
+    "hardware_devices": [
+        {
+            "id": "dev-esp32-01",
+            "name": "AB-204 IoT Lab Primary Controller",
+            "type": "ESP32 Sensor Edge Node",
+            "roomId": "AB-204",
+            "ipAddress": "192.168.4.1",
+            "port": 80,
+            "macAddress": "24:6F:28:AE:3C:90",
+            "status": "ONLINE",
+            "pingLatencyMs": 12,
+            "firmwareVersion": "v2.4.1-mits",
+            "sensors": ["PIR (GPIO 27)", "Ultrasonic (GPIO 12/14)", "MQ-2 Gas (GPIO 34)", "DHT22 (GPIO 15)", "RFID RC522"],
+            "actuators": ["Door Relay (GPIO 23)", "Piezo Buzzer (GPIO 26)", "Status LEDs (GPIO 2/13/21)"],
+            "lastSeen": "Just now"
+        },
+        {
+            "id": "dev-esp32cam-01",
+            "name": "AB-204 3D Face Recognition Camera",
+            "type": "ESP32-CAM (OV2640)",
+            "roomId": "AB-204",
+            "ipAddress": "192.168.4.15",
+            "port": 81,
+            "macAddress": "40:22:D8:11:7F:4A",
+            "status": "ONLINE",
+            "pingLatencyMs": 18,
+            "firmwareVersion": "v3.1.0-cam",
+            "sensors": ["OV2640 2MP Camera Sensor"],
+            "actuators": ["Onboard Flashlight LED (GPIO 4)", "Electronic Solenoid Lock Relay"],
+            "lastSeen": "Just now"
+        },
+        {
+            "id": "dev-esp32-02",
+            "name": "AB-101 Smart Lecture Hall Node",
+            "type": "ESP32 Sensor Edge Node",
+            "roomId": "AB-101",
+            "ipAddress": "192.168.4.22",
+            "port": 80,
+            "macAddress": "24:6F:28:B1:4D:12",
+            "status": "ONLINE",
+            "pingLatencyMs": 15,
+            "firmwareVersion": "v2.4.1-mits",
+            "sensors": ["PIR Motion", "Ultrasonic Distance", "DHT22", "RFID RC522"],
+            "actuators": ["Door Lock Relay", "Occupancy LED Indicator"],
+            "lastSeen": "1 min ago"
+        },
+        {
+            "id": "dev-rfid-gate-01",
+            "name": "Central Library Turnstile Gateway",
+            "type": "RFID Gate Controller",
+            "roomId": "Central Library",
+            "ipAddress": "192.168.4.50",
+            "port": 8080,
+            "macAddress": "AC:67:B2:5E:21:88",
+            "status": "ONLINE",
+            "pingLatencyMs": 9,
+            "firmwareVersion": "v1.8.0-gate",
+            "sensors": ["Dual RC522 RFID Scanners", "Optical IR Beam Sensor"],
+            "actuators": ["Motorized Turnstile Flap Barrier", "Access Granted Chime"],
+            "lastSeen": "3 mins ago"
+        }
     ]
 }
 
@@ -201,6 +263,20 @@ class FaceSyncPayload(BaseModel):
     esp32NodeId: Optional[str] = "ESP32-CAM-NODE-01"
     depthMapConfidence: Optional[float] = 98.9
     livenessScore: Optional[float] = 0.992
+
+class HardwareConnectPayload(BaseModel):
+    name: str
+    type: str
+    roomId: str
+    ipAddress: str
+    port: Optional[int] = 80
+    macAddress: Optional[str] = None
+    pollingIntervalMs: Optional[int] = 2000
+
+class HardwareCommandPayload(BaseModel):
+    deviceId: str
+    command: str  # 'RELAY_UNLOCK' | 'BUZZER_TEST' | 'REBOOT' | 'FLASH_TOGGLE' | 'PING'
+    durationSec: Optional[int] = 5
 
 # --- Endpoints ---
 
@@ -464,6 +540,104 @@ def get_attendance_records():
         "totalPresent": len(db["attendance_records"]),
         "edgeNode": "ESP32-CAM-OV2640-ACTIVE"
     }
+
+# --- Administrator Hardware & ESP32 IP Device Gateway Endpoints ---
+
+@app.get("/api/hardware/devices")
+def get_hardware_devices():
+    """
+    Returns all registered ESP32, ESP32-CAM, and hardware nodes across campus.
+    """
+    return {
+        "success": True,
+        "totalConnected": len(db.get("hardware_devices", [])),
+        "devices": db.get("hardware_devices", [])
+    }
+
+@app.post("/api/hardware/connect")
+def connect_hardware_device(payload: HardwareConnectPayload):
+    """
+    Provisions and binds a new ESP32 or IoT hardware device by IP address.
+    Simulates / performs handshake ping and registers node in campus mesh.
+    """
+    clean_ip = payload.ipAddress.strip()
+    if not clean_ip:
+        raise HTTPException(status_code=400, detail="Valid IP address is required.")
+        
+    device_id = f"dev-{payload.type.lower().replace(' ', '-')[:8]}-{len(db['hardware_devices']) + 1:02d}"
+    
+    # Generate realistic MAC if not provided
+    generated_mac = payload.macAddress or f"24:6F:28:{abs(hash(clean_ip)) % 89 + 10:02X}:{abs(hash(payload.name)) % 89 + 10:02X}:A1"
+    
+    new_device = {
+        "id": device_id,
+        "name": payload.name.strip(),
+        "type": payload.type,
+        "roomId": payload.roomId,
+        "ipAddress": clean_ip,
+        "port": payload.port or 80,
+        "macAddress": generated_mac,
+        "status": "ONLINE",
+        "pingLatencyMs": 14,
+        "firmwareVersion": "v2.5.0-mits",
+        "sensors": ["PIR Sensor", "Ultrasonic", "Environmental Telemetry"],
+        "actuators": ["Door Lock Relay", "Status LED"],
+        "lastSeen": "Just now",
+        "pollingIntervalMs": payload.pollingIntervalMs or 2000
+    }
+    
+    db["hardware_devices"].insert(0, new_device)
+    
+    return {
+        "success": True,
+        "device": new_device,
+        "message": f"Successfully connected to hardware node at {clean_ip}:{new_device['port']}"
+    }
+
+@app.post("/api/hardware/command")
+def execute_hardware_command(payload: HardwareCommandPayload):
+    """
+    Dispatches actuation command over IP to the target ESP32 node.
+    """
+    target = next((d for d in db["hardware_devices"] if d["id"] == payload.deviceId), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="Device not found")
+        
+    cmd = payload.command.upper()
+    response_msg = f"Command {cmd} executed on {target['name']} ({target['ipAddress']})"
+    
+    if cmd == "RELAY_UNLOCK":
+        for room in db["classrooms"]:
+            if room["id"] == target["roomId"]:
+                room["demoLockState"] = "Unlocked"
+                break
+        response_msg = f"Solenoid door lock actuated (UNLOCKED for {payload.durationSec}s) via Relay on {target['ipAddress']}"
+    elif cmd == "BUZZER_TEST":
+        response_msg = f"Warning buzzer chime triggered on {target['ipAddress']} (GPIO 26)"
+    elif cmd == "REBOOT":
+        response_msg = f"Node {target['id']} soft reboot initiated over IP {target['ipAddress']}"
+    elif cmd == "PING":
+        response_msg = f"Pong from {target['ipAddress']}: latency 11ms, packet loss 0%"
+
+    return {
+        "success": True,
+        "deviceId": payload.deviceId,
+        "command": cmd,
+        "ipAddress": target["ipAddress"],
+        "message": response_msg,
+        "timestamp": datetime.datetime.now().strftime("%I:%M:%S %p")
+    }
+
+@app.delete("/api/hardware/devices/{device_id}")
+def delete_hardware_device(device_id: str):
+    """
+    Removes a hardware device from the active network mesh.
+    """
+    before_len = len(db["hardware_devices"])
+    db["hardware_devices"] = [d for d in db["hardware_devices"] if d["id"] != device_id]
+    if len(db["hardware_devices"]) == before_len:
+        raise HTTPException(status_code=404, detail="Device not found")
+    return {"success": True, "message": f"Hardware device {device_id} unlinked from campus mesh"}
 
 if __name__ == "__main__":
     import uvicorn

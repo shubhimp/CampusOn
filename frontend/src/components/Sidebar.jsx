@@ -18,7 +18,8 @@ import {
   Download,
   LogOut,
   Lock,
-  ScanFace
+  ScanFace,
+  Wifi
 } from 'lucide-react';
 
 export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOut }) {
@@ -42,6 +43,7 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
 
   const adminNav = [
     { id: 'overview', label: 'Campus Control Tower', icon: Activity },
+    { id: 'hardware_mesh', label: 'ESP32 & Hardware Mesh', icon: Wifi },
     { id: 'timetable_solver', label: 'AI Timetable Optimizer', icon: Calendar },
     { id: 'occupancy', label: 'Live IoT Room Matrix', icon: Layers },
     { id: 'users', label: 'Campus Users Directory', icon: Users },
