@@ -328,43 +328,45 @@ export default function AuthPage({ onLoginSuccess }) {
 
       {/* Main Authentication Card */}
       <div className="max-w-3xl mx-auto w-full bg-white rounded-3xl shadow-xl border border-[#ebd7cc] overflow-hidden">
-        {/* Mode Selector Tabs (Sign In vs Create Account) */}
-        <div className="grid grid-cols-2 border-b border-[#ebd7cc] bg-[#fbf3ee]">
-          <button
-            type="button"
-            onClick={() => {
-              setMode('signin');
-              setShowOtpScreen(false);
-              setErrorMsg('');
-              setSuccessMsg('');
-            }}
-            className={`py-4 text-center font-bold text-sm transition-all flex items-center justify-center gap-2 ${
-              mode === 'signin'
-                ? 'bg-white text-[#8b1e3f] border-b-2 border-[#8b1e3f] shadow-xs'
-                : 'text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <Lock className="w-4 h-4" />
-            <span>Sign In to Portal</span>
-          </button>
+        {/* Mode Selector Tabs (Sign In vs Sign Up) */}
+        <div className="p-2 border-b border-[#ebd7cc] bg-[#fbf3ee]">
+          <div className="grid grid-cols-2 gap-2 p-1 bg-[#f4e2d5] rounded-2xl">
+            <button
+              type="button"
+              onClick={() => {
+                setMode('signin');
+                setShowOtpScreen(false);
+                setErrorMsg('');
+                setSuccessMsg('');
+              }}
+              className={`py-3 px-4 text-center font-extrabold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                mode === 'signin'
+                  ? 'bg-[#8b1e3f] text-white shadow-md scale-[1.01]'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-[#ebd3c3]'
+              }`}
+            >
+              <Lock className="w-4 h-4" />
+              <span>SIGN IN</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => {
-              setMode('signup');
-              setShowOtpScreen(false);
-              setErrorMsg('');
-              setSuccessMsg('');
-            }}
-            className={`py-4 text-center font-bold text-sm transition-all flex items-center justify-center gap-2 ${
-              mode === 'signup'
-                ? 'bg-white text-[#8b1e3f] border-b-2 border-[#8b1e3f] shadow-xs'
-                : 'text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <Sparkles className="w-4 h-4 text-amber-600" />
-            <span>Create New Account</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode('signup');
+                setShowOtpScreen(false);
+                setErrorMsg('');
+                setSuccessMsg('');
+              }}
+              className={`py-3 px-4 text-center font-extrabold text-sm rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                mode === 'signup'
+                  ? 'bg-[#8b1e3f] text-white shadow-md scale-[1.01]'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-[#ebd3c3]'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-amber-300" />
+              <span>SIGN UP (CREATE ACCOUNT)</span>
+            </button>
+          </div>
         </div>
 
         <div className="p-6 sm:p-8">
@@ -881,12 +883,51 @@ export default function AuthPage({ onLoginSuccess }) {
                         ? 'Proceed & Verify with 6-Digit OTP'
                         : authMethod === 'otp'
                         ? 'Send 6-Digit Login OTP'
-                        : 'Authorize & Launch Workspace'}
+                        : 'Sign In & Launch Portal'}
                     </span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </button>
+
+              {/* Direct Link Switcher: Sign In <-> Sign Up */}
+              <div className="text-center pt-3">
+                {mode === 'signin' ? (
+                  <p className="text-xs text-slate-600">
+                    Don't have an account yet?{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('signup');
+                        setShowOtpScreen(false);
+                        setErrorMsg('');
+                        setSuccessMsg('');
+                      }}
+                      className="font-bold text-[#8b1e3f] hover:underline cursor-pointer ml-1 inline-flex items-center gap-1"
+                    >
+                      <span>Create Account (Sign Up)</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-600">
+                    Already registered with MITS?{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('signin');
+                        setShowOtpScreen(false);
+                        setErrorMsg('');
+                        setSuccessMsg('');
+                      }}
+                      className="font-bold text-[#8b1e3f] hover:underline cursor-pointer ml-1 inline-flex items-center gap-1"
+                    >
+                      <span>Sign In here</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </p>
+                )}
+              </div>
             </form>
           )}
 
