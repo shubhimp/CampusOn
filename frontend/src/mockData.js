@@ -2,126 +2,278 @@
 // Department of Electrical & Computer Engineering
 
 export const INITIAL_USER = {
-  id: 'usr_student_01',
+  id: 'usr_student_shubhi',
   role: 'student', // 'student' | 'faculty' | 'admin' | 'parent'
-  name: 'Shubhi Mathur',
-  enrollmentNo: 'BTEC25O1060',
+  name: 'Shubhi',
+  enrollmentNo: '25EC1SH60',
   department: 'Electrical & Computer Engineering',
   semester: '3rd Semester',
   avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-  email: 'shubhi.btec25o1060@mitsgwalior.in',
-  rfidTag: 'RFID-9A-4F-2C-11',
-  parentName: 'R. K. Mathur',
+  email: '25ec1sh60@mitgwl.ac.in',
+  rfidTag: 'RFID-SH-60-EC-02',
+  parentName: 'Vibha Mathur',
   parentContact: '+91 98260 12345',
 };
 
-export const EXAMINER_CREDENTIALS = [
+// Official 13 Sample Evaluation & Viva Credentials
+export const SAMPLE_CREDENTIALS = [
+  // 1. Student Dashboard (4 accounts)
   {
+    id: 'usr_student_tamanna',
     role: 'student',
     roleLabel: 'Student Dashboard',
-    name: 'Shubhi Mathur',
-    email: 'student@campuson.mits',
-    altEmail: 'shubhi.btec25o1060@mitsgwalior.in',
-    password: 'Password@123',
-    allottedId: 'BTEC25O1060',
-    rfidTag: 'RFID-9A-4F-2C-11',
+    name: 'Tamanna',
+    email: '25ec1ta63@mitsgwl.ac.in',
+    password: 'Aarav@123',
+    allottedId: '25EC1TA63',
+    rfidTag: 'RFID-TA-63-EC-01',
+    department: 'Electrical & Computer Engineering',
+    semester: '3rd Semester',
+    badge: 'Student / ECE Major',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+    description: 'Timetable, 3D face biometric sync, attendance analytics & AI mentor.'
+  },
+  {
+    id: 'usr_student_shubhi',
+    role: 'student',
+    roleLabel: 'Student Dashboard',
+    name: 'Shubhi',
+    email: '25ec1sh60@mitgwl.ac.in',
+    password: 'Priya@456',
+    allottedId: '25EC1SH60',
+    rfidTag: 'RFID-SH-60-EC-02',
     department: 'Electrical & Computer Engineering',
     semester: '3rd Semester',
     badge: 'Student / IoT Major',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    description: 'Access timetable, 3D face biometric attendance, dynamic QR, indoor map & AI notes.'
+    description: 'Timetable, 3D face biometric sync, attendance analytics & AI mentor.'
   },
   {
+    id: 'usr_student_shubh',
+    role: 'student',
+    roleLabel: 'Student Dashboard',
+    name: 'Shubh',
+    email: '25ec1sh59@mitgwl.ac.in',
+    password: 'Rahul@789',
+    allottedId: '25EC1SH59',
+    rfidTag: 'RFID-SH-59-EC-03',
+    department: 'Electrical & Computer Engineering',
+    semester: '3rd Semester',
+    badge: 'Student / ECE Major',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
+    description: 'Timetable, 3D face biometric sync, attendance analytics & AI mentor.'
+  },
+  {
+    id: 'usr_student_shourya',
+    role: 'student',
+    roleLabel: 'Student Dashboard',
+    name: 'Shourya',
+    email: '25ec1sh58@mitgwl.ac.in',
+    password: 'Sneha@2026',
+    allottedId: '25EC1SH58',
+    rfidTag: 'RFID-SH-58-EC-04',
+    department: 'Electrical & Computer Engineering',
+    semester: '3rd Semester',
+    badge: 'Student / ECE Major',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    description: 'Timetable, 3D face biometric sync, attendance analytics & AI mentor.'
+  },
+
+  // 2. Faculty Dashboard (5 accounts)
+  {
+    id: 'usr_faculty_anusaya',
     role: 'faculty',
     roleLabel: 'Faculty Dashboard',
-    name: 'Dr. Murli Manohar',
-    email: 'faculty@campuson.mits',
-    altEmail: 'murli.manohar@mitsgwalior.in',
-    password: 'Password@123',
-    allottedId: 'FAC-ECE-208',
+    name: 'Anusaya',
+    email: 'anusayal@mitsgwalior.in',
+    password: 'Anusaya@123',
+    allottedId: 'FAC-ECE-101',
+    employeeCode: 'FAC-ECE-101',
     department: 'Electrical & Computer Engineering',
-    designation: 'Associate Professor & IoT Mentor',
-    badge: 'Faculty / IoT Coordinator',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    description: 'Run ESP32-CAM 3D Face Recognition attendance, camera feeds, notes & queries.'
+    designation: 'Assistant Professor & Mentor',
+    cabin: 'Block B - Cabin 104',
+    badge: 'Faculty / ECE Mentor',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    description: 'ESP32-CAM 3D Face Biometric attendance, teaching schedule & student requests.'
   },
   {
+    id: 'usr_faculty_pbansal',
+    role: 'faculty',
+    roleLabel: 'Faculty Dashboard',
+    name: 'P. Bansal',
+    email: 'pbansal444@mitsgwalior.in',
+    password: 'PBansal@456',
+    allottedId: 'FAC-ECE-102',
+    employeeCode: 'FAC-ECE-102',
+    department: 'Electrical & Computer Engineering',
+    designation: 'Associate Professor',
+    cabin: 'Block B - Cabin 210',
+    badge: 'Faculty / Signals Lead',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
+    description: 'ESP32-CAM 3D Face Biometric attendance, teaching schedule & student requests.'
+  },
+  {
+    id: 'usr_faculty_murli',
+    role: 'faculty',
+    roleLabel: 'Faculty Dashboard',
+    name: 'Murli Manohar',
+    email: 'murlimanohar@mitsgwalior.in',
+    password: 'Murli@789',
+    allottedId: 'FAC-ECE-208',
+    employeeCode: 'FAC-ECE-208',
+    department: 'Electrical & Computer Engineering',
+    designation: 'Associate Professor & IoT Coordinator',
+    cabin: 'Faculty Block B - Cabin 208',
+    badge: 'Faculty / IoT Coordinator',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
+    description: 'ESP32-CAM 3D Face Biometric attendance, teaching schedule & student requests.'
+  },
+  {
+    id: 'usr_faculty_sulochana',
+    role: 'faculty',
+    roleLabel: 'Faculty Dashboard',
+    name: 'Sulochana Wadhwani',
+    email: 'sulochana_wadhwani@mitsgwalior.in',
+    password: 'Sulochana@2026',
+    allottedId: 'FAC-ECE-104',
+    employeeCode: 'FAC-ECE-104',
+    department: 'Electrical & Computer Engineering',
+    designation: 'Professor & Head of Department',
+    cabin: 'Department HOD Suite - ECE',
+    badge: 'Faculty / Head of Department',
+    avatar: 'https://images.unsplash.com/photo-1580894732454-d67b2d56d255?w=150&auto=format&fit=crop&q=80',
+    description: 'ESP32-CAM 3D Face Biometric attendance, teaching schedule & student requests.'
+  },
+  {
+    id: 'usr_faculty_shubhim',
+    role: 'faculty',
+    roleLabel: 'Faculty Dashboard',
+    name: 'Shubhim',
+    email: 'shubhimp13@gmail.com',
+    password: 'Shubhim@567',
+    allottedId: 'FAC-ECE-105',
+    employeeCode: 'FAC-ECE-105',
+    department: 'Electrical & Computer Engineering',
+    designation: 'IoT Systems Lead & Faculty Mentor',
+    cabin: 'IoT Innovation Lab - AB 204',
+    badge: 'Faculty / IoT Specialist',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    description: 'ESP32-CAM 3D Face Biometric attendance, teaching schedule & student requests.'
+  },
+
+  // 3. Admin Dashboard (2 accounts)
+  {
+    id: 'usr_admin_aditya',
     role: 'admin',
-    roleLabel: 'Administrator Dashboard',
+    roleLabel: 'Admin Dashboard',
+    name: 'Aditya',
+    email: 'itsaditya016@gmail.com',
+    password: 'Aditya@2026',
+    allottedId: 'ADM-MITS-01',
+    adminCode: 'ADM-MITS-01',
+    department: 'Central Administration & Examination Cell',
+    accessLevel: 'Senior Administrator',
+    badge: 'Campus Administrator',
+    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&auto=format&fit=crop&q=80',
+    description: 'Campus control tower, OR-Tools timetable optimizer, IoT hardware mesh & directory.'
+  },
+  {
+    id: 'usr_admin_shubhi_mathur',
+    role: 'admin',
+    roleLabel: 'Admin Dashboard',
     name: 'Shubhi Mathur',
-    email: 'admin@campuson.mits',
-    altEmail: 'shubhimp13@gmail.com',
-    password: 'Password@123',
+    email: 'shubhimathur2006@gmail.com',
+    password: 'Shubhim@789',
     allottedId: 'ADM-MITS-02',
+    adminCode: 'ADM-MITS-02',
     department: 'Central Administration & Campus Infrastructure',
     accessLevel: 'Super Administrator',
     badge: 'Campus Super Admin',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    description: 'Campus control tower, OR-Tools timetable optimizer, IoT room matrix & analytics.'
+    description: 'Campus control tower, OR-Tools timetable optimizer, IoT hardware mesh & directory.'
   },
+
+  // 4. Parent Dashboard (2 accounts)
   {
+    id: 'usr_parent_vibha_mathur',
     role: 'parent',
     roleLabel: 'Parent Dashboard',
-    name: 'Mr. R. K. Mathur',
-    email: 'parent@campuson.mits',
-    altEmail: 'rkmathur.gwalior@gmail.com',
-    password: 'Password@123',
-    allottedId: 'PRT-98260',
-    linkedStudent: 'Shubhi Mathur (BTEC25O1060)',
-    relationship: 'Father',
+    name: 'Vibha Mathur',
+    email: 'vibhamathur13@gmail.com',
+    password: 'Vibha@789',
+    allottedId: 'PRT-98261',
+    parentCode: 'PRT-98261',
+    linkedStudent: 'Shubhi (25ec1sh60@mitgwl.ac.in)',
+    relationship: 'Mother',
     badge: 'Verified Guardian',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-    description: 'Cumulative academic attendance records, fee ledger & college notices.'
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+    description: 'Academic attendance monitoring, fee ledger receipts, and college circulars.'
+  },
+  {
+    id: 'usr_parent_vibha',
+    role: 'parent',
+    roleLabel: 'Parent Dashboard',
+    name: 'Vibha',
+    email: 'vibdinner@gmail.com',
+    password: 'VibDinner@2026',
+    allottedId: 'PRT-98262',
+    parentCode: 'PRT-98262',
+    linkedStudent: 'Tamanna (25ec1ta63@mitsgwl.ac.in)',
+    relationship: 'Guardian',
+    badge: 'Verified Guardian',
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+    description: 'Academic attendance monitoring, fee ledger receipts, and college circulars.'
   }
 ];
 
+// Alias for backwards compatibility
+export const EXAMINER_CREDENTIALS = SAMPLE_CREDENTIALS;
+
 export const USERS = {
   student: {
-    id: 'usr_student_01',
+    id: 'usr_student_shubhi',
     role: 'student',
-    name: 'Shubhi Mathur',
-    enrollmentNo: 'BTEC25O1060',
+    name: 'Shubhi',
+    enrollmentNo: '25EC1SH60',
     department: 'Electrical & Computer Engineering',
     semester: '3rd Semester',
-    email: 'student@campuson.mits',
-    altEmail: 'shubhi.btec25o1060@mitsgwalior.in',
+    email: '25ec1sh60@mitgwl.ac.in',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    rfidTag: 'RFID-9A-4F-2C-11'
+    rfidTag: 'RFID-SH-60-EC-02'
   },
   faculty: {
-    id: 'usr_faculty_01',
+    id: 'usr_faculty_murli',
     role: 'faculty',
     name: 'Dr. Murli Manohar',
-    designation: 'Associate Professor & IoT Mentor',
+    designation: 'Associate Professor & IoT Coordinator',
     department: 'Electrical & Computer Engineering',
-    email: 'faculty@campuson.mits',
-    altEmail: 'murli.manohar@mitsgwalior.in',
+    email: 'murlimanohar@mitsgwalior.in',
     employeeCode: 'FAC-ECE-208',
     cabin: 'Faculty Block B - Cabin 208',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
     assignedResponsibility: 'Centre for Internet of Things Coordinator'
   },
   admin: {
-    id: 'usr_admin_shubhi',
+    id: 'usr_admin_shubhi_mathur',
     role: 'admin',
     name: 'Shubhi Mathur',
     department: 'Central Administration & Campus Infrastructure',
-    email: 'admin@campuson.mits',
+    email: 'shubhimathur2006@gmail.com',
     altEmail: 'shubhimp13@gmail.com',
     adminCode: 'ADM-MITS-02',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
     accessLevel: 'Super Administrator'
   },
   parent: {
-    id: 'usr_parent_01',
+    id: 'usr_parent_vibha_mathur',
     role: 'parent',
-    name: 'Mr. R. K. Mathur',
-    linkedStudent: 'Shubhi Mathur (BTEC25O1060)',
-    relationship: 'Father',
-    email: 'parent@campuson.mits',
-    altEmail: 'rkmathur.gwalior@gmail.com',
-    parentCode: 'PRT-98260',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80'
+    name: 'Vibha Mathur',
+    linkedStudent: 'Shubhi (25ec1sh60@mitgwl.ac.in)',
+    relationship: 'Mother',
+    email: 'vibhamathur13@gmail.com',
+    altEmail: 'parent@campuson.mits',
+    parentCode: 'PRT-98261',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80'
   }
 };
 

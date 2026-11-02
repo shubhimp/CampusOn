@@ -26,7 +26,10 @@ import {
   Check,
   ChevronDown,
   Sun,
-  Moon
+  Moon,
+  Eye,
+  EyeOff,
+  Copy
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { 
@@ -38,7 +41,7 @@ import {
   requestPasswordResetOtp,
   confirmPasswordReset
 } from '../services/supabaseClient';
-import { EXAMINER_CREDENTIALS } from '../mockData';
+import { EXAMINER_CREDENTIALS, SAMPLE_CREDENTIALS } from '../mockData';
 
 export default function AuthPage({ onLoginSuccess }) {
   const { theme, isDark, toggleTheme, setThemeMode } = useTheme();
@@ -48,6 +51,28 @@ export default function AuthPage({ onLoginSuccess }) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+
+  // Password Security & Concealed Credentials State
+  const [revealedPasswords, setRevealedPasswords] = useState({});
+  const [copiedCredId, setCopiedCredId] = useState(null);
+  const [credRoleFilter, setCredRoleFilter] = useState('ALL'); // 'ALL' | 'student' | 'faculty' | 'admin' | 'parent'
+  const [showSignInPassword, setShowSignInPassword] = useState(false);
+
+  const togglePasswordVisibility = (credId) => {
+    setRevealedPasswords(prev => ({
+      ...prev,
+      [credId]: !prev[credId]
+    }));
+  };
+
+  const handleCopySecurePassword = (password, credId, e) => {
+    e?.stopPropagation();
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(password);
+      setCopiedCredId(credId);
+      setTimeout(() => setCopiedCredId(null), 2000);
+    }
+  };
 
   // Password Reset Specific State
   const [forgotStep, setForgotStep] = useState('request'); // 'request' | 'verify'
@@ -189,10 +214,10 @@ export default function AuthPage({ onLoginSuccess }) {
     setShowOtpScreen(false);
     try {
       const demoAccounts = {
-        student: { email: 'student@campuson.mits', pass: 'Password@123' },
-        faculty: { email: 'faculty@campuson.mits', pass: 'Password@123' },
-        admin: { email: 'admin@campuson.mits', pass: 'Password@123' },
-        parent: { email: 'parent@campuson.mits', pass: 'Password@123' }
+        student: { email: '25ec1sh60@mitgwl.ac.in', pass: 'Priya@456' },
+        faculty: { email: 'murlimanohar@mitsgwalior.in', pass: 'Murli@789' },
+        admin: { email: 'shubhimathur2006@gmail.com', pass: 'Shubhim@789' },
+        parent: { email: 'vibhamathur13@gmail.com', pass: 'Vibha@789' }
       };
       const creds = demoAccounts[roleId];
       const res = await loginAccount(creds.email, creds.pass);
@@ -1003,14 +1028,22 @@ export default function AuthPage({ onLoginSuccess }) {
                     <div className="relative">
                       <Lock className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
                       <input
-                        type="password"
+                        type={showSignInPassword ? 'text' : 'password'}
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
                         placeholder="••••••••"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#141419] focus:border-[#FFD000] focus:ring-2 focus:ring-[#FFD000]/25 outline-none text-xs text-slate-800 dark:text-white"
+                        className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#141419] focus:border-[#FFD000] focus:ring-2 focus:ring-[#FFD000]/25 outline-none text-xs text-slate-800 dark:text-white"
                         required
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowSignInPassword(!showSignInPassword)}
+                        className="absolute right-3.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 cursor-pointer"
+                        title={showSignInPassword ? 'Conceal Password' : 'Show Password'}
+                      >
+                        {showSignInPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -1046,7 +1079,7 @@ export default function AuthPage({ onLoginSuccess }) {
             </form>
           )}
 
-          {/* 🎓 Examiner & Viva Evaluation Master Credentials (4 Dummy Dashboards) */}
+          {/* 🎓 Authorized Sample Credentials (13 Profiles - Passwords Masked for Presentation Security) */}
           <div className="mt-8 pt-6 border-t border-[#FEF08A] dark:border-[#222228]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
@@ -1054,65 +1087,132 @@ export default function AuthPage({ onLoginSuccess }) {
                   <ShieldCheck className="w-3.5 h-3.5 text-black" />
                 </span>
                 <span className="text-xs font-mono font-bold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider">
-                  Examiner & Viva Demo Credentials (4 Single Dashboards)
+                  CampusOn Sample Credentials ({SAMPLE_CREDENTIALS.length} Authorized Profiles)
                 </span>
               </div>
-              <span className="text-[10px] bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 px-2 py-0.5 rounded font-mono font-bold self-start sm:self-auto">
-                EVALUATION READY • PASS: Password@123
+              <span className="text-[10px] bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 px-2 py-0.5 rounded font-mono font-bold self-start sm:self-auto flex items-center gap-1">
+                <Lock className="w-3 h-3 text-[#CA8A04] dark:text-[#FFD000]" />
+                <span>PASSWORDS CONCEALED FOR SECURITY</span>
               </span>
             </div>
-            <p className="text-[11px] text-slate-600 dark:text-[#A1A1AA] mb-3.5">
-              Each dummy profile is locked strictly to its dedicated dashboard with zero unauthorized role switching. Click <strong>Launch</strong> to enter immediately or <strong>Auto-Fill</strong> to inspect:
+
+            <p className="text-[11px] text-slate-600 dark:text-[#A1A1AA] mb-3">
+              Passwords are automatically masked for public presentation & viva evaluations. Click <strong>1-Click Launch</strong> to enter directly, <strong>Auto-Fill</strong> to test, or click the <strong>Eye icon</strong> to reveal.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {EXAMINER_CREDENTIALS.map((cred) => (
-                <div
-                  key={cred.role}
-                  className="p-3.5 rounded-2xl bg-[#FEFDF8] dark:bg-[#0D0D11] border border-[#FEF08A] dark:border-[#222228] hover:border-[#FFD000] dark:hover:border-[#FFD000] transition-all shadow-2xs flex flex-col justify-between"
+            {/* Role Filter Tabs */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-3">
+              {[
+                { id: 'ALL', label: `All Profiles (${SAMPLE_CREDENTIALS.length})` },
+                { id: 'student', label: `Students (${SAMPLE_CREDENTIALS.filter(c => c.role === 'student').length})` },
+                { id: 'faculty', label: `Faculty (${SAMPLE_CREDENTIALS.filter(c => c.role === 'faculty').length})` },
+                { id: 'admin', label: `Admins (${SAMPLE_CREDENTIALS.filter(c => c.role === 'admin').length})` },
+                { id: 'parent', label: `Parents (${SAMPLE_CREDENTIALS.filter(c => c.role === 'parent').length})` }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setCredRoleFilter(tab.id)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    credRoleFilter === tab.id
+                      ? 'bg-[#FFD000] text-black shadow-xs'
+                      : 'bg-[#FEF9C3]/50 dark:bg-[#181820] text-slate-700 dark:text-zinc-400 hover:text-black dark:hover:text-white'
+                  }`}
                 >
-                  <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-black bg-[#FFD000] px-2 py-0.5 rounded">
-                        {cred.role.toUpperCase()}
-                      </span>
-                      <span className="text-[9px] font-mono text-slate-500 dark:text-[#71717A] font-bold">
-                        {cred.allottedId}
-                      </span>
-                    </div>
-
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">{cred.name}</h4>
-                    <p className="text-[10px] text-slate-600 dark:text-[#A1A1AA] font-mono mt-0.5 truncate select-all" title={cred.email}>
-                      {cred.email}
-                    </p>
-                    <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5">
-                      Pass: <span className="font-bold text-slate-900 dark:text-white">{cred.password}</span>
-                    </p>
-                  </div>
-
-                  <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-[#222228] flex items-center gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => handleLaunchExaminerCred(cred)}
-                      disabled={loading}
-                      className="flex-1 py-1.5 px-2 rounded-lg bg-[#FFD000] hover:bg-[#F0C400] text-black font-bold text-[10px] flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50 border border-[#FFD000]"
-                    >
-                      <span>Launch</span>
-                      <ArrowRight className="w-3 h-3 text-black" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => handleAutoFillExaminer(cred)}
-                      disabled={loading}
-                      className="py-1.5 px-2 rounded-lg bg-white dark:bg-[#181820] hover:bg-[#FEF9C3] text-slate-800 dark:text-slate-200 font-bold text-[10px] border border-slate-200 dark:border-[#27272A] transition-all cursor-pointer"
-                      title="Fill into Sign In Form"
-                    >
-                      Auto-Fill
-                    </button>
-                  </div>
-                </div>
+                  {tab.label}
+                </button>
               ))}
+            </div>
+
+            {/* Credentials Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+              {SAMPLE_CREDENTIALS
+                .filter(cred => credRoleFilter === 'ALL' || cred.role === credRoleFilter)
+                .map((cred) => {
+                  const isRevealed = !!revealedPasswords[cred.id];
+                  const isCopied = copiedCredId === cred.id;
+                  return (
+                    <div
+                      key={cred.id}
+                      className="p-3.5 rounded-2xl bg-[#FEFDF8] dark:bg-[#0D0D11] border border-[#FEF08A] dark:border-[#222228] hover:border-[#FFD000] dark:hover:border-[#FFD000] transition-all shadow-2xs flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <span className={`text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+                            cred.role === 'student' ? 'bg-[#FFD000] text-black' :
+                            cred.role === 'faculty' ? 'bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 border border-purple-200 dark:border-purple-800' :
+                            cred.role === 'admin' ? 'bg-amber-400 text-black font-extrabold' :
+                            'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                          }`}>
+                            {cred.role.toUpperCase()}
+                          </span>
+                          <span className="text-[9px] font-mono text-slate-500 dark:text-[#71717A] font-bold">
+                            {cred.allottedId}
+                          </span>
+                        </div>
+
+                        <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">{cred.name}</h4>
+                        <p className="text-[10px] text-slate-600 dark:text-[#A1A1AA] font-mono mt-0.5 truncate select-all" title={cred.email}>
+                          {cred.email}
+                        </p>
+
+                        {/* Masked Password Container */}
+                        <div className="mt-2 p-2 rounded-lg bg-slate-100/70 dark:bg-[#141419] border border-slate-200/80 dark:border-[#27272A] flex items-center justify-between text-[11px] font-mono">
+                          <div className="flex items-center gap-1.5 overflow-hidden">
+                            <span className="text-[10px] text-slate-400 select-none">Pass:</span>
+                            <span className={`font-bold tracking-wider select-all ${isRevealed ? 'text-slate-900 dark:text-white text-xs' : 'text-slate-500 dark:text-zinc-500 text-sm'}`}>
+                              {isRevealed ? cred.password : '••••••••'}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-1">
+                            {/* Toggle Reveal */}
+                            <button
+                              type="button"
+                              onClick={() => togglePasswordVisibility(cred.id)}
+                              className="p-1 rounded hover:bg-slate-200 dark:hover:bg-[#222228] text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer transition-colors"
+                              title={isRevealed ? 'Hide Password' : 'Show Password (Private)'}
+                            >
+                              {isRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                            </button>
+
+                            {/* Copy Password */}
+                            <button
+                              type="button"
+                              onClick={(e) => handleCopySecurePassword(cred.password, cred.id, e)}
+                              className="p-1 rounded hover:bg-slate-200 dark:hover:bg-[#222228] text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer transition-colors"
+                              title="Copy password without displaying"
+                            >
+                              {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-[#222228] flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => handleLaunchExaminerCred(cred)}
+                          disabled={loading}
+                          className="flex-1 py-1.5 px-2 rounded-lg bg-[#FFD000] hover:bg-[#F0C400] text-black font-bold text-[10px] flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50 border border-[#FFD000]"
+                        >
+                          <span>1-Click Launch</span>
+                          <ArrowRight className="w-3 h-3 text-black" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleAutoFillExaminer(cred)}
+                          disabled={loading}
+                          className="py-1.5 px-2 rounded-lg bg-white dark:bg-[#181820] hover:bg-[#FEF9C3] text-slate-800 dark:text-slate-200 font-bold text-[10px] border border-slate-200 dark:border-[#27272A] transition-all cursor-pointer"
+                          title="Auto-fill email and masked password into Sign In form"
+                        >
+                          Auto-Fill
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
           </div>
 
@@ -1139,8 +1239,8 @@ export default function AuthPage({ onLoginSuccess }) {
                   <GraduationCap className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                   <span>Tap Student Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">RFID-9A-4F-2C-11</p>
-                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Shubhi Mathur</p>
+                <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">25EC1SH60</p>
+                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Shubhi (3rd Sem)</p>
               </button>
 
               <button
@@ -1154,7 +1254,7 @@ export default function AuthPage({ onLoginSuccess }) {
                   <span>Tap Faculty Tag</span>
                 </p>
                 <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">FAC-ECE-208</p>
-                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Dr. M. Manohar</p>
+                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Dr. Murli Manohar</p>
               </button>
 
               <button
@@ -1181,8 +1281,8 @@ export default function AuthPage({ onLoginSuccess }) {
                   <Users className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                   <span>Tap Parent Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">rkmathur.gwalior</p>
-                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Mr. R. K. Mathur</p>
+                <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">PRT-98261</p>
+                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Vibha Mathur</p>
               </button>
             </div>
           </div>
