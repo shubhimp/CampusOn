@@ -71,7 +71,7 @@ export default function App() {
   const effectiveRole = currentUser?.role || 'student';
 
   return (
-    <div className="flex h-screen bg-[#F8F9FA] overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#F8F9FA] dark:bg-[#0b0f19] overflow-hidden font-sans">
       {/* Light Peach Sidebar with Strict Role-Based Access Control */}
       <Sidebar
         currentUser={currentUser}

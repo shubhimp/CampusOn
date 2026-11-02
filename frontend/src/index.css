@@ -2,9 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg-primary: #F8F9FA;
+  --bg-card: #ffffff;
+  --bg-sidebar: #fdf3ed;
+  --border-color: #ebd7cc;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --accent-maroon: #8b1e3f;
+}
+
+html.dark, body.dark, [data-theme="dark"] {
+  --bg-primary: #0b0f19;
+  --bg-card: #141d2f;
+  --bg-sidebar: #0f172a;
+  --border-color: #26354f;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-maroon: #e11d48;
+}
+
 @layer base {
   body {
-    @apply bg-[#F8F9FA] text-slate-800 antialiased font-sans;
+    @apply bg-[#F8F9FA] text-slate-800 antialiased font-sans transition-colors duration-200;
+  }
+  body.dark {
+    @apply bg-[#0b0f19] text-slate-100;
   }
 }
 
@@ -16,12 +39,21 @@
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
+.dark ::-webkit-scrollbar-track {
+  background: #0b0f19;
+}
 ::-webkit-scrollbar-thumb {
   background: #d8c2b5;
   border-radius: 9999px;
 }
+.dark ::-webkit-scrollbar-thumb {
+  background: #2a3a54;
+}
 ::-webkit-scrollbar-thumb:hover {
   background: #a63456;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #e11d48;
 }
 
 /* Hexagon Card Styling */
@@ -37,7 +69,107 @@
   transition: all 0.2s ease-in-out;
 }
 
+.dark .hex-card {
+  background: #141d2f;
+  border-color: #26354f;
+}
+
 .hex-card:hover {
   box-shadow: 0 10px 25px -5px rgba(139, 30, 63, 0.08);
   border-color: #ffd8be;
+}
+
+.dark .hex-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(225, 29, 72, 0.12);
+  border-color: #e11d48;
+}
+
+/* Global Dark Theme Overrides for Comprehensive Full Coverage */
+.dark .bg-white {
+  background-color: #141d2f !important;
+  color: #f8fafc !important;
+  border-color: #24344d !important;
+}
+
+.dark .bg-\[\#F8F9FA\] {
+  background-color: #0b0f19 !important;
+}
+
+.dark .bg-\[\#fdf3ed\],
+.dark .bg-\[\#fff7f2\],
+.dark .bg-\[\#fbf3ee\],
+.dark .bg-\[\#fdf6f0\],
+.dark .bg-\[\#fdf7f4\],
+.dark .bg-\[\#faf5f0\],
+.dark .bg-\[\#fbf5f1\],
+.dark .bg-slate-50 {
+  background-color: #162238 !important;
+  border-color: #253652 !important;
+  color: #e2e8f0 !important;
+}
+
+.dark .bg-slate-100 {
+  background-color: #1c2b44 !important;
+  color: #f1f5f9 !important;
+}
+
+.dark .border-\[\#ebd7cc\],
+.dark .border-\[\#ecd5c6\],
+.dark .border-\[\#edd7ca\],
+.dark .border-\[\#f0ded2\],
+.dark .border-\[\#edd5c6\],
+.dark .border-slate-200 {
+  border-color: #24344d !important;
+}
+
+.dark .border-slate-100 {
+  border-color: #1f2c42 !important;
+}
+
+.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+.dark input, 
+.dark select, 
+.dark textarea {
+  background-color: #111a2c !important;
+  border-color: #2d3e5e !important;
+  color: #ffffff !important;
+}
+
+.dark input::placeholder, 
+.dark textarea::placeholder {
+  color: #64748b !important;
+}
+
+.dark .shadow-sm,
+.dark .shadow-md,
+.dark .shadow-xl {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Gradient backgrounds in dark mode */
+.dark .from-\[\#fdf7f4\],
+.dark .via-\[\#f7e6db\],
+.dark .to-\[\#f4dcd0\] {
+  --tw-gradient-from: #0b0f19 !important;
+  --tw-gradient-via: #11192b !important;
+  --tw-gradient-to: #0e1524 !important;
 }

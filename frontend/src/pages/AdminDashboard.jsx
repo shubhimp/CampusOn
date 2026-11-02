@@ -44,6 +44,7 @@ import {
   CartesianGrid 
 } from 'recharts';
 import HexagonBadge from '../components/HexagonBadge';
+import ESP32CamFaceAttendance from '../components/ESP32CamFaceAttendance';
 import { RECENT_SAFETY_ALERTS } from '../mockData';
 import { optimizeTimetable } from '../services/api';
 import { getLocalDirectory } from '../services/supabaseClient';
@@ -336,6 +337,11 @@ export default function AdminDashboard({
           statusColor={alerts.filter((a) => !a.resolved).length > 0 ? 'amber' : 'emerald'}
         />
       </div>
+
+      {/* Tab: ESP32 3D Biometrics & Face Attendance */}
+      {activeTab === 'face_attendance' && (
+        <ESP32CamFaceAttendance roomId="AB-204" roomName="IoT & Embedded Systems Lab" />
+      )}
 
       {/* Tab: Campus Control Tower */}
       {activeTab === 'overview' && (

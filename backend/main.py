@@ -3,7 +3,7 @@ CampusOn Intelligent Campus Operating System
 FastAPI Central Backend Engine
 """
 
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Body, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
@@ -278,6 +278,20 @@ class HardwareCommandPayload(BaseModel):
     command: str  # 'RELAY_UNLOCK' | 'BUZZER_TEST' | 'REBOOT' | 'FLASH_TOGGLE' | 'PING'
     durationSec: Optional[int] = 5
 
+class BiometricEnrollPayload(BaseModel):
+    studentId: str
+    studentName: str
+    department: Optional[str] = "ECE"
+    semester: Optional[str] = "3rd Semester"
+    leftImageBase64: str
+    frontImageBase64: str
+    rightImageBase64: str
+
+class BiometricVerifyPayload(BaseModel):
+    imageBase64: str
+    roomId: Optional[str] = "AB-204"
+    streamSource: Optional[str] = "webcam"
+
 # --- Endpoints ---
 
 @app.get("/")
@@ -540,6 +554,124 @@ def get_attendance_records():
         "totalPresent": len(db["attendance_records"]),
         "edgeNode": "ESP32-CAM-OV2640-ACTIVE"
     }
+
+# --- 3D Biometric Face Recognition & Enrollment Endpoints ---
+
+@app.get("/api/biometrics/enrolled")
+def get_enrolled_biometrics():
+    """Returns list of enrolled students with 3D profile status."""
+    from face_engine import load_enrolled_faces
+    profiles = load_enrolled_faces()
+    result = []
+    for s_id, p in profiles.items():
+        result.append({
+            "studentId": p["studentId"],
+            "studentName": p["studentName"],
+            "department": p.get("department", "ECE"),
+            "semester": p.get("semester", "3rd Semester"),
+            "enrolledAt": p.get("enrolledAt", "2026-10-31"),
+            "angles": p.get("angles", ["left_profile", "front_face", "right_profile"]),
+            "depthConfidence": p.get("depthConfidence", 99.2),
+            "status": p.get("status", "Active")
+        })
+    return {"success": True, "count": len(result), "students": result}
+
+@app.post("/api/biometrics/enroll-3d")
+def enroll_student_biometrics(payload: BiometricEnrollPayload):
+    """Enrolls student using 3-Angle Photos (Left Profile, Front Face, Right Profile)."""
+    from face_engine import enroll_student_3d
+    try:
+        profile = enroll_student_3d(
+            student_id=payload.studentId.strip(),
+            student_name=payload.studentName.strip(),
+            department=payload.department or "ECE",
+            semester=payload.semester or "3rd Semester",
+            left_img_data=payload.leftImageBase64,
+            front_img_data=payload.frontImageBase64,
+            right_img_data=payload.rightImageBase64
+        )
+        return {
+            "success": True,
+            "message": f"Biometric 3D profile enrolled for {payload.studentName} ({payload.studentId})",
+            "student": {
+                "studentId": profile["studentId"],
+                "studentName": profile["studentName"],
+                "department": profile.get("department", "ECE"),
+                "semester": profile.get("semester", "3rd Semester"),
+                "angles": profile["angles"],
+                "depthConfidence": profile["depthConfidence"]
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Enrollment failed: {str(e)}")
+
+@app.delete("/api/biometrics/enrolled/{student_id}")
+def delete_student_biometrics(student_id: str):
+    """Deletes an enrolled biometric student profile."""
+    from face_engine import load_enrolled_faces, save_enrolled_faces
+    profiles = load_enrolled_faces()
+    if student_id in profiles:
+        del profiles[student_id]
+        save_enrolled_faces(profiles)
+        return {"success": True, "message": f"Student {student_id} removed from biometric registry."}
+    raise HTTPException(status_code=404, detail="Student not found in registry.")
+
+@app.post("/api/biometrics/verify-frame")
+async def verify_biometric_frame(
+    request: Request,
+    roomId: str = "AB-204"
+):
+    """
+    Receives frame either as raw JPEG binary (from ESP32-CAM)
+    or JSON payload with base64 image (from browser webcam).
+    Matches against 3-Angle profiles, marks attendance, and actuates door relay.
+    """
+    from face_engine import verify_face_frame
+    
+    content_type = request.headers.get("content-type", "")
+    
+    if "application/json" in content_type:
+        body = await request.json()
+        image_data = body.get("imageBase64", "")
+        roomId = body.get("roomId", roomId)
+    else:
+        # Raw binary body from ESP32-CAM
+        image_data = await request.body()
+        
+    if not image_data:
+        return {"authenticated": False, "reason": "No image data received"}
+        
+    result = verify_face_frame(image_data, room_id=roomId)
+    
+    if result.get("authenticated"):
+        # Automatically insert into campus attendance records
+        att_record = {
+            "id": f"att-{len(db['attendance_records']) + 1:03d}",
+            "studentId": result["studentId"],
+            "studentName": result["studentName"],
+            "courseCode": "ECE-305P",
+            "roomId": roomId,
+            "timestamp": result["timestamp"],
+            "date": "Today",
+            "verificationMethod": "ESP32-CAM 3D Face Biometric",
+            "confidence": result["confidence"],
+            "status": "Present",
+            "relayActuated": True,
+            "matchedAngle": result.get("matchedAngle", "front_face")
+        }
+        db["attendance_records"].insert(0, att_record)
+        
+        # Unlock classroom door in system
+        for room in db["classrooms"]:
+            if room["id"] == roomId:
+                room["demoLockState"] = "Unlocked"
+                room["rfidLastScan"] = f"{result['studentName']} (3D Biometric - {result['timestamp']})"
+                break
+                
+        result["record"] = att_record
+        result["doorRelay"] = "ACTUATED_UNLOCKED"
+        
+    return result
 
 # --- Administrator Hardware & ESP32 IP Device Gateway Endpoints ---
 

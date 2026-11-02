@@ -9,6 +9,23 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      (function() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const urlTheme = params.get('theme');
+          const stored = localStorage.getItem('campuson_theme');
+          const theme = urlTheme === 'dark' || urlTheme === 'light' ? urlTheme : (stored || 'light');
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+            document.documentElement.setAttribute('data-theme', 'dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.setAttribute('data-theme', 'light');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body class="bg-[#F8F9FA] text-slate-800 antialiased selection:bg-[#ffd8be] selection:text-[#8b1e3f]">
     <div id="root"></div>

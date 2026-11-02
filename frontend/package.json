@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "proxy": "node proxy_servers.cjs",
     "build": "vite build",
     "preview": "vite preview"
   },

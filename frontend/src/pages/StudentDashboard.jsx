@@ -23,6 +23,7 @@ import {
 import HexagonBadge from '../components/HexagonBadge';
 import DynamicStudentCard from '../components/DynamicStudentCard';
 import CampusFloorMap from '../components/CampusFloorMap';
+import ESP32CamFaceAttendance from '../components/ESP32CamFaceAttendance';
 import { COURSE_NOTES, SUPPORT_CATEGORIES } from '../mockData';
 import { askNotesAI, submitWelfareQuery } from '../services/api';
 
@@ -230,6 +231,10 @@ export default function StudentDashboard({
       </div>
 
       {/* Main Tab Navigation Container */}
+      {activeTab === 'face_attendance' && (
+        <ESP32CamFaceAttendance roomId="AB-204" roomName="IoT & Embedded Systems Lab" />
+      )}
+
       {activeTab === 'overview' && (
         <div className="space-y-6">
           {/* Daily Schedule Section */}

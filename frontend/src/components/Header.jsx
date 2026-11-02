@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Wifi, ShieldAlert, Sparkles, User, RefreshCw, Download, LogOut, ChevronDown } from 'lucide-react';
+import { Bell, Wifi, ShieldAlert, Sparkles, User, RefreshCw, Download, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Header({ currentUser, alertsCount = 2, onTriggerRefresh, onSignOut }) {
+  const { theme, isDark, toggleTheme } = useTheme();
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
@@ -27,14 +29,14 @@ export default function Header({ currentUser, alertsCount = 2, onTriggerRefresh,
   };
 
   return (
-    <header className="h-16 bg-white border-b border-[#ebd7cc] px-6 flex items-center justify-between shrink-0 shadow-sm">
+    <header className="h-16 bg-white dark:bg-[#0f172a] border-b border-[#ebd7cc] dark:border-slate-800 px-6 flex items-center justify-between shrink-0 shadow-sm">
       {/* College Branding & Breadcrumb */}
       <div className="flex items-center gap-4">
         <div className="hidden sm:block">
-          <h2 className="text-sm font-bold text-slate-800 tracking-tight">
+          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100 tracking-tight">
             Madhav Institute of Technology & Science, Gwalior
           </h2>
-          <p className="text-[11px] text-[#8b1e3f] font-medium flex items-center gap-1.5">
+          <p className="text-[11px] text-[#8b1e3f] dark:text-rose-400 font-medium flex items-center gap-1.5">
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500" />
             NAAC Accredited A++ | Autonomous Institution | Centre for Internet of Things
           </p>
@@ -43,6 +45,30 @@ export default function Header({ currentUser, alertsCount = 2, onTriggerRefresh,
 
       {/* Right Controls: Live Telemetry Status, Clock, Alerts & User Avatar */}
       <div className="flex items-center gap-3.5">
+        {/* Theme Switcher Toggle (🌙 Dark / ☀️ Light) */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition-all cursor-pointer shadow-2xs ${
+            isDark 
+              ? 'bg-slate-800 border-slate-700 text-amber-300 hover:bg-slate-700 hover:border-amber-400/50' 
+              : 'bg-[#fdf3ed] border-[#edd5c6] text-[#8b1e3f] hover:bg-[#fae5d8]'
+          }`}
+          title={`Switch to ${isDark ? 'Light' : 'Dark'} Theme (or use ?theme=${isDark ? 'light' : 'dark'})`}
+        >
+          {isDark ? (
+            <>
+              <Sun className="w-3.5 h-3.5 text-amber-400 animate-spin-slow" />
+              <span>☀️ Light</span>
+            </>
+          ) : (
+            <>
+              <Moon className="w-3.5 h-3.5 text-[#8b1e3f]" />
+              <span>🌙 Dark</span>
+            </>
+          )}
+        </button>
+
         {/* Master PDF Download Button */}
         <a
           href="/CampusOn_Master_Guidebook.pdf"

@@ -24,8 +24,11 @@ import {
   Send,
   ArrowLeft,
   Check,
-  ChevronDown
+  ChevronDown,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useTheme } from '../context/ThemeContext';
 import { 
   registerAccount, 
   loginAccount, 
@@ -38,6 +41,7 @@ import {
 import { EXAMINER_CREDENTIALS } from '../mockData';
 
 export default function AuthPage({ onLoginSuccess }) {
+  const { theme, isDark, toggleTheme, setThemeMode } = useTheme();
   const [mode, setMode] = useState('signin'); // 'signin' | 'signup' | 'forgot'
   const [authMethod, setAuthMethod] = useState('password'); // 'password' | 'otp'
   const [selectedRole, setSelectedRole] = useState('student');
@@ -439,23 +443,46 @@ export default function AuthPage({ onLoginSuccess }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fdf7f4] via-[#f7e6db] to-[#f4dcd0] flex flex-col justify-between py-8 px-4 sm:px-6 lg:px-8 font-sans">
-      {/* Top Campus Branding */}
+      {/* Top Campus Branding & Theme Toggle */}
       <div className="max-w-4xl mx-auto w-full text-center mb-6">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#edd5c6] shadow-xs mb-3">
-          <Shield className="w-3.5 h-3.5 text-emerald-600" />
-          <span className="text-xs font-semibold text-[#8b1e3f] uppercase tracking-wider">
-            MITS Gwalior Secure Identity Gateway • Strict Access Control
-          </span>
+        <div className="flex items-center justify-between gap-3 mb-3 max-w-2xl mx-auto px-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-800/90 border border-[#edd5c6] dark:border-slate-700 shadow-xs">
+            <Shield className="w-3.5 h-3.5 text-emerald-600" />
+            <span className="text-xs font-semibold text-[#8b1e3f] dark:text-rose-400 uppercase tracking-wider">
+              MITS Gwalior Secure Identity Gateway
+            </span>
+          </div>
+
+          {/* Quick Direct Theme Switcher Pill */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-[#edd5c6] dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-amber-300 shadow-xs hover:border-[#8b1e3f] dark:hover:border-amber-400 cursor-pointer transition-all"
+            title={`Switch to ${isDark ? 'Light' : 'Dark'} Theme (or open with ?theme=${isDark ? 'light' : 'dark'})`}
+          >
+            {isDark ? (
+              <>
+                <Sun className="w-3.5 h-3.5 text-amber-400" />
+                <span>☀️ Light Theme</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                <span>🌙 Dark Theme</span>
+              </>
+            )}
+          </button>
         </div>
+
         <div className="flex items-center justify-center gap-3">
           <div className="w-12 h-12 rounded-2xl bg-[#8b1e3f] text-white flex items-center justify-center shadow-md">
             <Cpu className="w-7 h-7" />
           </div>
           <div className="text-left">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#8b1e3f] tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#8b1e3f] dark:text-rose-400 tracking-tight">
               CampusOn OS
             </h1>
-            <p className="text-xs font-semibold text-slate-600">
+            <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
               Department of Electrical & Computer Engg. | Centre for Internet of Things
             </p>
           </div>

@@ -25,6 +25,7 @@ import {
 export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOut }) {
   const studentNav = [
     { id: 'overview', label: 'Daily Timetable', icon: Calendar },
+    { id: 'face_attendance', label: 'ESP32 3D Face Attendance', icon: ScanFace },
     { id: 'digital_id', label: 'Digital Student ID', icon: QrCode },
     { id: 'rooms', label: 'Classroom Availability', icon: Layers },
     { id: 'navigation', label: 'Indoor Navigation', icon: Compass },
@@ -43,6 +44,7 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
 
   const adminNav = [
     { id: 'overview', label: 'Campus Control Tower', icon: Activity },
+    { id: 'face_attendance', label: 'ESP32 3D Face Attendance', icon: ScanFace },
     { id: 'hardware_mesh', label: 'ESP32 & Hardware Mesh', icon: Wifi },
     { id: 'timetable_solver', label: 'AI Timetable Optimizer', icon: Calendar },
     { id: 'occupancy', label: 'Live IoT Room Matrix', icon: Layers },
@@ -71,30 +73,30 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
   };
 
   return (
-    <aside className="w-64 bg-[#fdf3ed] border-r border-[#edd5c6] flex flex-col h-screen select-none shrink-0 transition-all">
+    <aside className="w-64 bg-[#fdf3ed] dark:bg-[#0f172a] border-r border-[#edd5c6] dark:border-slate-800 flex flex-col h-screen select-none shrink-0 transition-all">
       {/* Brand Header */}
-      <div className="p-5 border-b border-[#ebd3c3] flex items-center gap-3">
+      <div className="p-5 border-b border-[#ebd3c3] dark:border-slate-800 flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8b1e3f] to-[#b83252] flex items-center justify-center text-white shadow-md">
           <Cpu className="w-5 h-5 animate-pulse" />
         </div>
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#8b1e3f]">CampusOn</h1>
-          <p className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">MITS Gwalior OS</p>
+          <h1 className="text-xl font-bold tracking-tight text-[#8b1e3f] dark:text-rose-400">CampusOn</h1>
+          <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">MITS Gwalior OS</p>
         </div>
       </div>
 
       {/* Role Access Section: Strictly Confined to Single Authorized Dashboard */}
-      <div className="p-3.5 border-b border-[#ebd3c3]/70 bg-[#faebe0]">
+      <div className="p-3.5 border-b border-[#ebd3c3]/70 dark:border-slate-800 bg-[#faebe0] dark:bg-slate-900/60">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
             Assigned Dashboard
           </span>
-          <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-full">
+          <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-full">
             <Lock className="w-2.5 h-2.5" />
             <span>ROLE LOCKED</span>
           </span>
         </div>
-        <div className="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-[#edd7ca] shadow-2xs">
+        <div className="flex items-center gap-2.5 p-2 bg-white dark:bg-slate-800 rounded-xl border border-[#edd7ca] dark:border-slate-700 shadow-2xs">
           <div className="p-2 rounded-lg bg-[#8b1e3f] text-white shrink-0">
             {effectiveRole === 'student' && <GraduationCap className="w-4 h-4" />}
             {effectiveRole === 'faculty' && <BookOpen className="w-4 h-4" />}
@@ -133,10 +135,10 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all text-left cursor-pointer ${
                 isActive
                   ? 'bg-[#8b1e3f] text-white shadow-sm font-semibold'
-                  : 'text-slate-700 hover:bg-[#fae5d8] hover:text-[#8b1e3f]'
+                  : 'text-slate-700 dark:text-slate-300 hover:bg-[#fae5d8] dark:hover:bg-slate-800 hover:text-[#8b1e3f] dark:hover:text-rose-400'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#8b1e3f]'}`} />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#8b1e3f] dark:text-rose-400'}`} />
               <span>{item.label}</span>
             </button>
           );
