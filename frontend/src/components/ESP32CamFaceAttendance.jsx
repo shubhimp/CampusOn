@@ -30,6 +30,46 @@ const API_BASE = (typeof window !== 'undefined' && (window.location.hostname ===
 
 const INITIAL_ENROLLED_STUDENTS = [
   {
+    studentId: '25EC1SH60',
+    studentName: 'Shubhi',
+    department: 'ECE',
+    semester: '3rd Semester',
+    enrolledAt: '2026-10-31T10:00:00',
+    angles: ['left_profile', 'front_face', 'right_profile'],
+    depthConfidence: 99.4,
+    status: 'Active'
+  },
+  {
+    studentId: '25EC1TA63',
+    studentName: 'Tamanna',
+    department: 'ECE',
+    semester: '3rd Semester',
+    enrolledAt: '2026-10-31T10:05:00',
+    angles: ['left_profile', 'front_face', 'right_profile'],
+    depthConfidence: 98.7,
+    status: 'Active'
+  },
+  {
+    studentId: '25EC1SH59',
+    studentName: 'Shubh',
+    department: 'ECE',
+    semester: '3rd Semester',
+    enrolledAt: '2026-10-31T10:10:00',
+    angles: ['left_profile', 'front_face', 'right_profile'],
+    depthConfidence: 97.9,
+    status: 'Active'
+  },
+  {
+    studentId: '25EC1SH58',
+    studentName: 'Shourya',
+    department: 'ECE',
+    semester: '3rd Semester',
+    enrolledAt: '2026-10-31T10:15:00',
+    angles: ['left_profile', 'front_face', 'right_profile'],
+    depthConfidence: 98.2,
+    status: 'Active'
+  },
+  {
     studentId: 'BTEC25O1060',
     studentName: 'Shubhi Mathur',
     department: 'ECE',
@@ -47,26 +87,6 @@ const INITIAL_ENROLLED_STUDENTS = [
     enrolledAt: '2026-10-31T10:05:00',
     angles: ['left_profile', 'front_face', 'right_profile'],
     depthConfidence: 98.7,
-    status: 'Active'
-  },
-  {
-    studentId: 'BTEC25O1045',
-    studentName: 'Rahul Verma',
-    department: 'ECE',
-    semester: '3rd Semester',
-    enrolledAt: '2026-10-31T10:10:00',
-    angles: ['left_profile', 'front_face', 'right_profile'],
-    depthConfidence: 97.9,
-    status: 'Active'
-  },
-  {
-    studentId: 'BTEC25O1012',
-    studentName: 'Aditya Saxena',
-    department: 'ECE',
-    semester: '3rd Semester',
-    enrolledAt: '2026-10-31T10:15:00',
-    angles: ['left_profile', 'front_face', 'right_profile'],
-    depthConfidence: 98.2,
     status: 'Active'
   }
 ];
