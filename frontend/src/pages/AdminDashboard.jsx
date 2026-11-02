@@ -313,7 +313,7 @@ export default function AdminDashboard({
           label="Total Monitored Rooms"
           value={`${classrooms.length} Spaces`}
           subtext="ESP32 Edge Nodes Active"
-          statusColor="maroon"
+          statusColor="yellow"
         />
         <HexagonBadge
           icon={Activity}
@@ -347,19 +347,19 @@ export default function AdminDashboard({
       {activeTab === 'overview' && (
         <div className="space-y-6">
           {/* Quick Hardware Mesh IP Gateway Banner in Overview */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-[#8b1e3f] via-[#68152e] to-[#4a0e20] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-md">
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-[#FFD000] via-[#FACC15] to-[#EAB308] text-black flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-[0_0_20px_rgba(255,208,0,0.25)]">
             <div className="flex items-center gap-3.5">
-              <div className="w-11 h-11 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-xs">
-                <Wifi className="w-6 h-6 text-emerald-400 animate-pulse" />
+              <div className="w-11 h-11 rounded-xl bg-black/10 backdrop-blur-md flex items-center justify-center border border-black/20 shadow-xs">
+                <Wifi className="w-6 h-6 text-black animate-pulse" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="text-sm font-bold text-white">ESP32 & Hardware Mesh IP Controller</h4>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold border border-emerald-500/30">
+                  <h4 className="text-sm font-extrabold text-black">ESP32 & Hardware Mesh IP Controller</h4>
+                  <span className="px-2.5 py-0.5 rounded-full bg-black/15 text-black font-mono text-[10px] font-bold border border-black/25">
                     {hardwareDevices.filter(d => d.status === 'ONLINE').length} Nodes Online
                   </span>
                 </div>
-                <p className="text-xs text-white/70 mt-0.5">
+                <p className="text-xs text-black/80 mt-0.5 font-medium">
                   Live telemetry, 3D face camera streaming, and remote solenoid door lock actuation via IP address.
                 </p>
               </div>
@@ -367,9 +367,9 @@ export default function AdminDashboard({
             <button
               type="button"
               onClick={() => setActiveTab('hardware_mesh')}
-              className="px-4 py-2 rounded-xl bg-white text-[#8b1e3f] hover:bg-slate-100 text-xs font-bold transition-all shadow-xs flex items-center gap-2 self-start sm:self-auto cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-black text-[#FFD000] hover:bg-neutral-900 text-xs font-bold transition-all shadow-md flex items-center gap-2 self-start sm:self-auto cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 text-[#FFD000]" />
               <span>Connect Hardware by IP</span>
             </button>
           </div>
@@ -413,10 +413,10 @@ export default function AdminDashboard({
                     if (room.status === 'Occupied – Open Use') badgeClass = 'bg-amber-100 text-amber-800';
 
                     return (
-                      <tr key={room.id} className="hover:bg-[#fffaf7] transition-colors">
-                        <td className="p-3 font-mono font-bold text-[#8b1e3f]">{room.id}</td>
-                        <td className="p-3 text-slate-600 font-medium">{room.building} ({room.floor})</td>
-                        <td className="p-3 text-slate-700 font-semibold">{room.capacity} Seats</td>
+                      <tr key={room.id} className="hover:bg-[#FEFDF8] dark:hover:bg-[#181820] transition-colors">
+                        <td className="p-3 font-mono font-bold text-[#CA8A04] dark:text-[#FFD000]">{room.id}</td>
+                        <td className="p-3 text-slate-600 dark:text-[#A1A1AA] font-medium">{room.building} ({room.floor})</td>
+                        <td className="p-3 text-slate-700 dark:text-slate-200 font-semibold">{room.capacity} Seats</td>
                         <td className="p-3">
                           <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${badgeClass}`}>
                             {room.status}
@@ -438,7 +438,7 @@ export default function AdminDashboard({
                           {room.gasLevel ? `${room.gasLevel} ppm (Normal)` : 'N/A'}
                         </td>
                         <td className="p-3">
-                          <span className="text-[10px] font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-[#181820] px-2 py-0.5 rounded">
                             {room.demoLockState || 'Locked'}
                           </span>
                         </td>
@@ -452,43 +452,43 @@ export default function AdminDashboard({
 
           {/* Analytics Graphs */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6">
-              <h3 className="text-sm font-bold text-slate-900 mb-1 flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#8b1e3f]" />
+            <div className="bg-white dark:bg-[#121217] rounded-2xl border border-[#FEF08A] dark:border-[#222228] shadow-sm p-6">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
                 Hourly Campus Classroom Utilization Curve
               </h3>
-              <p className="text-xs text-slate-500 mb-4">
+              <p className="text-xs text-slate-500 dark:text-[#A1A1AA] mb-4">
                 Measured by ultrasonic proximity & PIR activity across all floors
               </p>
               <div className="h-60">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={utilizationData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#222228" />
                     <XAxis dataKey="hour" stroke="#94a3b8" fontSize={11} />
                     <YAxis stroke="#94a3b8" fontSize={11} unit="%" />
                     <Tooltip />
-                    <Line type="monotone" dataKey="occupancyRate" stroke="#8b1e3f" strokeWidth={3} dot={{ r: 4 }} />
+                    <Line type="monotone" dataKey="occupancyRate" stroke="#FFD000" strokeWidth={3} dot={{ r: 4, fill: '#FFD000' }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6">
-              <h3 className="text-sm font-bold text-slate-900 mb-1 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#8b1e3f]" />
+            <div className="bg-white dark:bg-[#121217] rounded-2xl border border-[#FEF08A] dark:border-[#222228] shadow-sm p-6">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
                 Department Attendance Analytics
               </h3>
-              <p className="text-xs text-slate-500 mb-4">
+              <p className="text-xs text-slate-500 dark:text-[#A1A1AA] mb-4">
                 Verified RFID and Dynamic QR scan rates
               </p>
               <div className="h-60">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={departmentAttendance}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#222228" />
                     <XAxis dataKey="dept" stroke="#94a3b8" fontSize={11} />
                     <YAxis stroke="#94a3b8" fontSize={11} unit="%" />
                     <Tooltip />
-                    <Bar dataKey="attendance" fill="#b83252" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="attendance" fill="#FFD000" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -501,20 +501,20 @@ export default function AdminDashboard({
       {(activeTab === 'hardware_mesh' || activeTab === 'occupancy') && (
         <div className="space-y-6">
           {/* Top Control Bar */}
-          <div className="bg-white rounded-3xl border border-[#ebd7cc] shadow-sm p-6">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#ebd7cc]">
+          <div className="bg-white dark:bg-[#121217] rounded-3xl border border-[#FEF08A] dark:border-[#222228] shadow-sm p-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#FEF08A] dark:border-[#222228]">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#fdf3ed] border border-[#ebd7cc] text-[#8b1e3f] text-xs font-bold uppercase tracking-wider mb-2">
-                  <Wifi className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FEF9C3] dark:bg-[#0D0D11] border border-[#FDE047] dark:border-[#222228] text-[#713F12] dark:text-[#FFD000] text-xs font-mono font-bold uppercase tracking-wider mb-2">
+                  <Wifi className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                   <span>MITS Campus IoT Hardware Mesh</span>
                 </div>
-                <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
                   <span>ESP32 & Hardware IP Management Center</span>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono font-bold">
+                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 font-mono font-bold border border-emerald-300 dark:border-emerald-800">
                     {hardwareDevices.filter(d => d.status === 'ONLINE').length} ONLINE
                   </span>
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500 dark:text-[#A1A1AA] mt-1">
                   Connect, monitor telemetry, and remotely actuate ESP32 microcontrollers, ESP32-CAM nodes, and RFID gateways over LAN/Wi-Fi via IP addresses.
                 </p>
               </div>
@@ -523,9 +523,9 @@ export default function AdminDashboard({
                 <button
                   type="button"
                   onClick={() => setShowAddDeviceModal(prev => !prev)}
-                  className="px-4 py-2.5 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white text-xs font-bold flex items-center gap-2 shadow-md transition-all cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-[#FFD000] hover:bg-[#F0C400] text-black text-xs font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(255,208,0,0.35)] transition-all cursor-pointer"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-4 h-4 text-black" />
                   <span>{showAddDeviceModal ? 'Close Form' : 'Connect New Hardware by IP'}</span>
                 </button>
               </div>
@@ -533,12 +533,12 @@ export default function AdminDashboard({
 
             {/* Hardware Feedback Alert */}
             {hardwareFeedback && (
-              <div className="mt-4 p-3.5 rounded-2xl bg-[#fdf5f0] border border-[#edd5c6] text-xs font-semibold text-[#8b1e3f] flex items-center justify-between animate-in fade-in">
+              <div className="mt-4 p-3.5 rounded-2xl bg-[#FEF9C3] dark:bg-[#181820] border border-[#FDE047] dark:border-[#27272A] text-xs font-semibold text-[#713F12] dark:text-[#FFD000] flex items-center justify-between animate-in fade-in">
                 <span>{hardwareFeedback}</span>
                 <button
                   type="button"
                   onClick={() => setHardwareFeedback('')}
-                  className="text-slate-400 hover:text-slate-600 font-bold ml-2"
+                  className="text-slate-400 hover:text-black dark:hover:text-white font-bold ml-2 cursor-pointer"
                 >
                   ✕
                 </button>
@@ -547,36 +547,36 @@ export default function AdminDashboard({
 
             {/* Add Hardware Device by IP Form / Modal */}
             {showAddDeviceModal && (
-              <form onSubmit={handleConnectDevice} className="mt-6 p-5 rounded-2xl bg-gradient-to-br from-[#faf4f0] via-[#f7eee7] to-[#f4e6dc] border border-[#edd7ca] space-y-4 animate-in fade-in">
-                <div className="flex items-center justify-between pb-3 border-b border-[#ebd4c5]">
-                  <h4 className="text-sm font-bold text-[#8b1e3f] flex items-center gap-2">
+              <form onSubmit={handleConnectDevice} className="mt-6 p-5 rounded-2xl bg-[#FEFDF8] dark:bg-[#0D0D11] border border-[#FEF08A] dark:border-[#222228] space-y-4 animate-in fade-in">
+                <div className="flex items-center justify-between pb-3 border-b border-[#FEF08A] dark:border-[#222228]">
+                  <h4 className="text-sm font-bold text-[#713F12] dark:text-[#FFD000] flex items-center gap-2">
                     <Terminal className="w-4 h-4" />
                     <span>Provision New Hardware Node over LAN / Wi-Fi IP</span>
                   </h4>
-                  <span className="text-[11px] text-slate-500 font-mono">Protocols: HTTP REST • TCP • MJPEG</span>
+                  <span className="text-[11px] text-slate-500 dark:text-[#A1A1AA] font-mono">Protocols: HTTP REST • TCP • MJPEG</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                   {/* Device Name */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Device Label / Name</label>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] mb-1">Device Label / Name</label>
                     <input
                       type="text"
                       value={newDevice.name}
                       onChange={(e) => setNewDevice(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="e.g. AB-204 Primary ESP32"
-                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 outline-none focus:border-[#8b1e3f]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#141419] border border-slate-200 dark:border-[#27272A] text-xs text-slate-800 dark:text-white outline-none focus:border-[#FFD000]"
                       required
                     />
                   </div>
 
                   {/* Hardware Type */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Hardware Model / Type</label>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] mb-1">Hardware Model / Type</label>
                     <select
                       value={newDevice.type}
                       onChange={(e) => setNewDevice(prev => ({ ...prev, type: e.target.value }))}
-                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 outline-none focus:border-[#8b1e3f]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#141419] border border-slate-200 dark:border-[#27272A] text-xs text-slate-800 dark:text-white outline-none focus:border-[#FFD000]"
                     >
                       <option value="ESP32 Sensor Edge Node">ESP32 Sensor Edge Node (PIR, Ultrasonic, Gas)</option>
                       <option value="ESP32-CAM (OV2640)">ESP32-CAM (OV2640 3D Face Biometric)</option>
@@ -587,11 +587,11 @@ export default function AdminDashboard({
 
                   {/* Assigned Room */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Assigned Classroom / Lab</label>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] mb-1">Assigned Classroom / Lab</label>
                     <select
                       value={newDevice.roomId}
                       onChange={(e) => setNewDevice(prev => ({ ...prev, roomId: e.target.value }))}
-                      className="w-full px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 outline-none focus:border-[#8b1e3f]"
+                      className="w-full px-3 py-2 rounded-xl bg-white dark:bg-[#141419] border border-slate-200 dark:border-[#27272A] text-xs text-slate-800 dark:text-white outline-none focus:border-[#FFD000]"
                     >
                       {classrooms.map(c => (
                         <option key={c.id} value={c.id}>{c.id} - {c.name}</option>
@@ -603,14 +603,14 @@ export default function AdminDashboard({
 
                   {/* IP Address & Port */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">Device IP Address & Port</label>
+                    <label className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] mb-1">Device IP Address & Port</label>
                     <div className="flex gap-2">
                       <input
                         type="text"
                         value={newDevice.ipAddress}
                         onChange={(e) => setNewDevice(prev => ({ ...prev, ipAddress: e.target.value }))}
                         placeholder="e.g. 192.168.4.1"
-                        className="flex-1 px-3 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-mono outline-none focus:border-[#8b1e3f]"
+                        className="flex-1 px-3 py-2 rounded-xl bg-white dark:bg-[#141419] border border-slate-200 dark:border-[#27272A] text-xs text-slate-800 dark:text-white font-mono outline-none focus:border-[#FFD000]"
                         required
                       />
                       <input
@@ -618,7 +618,7 @@ export default function AdminDashboard({
                         value={newDevice.port}
                         onChange={(e) => setNewDevice(prev => ({ ...prev, port: e.target.value }))}
                         placeholder="80"
-                        className="w-16 px-2 py-2 rounded-xl bg-white border border-slate-200 text-xs text-slate-800 font-mono outline-none focus:border-[#8b1e3f]"
+                        className="w-16 px-2 py-2 rounded-xl bg-white dark:bg-[#141419] border border-slate-200 dark:border-[#27272A] text-xs text-slate-800 dark:text-white font-mono outline-none focus:border-[#FFD000]"
                       />
                     </div>
                   </div>
@@ -626,32 +626,32 @@ export default function AdminDashboard({
 
                 {/* Quick IP Presets */}
                 <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-500">
-                  <span className="text-[11px] font-semibold text-slate-600">Quick Viva IP Presets:</span>
+                  <span className="text-[11px] font-semibold text-slate-600 dark:text-[#A1A1AA]">Quick Viva IP Presets:</span>
                   <button
                     type="button"
                     onClick={() => setNewDevice(prev => ({ ...prev, ipAddress: '192.168.4.1', port: '80', name: 'AB-204 IoT Lab ESP32' }))}
-                    className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-[#8b1e3f] text-[10px] font-mono text-slate-700 cursor-pointer"
+                    className="px-2 py-1 rounded-md bg-white dark:bg-[#181820] border border-slate-200 dark:border-[#27272A] hover:border-[#FFD000] text-[10px] font-mono text-slate-700 dark:text-slate-200 cursor-pointer"
                   >
                     192.168.4.1 (Default AP)
                   </button>
                   <button
                     type="button"
                     onClick={() => setNewDevice(prev => ({ ...prev, ipAddress: '192.168.4.15', port: '81', type: 'ESP32-CAM (OV2640)', name: 'AB-204 ESP32-CAM' }))}
-                    className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-[#8b1e3f] text-[10px] font-mono text-slate-700 cursor-pointer"
+                    className="px-2 py-1 rounded-md bg-white dark:bg-[#181820] border border-slate-200 dark:border-[#27272A] hover:border-[#FFD000] text-[10px] font-mono text-slate-700 dark:text-slate-200 cursor-pointer"
                   >
                     192.168.4.15:81 (ESP32-CAM)
                   </button>
                   <button
                     type="button"
                     onClick={() => setNewDevice(prev => ({ ...prev, ipAddress: '10.86.214.31', port: '8000', name: 'Campus LAN ESP32 Node' }))}
-                    className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-[#8b1e3f] text-[10px] font-mono text-slate-700 cursor-pointer"
+                    className="px-2 py-1 rounded-md bg-white dark:bg-[#181820] border border-slate-200 dark:border-[#27272A] hover:border-[#FFD000] text-[10px] font-mono text-slate-700 dark:text-slate-200 cursor-pointer"
                   >
                     10.86.214.31 (MITS Wi-Fi)
                   </button>
                   <button
                     type="button"
                     onClick={() => setNewDevice(prev => ({ ...prev, ipAddress: '127.0.0.1', port: '8000', name: 'Localhost Virtual ESP32' }))}
-                    className="px-2 py-1 rounded-md bg-white border border-slate-200 hover:border-[#8b1e3f] text-[10px] font-mono text-slate-700 cursor-pointer"
+                    className="px-2 py-1 rounded-md bg-white dark:bg-[#181820] border border-slate-200 dark:border-[#27272A] hover:border-[#FFD000] text-[10px] font-mono text-slate-700 dark:text-slate-200 cursor-pointer"
                   >
                     127.0.0.1 (Local Node)
                   </button>
@@ -662,19 +662,19 @@ export default function AdminDashboard({
                   <button
                     type="button"
                     onClick={() => setShowAddDeviceModal(false)}
-                    className="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold cursor-pointer"
+                    className="px-4 py-2 rounded-xl bg-slate-200 dark:bg-[#181820] hover:bg-slate-300 dark:hover:bg-[#222228] text-slate-700 dark:text-slate-200 text-xs font-bold cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={connectingDevice}
-                    className="px-5 py-2 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white text-xs font-bold flex items-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
+                    className="px-5 py-2 rounded-xl bg-[#FFD000] hover:bg-[#F0C400] text-black text-xs font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(255,208,0,0.35)] cursor-pointer disabled:opacity-50"
                   >
                     {connectingDevice ? (
-                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <RefreshCw className="w-4 h-4 animate-spin text-black" />
                     ) : (
-                      <Wifi className="w-4 h-4 text-emerald-300" />
+                      <Wifi className="w-4 h-4 text-black" />
                     )}
                     <span>Test Handshake & Connect Node</span>
                   </button>
@@ -690,7 +690,7 @@ export default function AdminDashboard({
               return (
                 <div
                   key={dev.id}
-                  className="p-5 rounded-3xl bg-white border border-[#ebd7cc] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between"
+                  className="p-5 rounded-3xl bg-white dark:bg-[#121217] border border-[#FEF08A] dark:border-[#222228] shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between"
                 >
                   <div>
                     {/* Card Top: Status & Name */}
@@ -698,21 +698,21 @@ export default function AdminDashboard({
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                          <span className="text-[10px] font-bold font-mono uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                          <span className="text-[10px] font-bold font-mono uppercase tracking-wider text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-full">
                             {dev.status} • {dev.pingLatencyMs}ms
                           </span>
-                          <span className="text-[10px] font-bold text-[#8b1e3f] bg-[#fdf3ed] border border-[#ebd7cc] px-2 py-0.5 rounded-md">
+                          <span className="text-[10px] font-bold text-[#713F12] dark:text-[#FFD000] bg-[#FEF9C3] dark:bg-[#FFD000]/15 border border-[#FDE047] dark:border-[#FFD000]/30 px-2 py-0.5 rounded-md">
                             Room {dev.roomId}
                           </span>
                         </div>
-                        <h4 className="text-sm font-extrabold text-slate-900 mt-1.5">{dev.name}</h4>
-                        <p className="text-[11px] text-slate-500 font-medium">{dev.type}</p>
+                        <h4 className="text-sm font-extrabold text-slate-900 dark:text-white mt-1.5">{dev.name}</h4>
+                        <p className="text-[11px] text-slate-500 dark:text-[#A1A1AA] font-medium">{dev.type}</p>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => handleRemoveDevice(dev.id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-all cursor-pointer"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all cursor-pointer"
                         title="Unlink device"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -720,43 +720,43 @@ export default function AdminDashboard({
                     </div>
 
                     {/* IP & Technical Specs Box */}
-                    <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5 font-mono text-[11px]">
-                      <div className="flex justify-between items-center text-slate-700">
-                        <span className="text-slate-500 font-sans text-[10px] uppercase font-bold">IP Endpoint:</span>
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#0D0D11] border border-slate-200 dark:border-[#222228] space-y-1.5 font-mono text-[11px]">
+                      <div className="flex justify-between items-center text-slate-700 dark:text-slate-300">
+                        <span className="text-slate-500 dark:text-[#71717A] font-sans text-[10px] uppercase font-bold">IP Endpoint:</span>
                         <a
                           href={`http://${dev.ipAddress}:${dev.port}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="font-bold text-[#8b1e3f] hover:underline"
+                          className="font-bold text-[#CA8A04] dark:text-[#FFD000] hover:underline"
                         >
                           http://{dev.ipAddress}:{dev.port}
                         </a>
                       </div>
-                      <div className="flex justify-between text-slate-600">
-                        <span className="text-slate-500 font-sans text-[10px] uppercase font-bold">MAC Address:</span>
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                        <span className="text-slate-500 dark:text-[#71717A] font-sans text-[10px] uppercase font-bold">MAC Address:</span>
                         <span>{dev.macAddress}</span>
                       </div>
-                      <div className="flex justify-between text-slate-600">
-                        <span className="text-slate-500 font-sans text-[10px] uppercase font-bold">Firmware:</span>
-                        <span className="text-emerald-700 font-bold">{dev.firmwareVersion}</span>
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                        <span className="text-slate-500 dark:text-[#71717A] font-sans text-[10px] uppercase font-bold">Firmware:</span>
+                        <span className="text-emerald-700 dark:text-emerald-400 font-bold">{dev.firmwareVersion}</span>
                       </div>
                     </div>
 
                     {/* Attached Sensors & Actuators Pills */}
                     <div className="mt-3 space-y-1.5">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase">Sensors:</span>
+                        <span className="text-[10px] font-bold text-slate-500 dark:text-[#71717A] uppercase">Sensors:</span>
                         {dev.sensors?.map((s, i) => (
-                          <span key={i} className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-mono">
+                          <span key={i} className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-[#181820] text-slate-700 dark:text-slate-300 text-[10px] font-mono">
                             {s}
                           </span>
                         ))}
                       </div>
 
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[10px] font-bold text-slate-500 uppercase">Actuators:</span>
+                        <span className="text-[10px] font-bold text-slate-500 dark:text-[#71717A] uppercase">Actuators:</span>
                         {dev.actuators?.map((a, i) => (
-                          <span key={i} className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200 text-[10px] font-mono">
+                          <span key={i} className="px-2 py-0.5 rounded-md bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 text-[10px] font-mono">
                             {a}
                           </span>
                         ))}
@@ -765,8 +765,8 @@ export default function AdminDashboard({
                   </div>
 
                   {/* Remote IP Actuation Controls */}
-                  <div className="pt-3 border-t border-slate-100 space-y-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                  <div className="pt-3 border-t border-slate-100 dark:border-[#222228] space-y-2">
+                    <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-[#71717A]">
                       Remote Hardware Actuation via IP
                     </p>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -796,10 +796,10 @@ export default function AdminDashboard({
                         type="button"
                         onClick={() => handleDeviceCommand(dev.id, 'PING', 'Telemetry Ping')}
                         disabled={isBusy}
-                        className="py-1.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                        className="py-1.5 px-2 rounded-xl bg-slate-100 dark:bg-[#181820] hover:bg-[#FEF9C3] text-slate-700 dark:text-slate-200 font-bold text-[10px] flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50 border border-slate-200 dark:border-[#27272A]"
                         title="Test ping handshake"
                       >
-                        <Wifi className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                        <Wifi className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                         <span>Ping IP</span>
                       </button>
 
@@ -807,7 +807,7 @@ export default function AdminDashboard({
                         type="button"
                         onClick={() => handleDeviceCommand(dev.id, 'REBOOT', 'Soft Reboot')}
                         disabled={isBusy}
-                        className="py-1.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                        className="py-1.5 px-2 rounded-xl bg-slate-100 dark:bg-[#181820] hover:bg-slate-200 text-slate-700 dark:text-slate-200 font-bold text-[10px] flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50 border border-slate-200 dark:border-[#27272A]"
                         title="Restart microcontroller"
                       >
                         <Power className="w-3.5 h-3.5 text-slate-500" />
@@ -821,28 +821,28 @@ export default function AdminDashboard({
           </div>
 
           {/* Hardware Protocol Specifications Card */}
-          <div className="p-5 rounded-3xl bg-white border border-[#ebd7cc] shadow-sm space-y-3">
-            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-[#8b1e3f]" />
+          <div className="p-5 rounded-3xl bg-white dark:bg-[#121217] border border-[#FEF08A] dark:border-[#222228] shadow-sm space-y-3">
+            <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <Cpu className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
               <span>MITS CampusOn Hardware Protocol & Integration Standards</span>
             </h4>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600">
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <span className="font-bold text-slate-800 block mb-1">1. HTTP REST Ingestion</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 dark:text-[#A1A1AA]">
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#0D0D11] border border-slate-200 dark:border-[#222228]">
+                <span className="font-bold text-slate-800 dark:text-white block mb-1">1. HTTP REST Ingestion</span>
                 <p className="text-[11px] leading-relaxed">
-                  Microcontrollers push sensor JSON packets via <code className="text-[#8b1e3f] bg-slate-200 px-1 py-0.5 rounded">POST /api/telemetry</code> every 2 seconds over Wi-Fi.
+                  Microcontrollers push sensor JSON packets via <code className="text-[#CA8A04] dark:text-[#FFD000] bg-slate-200 dark:bg-[#181820] px-1 py-0.5 rounded">POST /api/telemetry</code> every 2 seconds over Wi-Fi.
                 </p>
               </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <span className="font-bold text-slate-800 block mb-1">2. ESP32-CAM MJPEG Stream</span>
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#0D0D11] border border-slate-200 dark:border-[#222228]">
+                <span className="font-bold text-slate-800 dark:text-white block mb-1">2. ESP32-CAM MJPEG Stream</span>
                 <p className="text-[11px] leading-relaxed">
-                  OV2640 module serves video on <code className="text-[#8b1e3f] bg-slate-200 px-1 py-0.5 rounded">:81/stream</code> used for 3D face mesh liveness & attendance recognition.
+                  OV2640 module serves video on <code className="text-[#CA8A04] dark:text-[#FFD000] bg-slate-200 dark:bg-[#181820] px-1 py-0.5 rounded">:81/stream</code> used for 3D face mesh liveness & attendance recognition.
                 </p>
               </div>
-              <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200">
-                <span className="font-bold text-slate-800 block mb-1">3. Direct Actuation Over IP</span>
+              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#0D0D11] border border-slate-200 dark:border-[#222228]">
+                <span className="font-bold text-slate-800 dark:text-white block mb-1">3. Direct Actuation Over IP</span>
                 <p className="text-[11px] leading-relaxed">
-                  Central administration dispatches relay triggers to <code className="text-[#8b1e3f] bg-slate-200 px-1 py-0.5 rounded">http://&lt;IP&gt;/relay/unlock</code> to actuate solenoid locks in real-time.
+                  Central administration dispatches relay triggers to <code className="text-[#CA8A04] dark:text-[#FFD000] bg-slate-200 dark:bg-[#181820] px-1 py-0.5 rounded">http://&lt;IP&gt;/relay/unlock</code> to actuate solenoid locks in real-time.
                 </p>
               </div>
             </div>
@@ -852,14 +852,14 @@ export default function AdminDashboard({
 
       {/* Tab: AI Timetable Optimizer (OR-Tools) */}
       {activeTab === 'timetable_solver' && (
-        <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6 space-y-6 max-w-4xl">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#ebd7cc]">
+        <div className="bg-white dark:bg-[#121217] rounded-2xl border border-slate-200 dark:border-[#222228] shadow-sm p-6 space-y-6 max-w-4xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#222228]">
             <div>
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-[#8b1e3f]" />
+              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-[#FFD000]" />
                 Google OR-Tools CP-SAT Timetable Engine
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
                 Solves university scheduling as a mathematical constraint satisfaction problem
               </p>
             </div>
@@ -867,7 +867,7 @@ export default function AdminDashboard({
             <button
               onClick={handleRunOptimizer}
               disabled={isSolving}
-              className="bg-[#8b1e3f] hover:bg-[#6c1b31] disabled:bg-slate-400 text-white px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-sm transition-all"
+              className="bg-[#FFD000] hover:bg-[#F0C400] disabled:bg-slate-400 dark:disabled:bg-zinc-700 text-black px-5 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2 shadow-[0_0_15px_rgba(255,208,0,0.25)] transition-all cursor-pointer"
             >
               {isSolving ? (
                 <>
@@ -876,7 +876,7 @@ export default function AdminDashboard({
                 </>
               ) : (
                 <>
-                  <Play className="w-4 h-4" />
+                  <Play className="w-4 h-4 fill-black" />
                   Execute OR-Tools Solver
                 </>
               )}
@@ -884,8 +884,8 @@ export default function AdminDashboard({
           </div>
 
           {/* Hard Constraints & Policy Checklist */}
-          <div className="bg-[#fff7f2] p-5 rounded-xl border border-[#ebd7cc] text-xs">
-            <h4 className="font-bold text-[#8b1e3f] uppercase tracking-wider mb-3">
+          <div className="bg-[#FEF9C3]/40 dark:bg-[#18181E] p-5 rounded-xl border border-[#FDE047]/60 dark:border-[#2C2C34] text-xs">
+            <h4 className="font-bold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider mb-3">
               Enforced Scheduling Policies (Hard & Soft Constraints)
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-slate-700">
@@ -957,48 +957,48 @@ export default function AdminDashboard({
 
       {/* Tab: Campus Users Directory */}
       {activeTab === 'users' && (
-        <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#ebd7cc]">
+        <div className="bg-white dark:bg-[#121217] rounded-2xl border border-slate-200 dark:border-[#222228] shadow-sm p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-[#222228]">
             <div>
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Users className="w-5 h-5 text-[#8b1e3f]" />
+              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Users className="w-5 h-5 text-[#FFD000]" />
                 Dynamic Campus User Directory (Supabase Auth & Profiles)
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
                 Live list of registered Students, Professors, Faculty, Administrators, and Parents created via Auth
               </p>
             </div>
 
             <button
               onClick={() => setRegisteredUsers(getLocalDirectory())}
-              className="px-3 py-1.5 rounded-lg border border-[#ebd7cc] text-xs font-semibold text-slate-700 hover:bg-[#fdf3ed] flex items-center gap-1.5 transition-all self-start sm:self-auto cursor-pointer"
+              className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#2C2C34] text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:bg-[#FEF9C3]/40 dark:hover:bg-[#18181E] flex items-center gap-1.5 transition-all self-start sm:self-auto cursor-pointer"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-[#8b1e3f]" />
+              <RefreshCw className="w-3.5 h-3.5 text-[#FFD000]" />
               <span>Refresh Directory</span>
             </button>
           </div>
 
           {/* Quick Metrics Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-3.5 rounded-xl bg-[#fdf3ed] border border-[#edd7ca]">
-              <p className="text-[10px] font-bold text-slate-500 uppercase">Total Accounts</p>
-              <p className="text-xl font-extrabold text-[#8b1e3f] mt-0.5">{registeredUsers.length}</p>
+            <div className="p-3.5 rounded-xl bg-[#FEF9C3]/40 dark:bg-[#18181E] border border-[#FDE047]/60 dark:border-[#2C2C34]">
+              <p className="text-[10px] font-bold text-[#713F12] dark:text-[#FFD000] uppercase">Total Accounts</p>
+              <p className="text-xl font-extrabold text-[#713F12] dark:text-[#FFD000] mt-0.5">{registeredUsers.length}</p>
             </div>
-            <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200">
-              <p className="text-[10px] font-bold text-blue-600 uppercase">Active Students</p>
-              <p className="text-xl font-extrabold text-blue-900 mt-0.5">
+            <div className="p-3.5 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50">
+              <p className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase">Active Students</p>
+              <p className="text-xl font-extrabold text-blue-900 dark:text-blue-200 mt-0.5">
                 {registeredUsers.filter(u => u.role === 'student').length}
               </p>
             </div>
-            <div className="p-3.5 rounded-xl bg-purple-50 border border-purple-200">
-              <p className="text-[10px] font-bold text-purple-600 uppercase">Faculty / Professors</p>
-              <p className="text-xl font-extrabold text-purple-900 mt-0.5">
+            <div className="p-3.5 rounded-xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-900/50">
+              <p className="text-[10px] font-bold text-purple-600 dark:text-purple-400 uppercase">Faculty / Professors</p>
+              <p className="text-xl font-extrabold text-purple-900 dark:text-purple-200 mt-0.5">
                 {registeredUsers.filter(u => u.role === 'faculty').length}
               </p>
             </div>
-            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
-              <p className="text-[10px] font-bold text-emerald-600 uppercase">Admins & Parents</p>
-              <p className="text-xl font-extrabold text-emerald-900 mt-0.5">
+            <div className="p-3.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50">
+              <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">Admins & Parents</p>
+              <p className="text-xl font-extrabold text-emerald-900 dark:text-emerald-200 mt-0.5">
                 {registeredUsers.filter(u => u.role === 'admin' || u.role === 'parent').length}
               </p>
             </div>
@@ -1013,7 +1013,7 @@ export default function AdminDashboard({
                 placeholder="Search by name, email, enrollment no, or employee code..."
                 value={userSearch}
                 onChange={(e) => setUserSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
+                className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 dark:border-[#2C2C34] bg-white dark:bg-[#18181E] text-slate-900 dark:text-white text-xs focus:border-[#FFD000] focus:ring-1 focus:ring-[#FFD000] outline-none"
               />
             </div>
 
@@ -1024,8 +1024,8 @@ export default function AdminDashboard({
                   onClick={() => setUserRoleFilter(role)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
                     userRoleFilter === role
-                      ? 'bg-[#8b1e3f] text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-[#FFD000] text-black shadow-[0_0_12px_rgba(255,208,0,0.25)] font-bold'
+                      : 'bg-slate-100 dark:bg-[#18181E] text-slate-600 dark:text-zinc-400 hover:bg-slate-200 dark:hover:bg-[#222228]'
                   }`}
                 >
                   {role}
@@ -1035,9 +1035,9 @@ export default function AdminDashboard({
           </div>
 
           {/* User Directory Cards / Table */}
-          <div className="overflow-x-auto border border-slate-200 rounded-xl">
+          <div className="overflow-x-auto border border-slate-200 dark:border-[#222228] rounded-xl">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#fcf5f1] border-b border-[#edd7ca] text-slate-700">
+              <thead className="bg-[#FEF9C3]/20 dark:bg-[#18181E] border-b border-slate-200 dark:border-[#222228] text-slate-700 dark:text-zinc-300">
                 <tr>
                   <th className="py-3 px-4 font-bold">User Identity</th>
                   <th className="py-3 px-4 font-bold">Assigned Role</th>
@@ -1156,13 +1156,13 @@ export default function AdminDashboard({
 
                 <div>
                   {alert.resolved ? (
-                    <span className="text-[10px] font-bold text-slate-500 bg-slate-200 px-3 py-1 rounded-full">
+                    <span className="text-[10px] font-bold text-slate-500 dark:text-zinc-400 bg-slate-200 dark:bg-zinc-800 px-3 py-1 rounded-full">
                       Acknowledged & Resolved
                     </span>
                   ) : (
                     <button
                       onClick={() => handleAcknowledgeAlert(alert.id)}
-                      className="bg-[#8b1e3f] hover:bg-[#6c1b31] text-white px-4 py-1.5 rounded-lg text-xs font-bold"
+                      className="bg-[#FFD000] hover:bg-[#F0C400] text-black px-4 py-1.5 rounded-lg text-xs font-bold shadow-[0_0_12px_rgba(255,208,0,0.25)] transition-all cursor-pointer"
                     >
                       Acknowledge Alert
                     </button>

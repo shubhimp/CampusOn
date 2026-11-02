@@ -245,7 +245,7 @@ export const INITIAL_TIMETABLE = [
 ];
 
 export const SUBJECTS_ATTENDANCE = [
-  { code: 'ECE-301', name: 'Microcontrollers & Embedded Systems', faculty: 'Dr. Murli Manohar', attended: 26, total: 28, percentage: 92.8, color: '#8b1e3f' },
+  { code: 'ECE-301', name: 'Microcontrollers & Embedded Systems', faculty: 'Dr. Murli Manohar', attended: 26, total: 28, percentage: 92.8, color: '#FFD000' },
   { code: 'ECE-303', name: 'Signals and Systems', faculty: 'Prof. A. Saxena', attended: 22, total: 27, percentage: 81.4, color: '#f97316' },
   { code: 'ECE-305P', name: 'IoT Systems & Hardware Lab', faculty: 'Dr. Murli Manohar', attended: 14, total: 14, percentage: 100.0, color: '#10b981' },
   { code: 'ECE-307', name: 'Electronic Devices & Circuits', faculty: 'Dr. R. Verma', attended: 21, total: 26, percentage: 80.7, color: '#6366f1' },

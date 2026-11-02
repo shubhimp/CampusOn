@@ -19,7 +19,8 @@ import {
   LogOut,
   Lock,
   ScanFace,
-  Wifi
+  Wifi,
+  Sparkles
 } from 'lucide-react';
 
 export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOut }) {
@@ -73,56 +74,64 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
   };
 
   return (
-    <aside className="w-64 bg-[#fdf3ed] dark:bg-[#0f172a] border-r border-[#edd5c6] dark:border-slate-800 flex flex-col h-screen select-none shrink-0 transition-all">
+    <aside className="w-64 bg-[#FFFDF0] dark:bg-[#08080A] border-r border-[#E9E9E7] dark:border-[#222228] flex flex-col h-screen select-none shrink-0 transition-colors">
       {/* Brand Header */}
-      <div className="p-5 border-b border-[#ebd3c3] dark:border-slate-800 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#8b1e3f] to-[#b83252] flex items-center justify-center text-white shadow-md">
-          <Cpu className="w-5 h-5 animate-pulse" />
+      <div className="p-5 border-b border-[#E9E9E7] dark:border-[#222228] flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-[#FFD000] text-black flex items-center justify-center shadow-[0_0_18px_rgba(255,208,0,0.38)] shrink-0 font-bold">
+          <Cpu className="w-5 h-5 text-black animate-pulse" />
         </div>
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-[#8b1e3f] dark:text-rose-400">CampusOn</h1>
-          <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">MITS Gwalior OS</p>
+          <h1 className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1">
+            <span>Campus</span>
+            <span className="text-[#CA8A04] dark:text-[#FFD000]">On</span>
+            <span className="font-mono text-[9px] font-bold text-black bg-[#FFD000] px-1 py-0.2 rounded ml-1">
+              v2.0
+            </span>
+          </h1>
+          <p className="text-[10px] font-mono font-bold text-slate-500 dark:text-[#A1A1AA] uppercase tracking-wider">
+            MITS Gwalior OS
+          </p>
         </div>
       </div>
 
       {/* Role Access Section: Strictly Confined to Single Authorized Dashboard */}
-      <div className="p-3.5 border-b border-[#ebd3c3]/70 dark:border-slate-800 bg-[#faebe0] dark:bg-slate-900/60">
+      <div className="p-3.5 border-b border-[#E9E9E7] dark:border-[#222228] bg-white/60 dark:bg-[#0D0D11]">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-[#A1A1AA]">
             Assigned Dashboard
           </span>
-          <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 px-2 py-0.5 rounded-full">
+          <span className="inline-flex items-center gap-1 text-[9px] font-mono font-bold text-[#713F12] dark:text-[#FFD000] bg-[#FEF9C3] dark:bg-[#FFD000]/15 border border-[#FDE047] dark:border-[#FFD000]/35 px-2 py-0.5 rounded-full">
             <Lock className="w-2.5 h-2.5" />
             <span>ROLE LOCKED</span>
           </span>
         </div>
-        <div className="flex items-center gap-2.5 p-2 bg-white dark:bg-slate-800 rounded-xl border border-[#edd7ca] dark:border-slate-700 shadow-2xs">
-          <div className="p-2 rounded-lg bg-[#8b1e3f] text-white shrink-0">
-            {effectiveRole === 'student' && <GraduationCap className="w-4 h-4" />}
-            {effectiveRole === 'faculty' && <BookOpen className="w-4 h-4" />}
-            {effectiveRole === 'admin' && <ShieldCheck className="w-4 h-4" />}
-            {effectiveRole === 'parent' && <Users className="w-4 h-4" />}
+        <div className="flex items-center gap-2.5 p-2 bg-white dark:bg-[#121217] rounded-xl border border-[#E9E9E7] dark:border-[#222228] shadow-2xs">
+          <div className="p-2 rounded-lg bg-[#FFD000] text-black shrink-0 font-bold shadow-xs">
+            {effectiveRole === 'student' && <GraduationCap className="w-4 h-4 text-black" />}
+            {effectiveRole === 'faculty' && <BookOpen className="w-4 h-4 text-black" />}
+            {effectiveRole === 'admin' && <ShieldCheck className="w-4 h-4 text-black" />}
+            {effectiveRole === 'parent' && <Users className="w-4 h-4 text-black" />}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-bold text-slate-900 truncate uppercase">
+            <p className="text-xs font-bold text-slate-900 dark:text-white truncate uppercase">
               {effectiveRole === 'student' ? 'Student Dashboard' :
                effectiveRole === 'faculty' ? 'Teacher Dashboard' :
                effectiveRole === 'admin' ? 'Admin Dashboard' :
                effectiveRole === 'parent' ? 'Parent Dashboard' : 'Campus Dashboard'}
             </p>
-            <p className="text-[10px] text-slate-500 truncate font-mono">
+            <p className="text-[10px] text-slate-500 dark:text-[#A1A1AA] truncate font-mono">
               {currentUser?.enrollmentNo || currentUser?.employeeCode || currentUser?.adminCode || currentUser?.email}
             </p>
           </div>
         </div>
-        <p className="text-[10px] text-slate-400 mt-1.5 px-0.5">
+        <p className="text-[10px] text-slate-400 dark:text-[#71717A] mt-1.5 px-0.5">
           Account access is strictly confined to this dashboard.
         </p>
       </div>
 
       {/* Navigation Links */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
+        <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-[#71717A] px-3 py-1">
           {effectiveRole.toUpperCase()} SERVICES
         </p>
         {getNavItems().map((item) => {
@@ -132,44 +141,44 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all text-left cursor-pointer ${
+              className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all text-left cursor-pointer ${
                 isActive
-                  ? 'bg-[#8b1e3f] text-white shadow-sm font-semibold'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-[#fae5d8] dark:hover:bg-slate-800 hover:text-[#8b1e3f] dark:hover:text-rose-400'
+                  ? 'bg-[#FFD000] text-black font-bold shadow-[0_0_18px_rgba(255,208,0,0.32)] border border-[#FFD000]'
+                  : 'text-slate-700 dark:text-[#A1A1AA] hover:bg-[#FEF9C3] dark:hover:bg-[#141419] hover:text-black dark:hover:text-white'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#8b1e3f] dark:text-rose-400'}`} />
-              <span>{item.label}</span>
+              <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-black' : 'text-[#CA8A04] dark:text-[#FFD000]'}`} />
+              <span className="truncate">{item.label}</span>
             </button>
           );
         })}
 
         {/* Global IoT Simulator Shortcut */}
-        <div className="pt-4 mt-3 border-t border-[#edd5c6]">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
+        <div className="pt-4 mt-3 border-t border-[#E9E9E7] dark:border-[#222228]">
+          <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-[#71717A] px-3 py-1">
             HARDWARE LAB
           </p>
           <button
             onClick={() => setActiveTab('iot_simulator')}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'iot_simulator'
-                ? 'bg-amber-600 text-white shadow-sm'
-                : 'bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-200'
+                ? 'bg-[#FFD000] text-black shadow-[0_0_18px_rgba(255,208,0,0.32)] border border-[#FFD000]'
+                : 'bg-white dark:bg-[#121217] text-slate-800 dark:text-slate-200 hover:border-[#FFD000] border border-[#E9E9E7] dark:border-[#27272A]'
             }`}
           >
             <div className="flex items-center gap-2.5">
-              <Cpu className="w-4 h-4 text-amber-700" />
+              <Cpu className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
               <span>Virtual IoT ESP32</span>
             </div>
-            <span className="text-[9px] bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded font-mono font-bold">
+            <span className="text-[9px] bg-[#FEF9C3] dark:bg-[#FFD000]/20 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/40 px-1.5 py-0.5 rounded font-mono font-bold">
               LIVE
             </span>
           </button>
         </div>
 
         {/* Master Guidebook Download */}
-        <div className="pt-3 mt-2 border-t border-[#edd5c6]">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
+        <div className="pt-3 mt-2 border-t border-[#E9E9E7] dark:border-[#222228]">
+          <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-[#71717A] px-3 py-1">
             PROJECT VIVA DOCS
           </p>
           <a
@@ -177,13 +186,13 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
             download="CampusOn_Master_Guidebook.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-rose-50 text-rose-900 hover:bg-rose-100 border border-rose-200 transition-all cursor-pointer shadow-xs"
+            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold bg-[#FEF9C3] dark:bg-[#121217] text-slate-900 dark:text-white hover:border-[#FFD000] border border-[#FDE047] dark:border-[#27272A] transition-all cursor-pointer shadow-xs"
           >
             <div className="flex items-center gap-2.5">
-              <Download className="w-4 h-4 text-[#8b1e3f]" />
+              <Download className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
               <span>Download PDF Guide</span>
             </div>
-            <span className="text-[9px] bg-rose-200 text-[#8b1e3f] px-1.5 py-0.5 rounded font-mono font-bold">
+            <span className="text-[9px] bg-[#FFD000] text-black px-1.5 py-0.5 rounded font-mono font-bold">
               PDF
             </span>
           </a>
@@ -194,7 +203,7 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
           <div className="pt-2">
             <button
               onClick={onSignOut}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-rose-700 hover:bg-rose-50 border border-transparent hover:border-rose-200 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 dark:text-[#A1A1AA] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 border border-transparent hover:border-rose-200 dark:hover:border-rose-900 transition-all cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Switch / Sign Out</span>
@@ -204,11 +213,11 @@ export default function Sidebar({ currentUser, activeTab, setActiveTab, onSignOu
       </nav>
 
       {/* Footer / Institution Info */}
-      <div className="p-3.5 bg-[#f7e6db] border-t border-[#edd5c6] text-[11px] text-slate-600 flex items-center gap-2.5">
+      <div className="p-3.5 bg-white/70 dark:bg-[#050507] border-t border-[#E9E9E7] dark:border-[#222228] text-[11px] text-slate-600 dark:text-[#A1A1AA] flex items-center gap-2.5">
         <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
         <div className="truncate">
-          <p className="font-semibold text-slate-800 truncate">Centre for IoT</p>
-          <p className="text-[10px] text-slate-500 truncate">Dept. of Electrical & Computer Engg.</p>
+          <p className="font-bold text-slate-900 dark:text-white truncate">Centre for IoT</p>
+          <p className="text-[10px] text-slate-500 dark:text-[#71717A] truncate font-medium">Dept. of Electrical & Computer Engg.</p>
         </div>
       </div>
     </aside>

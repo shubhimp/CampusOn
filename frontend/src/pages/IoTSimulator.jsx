@@ -124,29 +124,29 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-[#121217] rounded-2xl border border-slate-200 dark:border-[#222228] shadow-sm p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <Cpu className="w-5 h-5 text-[#8b1e3f]" />
-            <h3 className="text-base font-bold text-slate-900">
+            <Cpu className="w-5 h-5 text-[#FFD000]" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white">
               Interactive ESP32 Virtual IoT Node Lab
             </h3>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
             Simulate and test PIR motion, Ultrasonic distance, DHT22 temp/humidity, MQ-2 gas, and RFID without physical hardware.
           </p>
         </div>
 
         {/* Room Selector */}
-        <div className="flex items-center gap-2 bg-[#fdf3ed] px-3.5 py-2 rounded-xl border border-[#edd5c6]">
-          <span className="text-xs font-semibold text-slate-600">Monitored Classroom:</span>
+        <div className="flex items-center gap-2 bg-[#FEF9C3]/40 dark:bg-[#18181E] px-3.5 py-2 rounded-xl border border-[#FDE047]/50 dark:border-[#2C2C34]">
+          <span className="text-xs font-semibold text-slate-600 dark:text-zinc-300">Monitored Classroom:</span>
           <select
             value={selectedRoomId}
             onChange={(e) => setSelectedRoomId(e.target.value)}
-            className="text-xs font-bold text-[#8b1e3f] bg-transparent outline-none cursor-pointer"
+            className="text-xs font-bold text-[#713F12] dark:text-[#FFD000] bg-transparent outline-none cursor-pointer"
           >
             {classrooms.map((r) => (
-              <option key={r.id} value={r.id}>{r.id} ({r.name})</option>
+              <option key={r.id} value={r.id} className="dark:bg-[#121217] dark:text-white">{r.id} ({r.name})</option>
             ))}
           </select>
         </div>
@@ -156,35 +156,35 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
         {/* Controls Column */}
         <div className="lg:col-span-2 space-y-5">
           {/* Hardware Sensor Controls Panel */}
-          <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6 space-y-6">
-            <h4 className="text-xs font-bold text-[#8b1e3f] uppercase tracking-wider flex items-center gap-2">
-              <Activity className="w-4 h-4" /> Sensor Input Controllers
+          <div className="bg-white dark:bg-[#121217] rounded-2xl border border-slate-200 dark:border-[#222228] shadow-sm p-6 space-y-6">
+            <h4 className="text-xs font-bold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider flex items-center gap-2">
+              <Activity className="w-4 h-4 text-[#FFD000]" /> Sensor Input Controllers
             </h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {/* 1. PIR Motion Switch (GPIO 27) */}
-              <div className="p-4 rounded-xl border border-[#ebd7cc] bg-[#fffaf7]">
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-[#222228] bg-white dark:bg-[#18181E]">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
                     <Activity className="w-4 h-4 text-emerald-600" />
                     PIR Motion (GPIO 27)
                   </span>
-                  <span className="text-[10px] font-mono text-slate-400">Digital In</span>
+                  <span className="text-[10px] font-mono text-slate-400 dark:text-zinc-500">Digital In</span>
                 </div>
-                <p className="text-[11px] text-slate-500 mb-3">Detects infrared radiation from human movement.</p>
+                <p className="text-[11px] text-slate-500 dark:text-zinc-400 mb-3">Detects infrared radiation from human movement.</p>
                 <div className="flex gap-2">
                   <button
                     onClick={() => { setPirMotion(true); handlePushTelemetry(); }}
-                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                      pirMotion ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600'
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      pirMotion ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-[#121217] text-slate-600 dark:text-zinc-400'
                     }`}
                   >
                     Motion Detected
                   </button>
                   <button
                     onClick={() => { setPirMotion(false); handlePushTelemetry(); }}
-                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                      !pirMotion ? 'bg-slate-700 text-white shadow-sm' : 'bg-slate-100 text-slate-600'
+                    className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      !pirMotion ? 'bg-slate-700 dark:bg-zinc-700 text-white shadow-sm' : 'bg-slate-100 dark:bg-[#121217] text-slate-600 dark:text-zinc-400'
                     }`}
                   >
                     No Motion
@@ -193,15 +193,15 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
               </div>
 
               {/* 2. Ultrasonic HC-SR04 Proximity (GPIO 12/14) */}
-              <div className="p-4 rounded-xl border border-[#ebd7cc] bg-[#fffaf7]">
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-[#222228] bg-white dark:bg-[#18181E]">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
                     <Radio className="w-4 h-4 text-blue-600" />
                     Ultrasonic Echo (GPIO 14)
                   </span>
-                  <span className="text-xs font-mono font-bold text-[#8b1e3f]">{ultrasonicDist} cm</span>
+                  <span className="text-xs font-mono font-bold text-[#713F12] dark:text-[#FFD000]">{ultrasonicDist} cm</span>
                 </div>
-                <p className="text-[11px] text-slate-500 mb-2">Distance to closest student desk/doorway.</p>
+                <p className="text-[11px] text-slate-500 dark:text-zinc-400 mb-2">Distance to closest student desk/doorway.</p>
                 <input
                   type="range"
                   min="20"
@@ -209,22 +209,22 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
                   step="5"
                   value={ultrasonicDist}
                   onChange={(e) => { setUltrasonicDist(e.target.value); handlePushTelemetry(); }}
-                  className="w-full accent-[#8b1e3f] cursor-pointer"
+                  className="w-full accent-[#FFD000] cursor-pointer"
                 />
-                <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+                <div className="flex justify-between text-[10px] text-slate-400 dark:text-zinc-500 font-mono mt-1">
                   <span>20 cm (Occupied)</span>
                   <span>400 cm (Empty Room)</span>
                 </div>
               </div>
 
               {/* 3. DHT22 Temperature Slider (GPIO 15) */}
-              <div className="p-4 rounded-xl border border-[#ebd7cc] bg-[#fffaf7]">
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-[#222228] bg-white dark:bg-[#18181E]">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
                     <Thermometer className="w-4 h-4 text-rose-500" />
                     Temperature (GPIO 15)
                   </span>
-                  <span className="text-xs font-mono font-bold text-[#8b1e3f]">{tempVal}°C</span>
+                  <span className="text-xs font-mono font-bold text-[#713F12] dark:text-[#FFD000]">{tempVal}°C</span>
                 </div>
                 <input
                   type="range"
@@ -235,30 +235,30 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
                   onChange={(e) => { setTempVal(e.target.value); handlePushTelemetry(); }}
                   className="w-full accent-rose-600 cursor-pointer mt-2"
                 />
-                <div className="flex justify-between text-[10px] text-slate-400 font-mono mt-1">
+                <div className="flex justify-between text-[10px] text-slate-400 dark:text-zinc-500 font-mono mt-1">
                   <span>16°C (Cool)</span>
                   <span>42°C (Heat Hazard)</span>
                 </div>
               </div>
 
               {/* 4. MQ-2 Smoke & Gas Hazard Trigger (GPIO 34) */}
-              <div className="p-4 rounded-xl border border-[#ebd7cc] bg-[#fffaf7]">
+              <div className="p-4 rounded-xl border border-slate-200 dark:border-[#222228] bg-white dark:bg-[#18181E]">
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 flex items-center gap-1.5">
                     <Flame className="w-4 h-4 text-amber-600" />
                     MQ-2 Gas / Smoke (GPIO 34)
                   </span>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${gasHazard ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${gasHazard ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300'}`}>
                     {gasHazard ? '245 ppm (ALARM)' : '38 ppm (Safe)'}
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-500 mb-2">Simulate LPG, smoke, or volatile gas hazard.</p>
+                <p className="text-[11px] text-slate-500 dark:text-zinc-400 mb-2">Simulate LPG, smoke, or volatile gas hazard.</p>
                 <button
                   onClick={() => { setGasHazard(!gasHazard); handlePushTelemetry(); }}
-                  className={`w-full py-1.5 rounded-lg text-xs font-bold transition-all ${
+                  className={`w-full py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                     gasHazard
                       ? 'bg-rose-600 text-white animate-pulse'
-                      : 'bg-[#8b1e3f] text-white hover:bg-[#6c1b31]'
+                      : 'bg-[#FFD000] text-black hover:bg-[#F0C400] shadow-[0_0_12px_rgba(255,208,0,0.25)]'
                   }`}
                 >
                   {gasHazard ? '⚠️ Clear Smoke Condition' : '🔥 Trigger Smoke Condition'}
@@ -267,30 +267,30 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
             </div>
 
             {/* Context & Timetable Scheduling Overrides */}
-            <div className="pt-4 border-t border-[#ebd7cc] grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div className="pt-4 border-t border-slate-200 dark:border-[#222228] grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-[#18181E] border border-slate-200 dark:border-[#2C2C34]">
                 <div>
-                  <p className="font-bold text-slate-800">Scheduled Class Active</p>
-                  <p className="text-[11px] text-slate-500">Overrides room into "Class in Session"</p>
+                  <p className="font-bold text-slate-800 dark:text-zinc-200">Scheduled Class Active</p>
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-400">Overrides room into "Class in Session"</p>
                 </div>
                 <button
                   onClick={() => { setIsClassScheduled(!isClassScheduled); handlePushTelemetry(); }}
-                  className={`px-3 py-1.5 rounded-lg font-bold text-xs ${
-                    isClassScheduled ? 'bg-[#8b1e3f] text-white' : 'bg-slate-200 text-slate-700'
+                  className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                    isClassScheduled ? 'bg-[#FFD000] text-black shadow-[0_0_12px_rgba(255,208,0,0.25)]' : 'bg-slate-200 dark:bg-[#121217] text-slate-700 dark:text-zinc-400'
                   }`}
                 >
                   {isClassScheduled ? 'Active Lecture' : 'No Class'}
                 </button>
               </div>
 
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-[#18181E] border border-slate-200 dark:border-[#2C2C34]">
                 <div>
-                  <p className="font-bold text-slate-800">ESP32 Device Connectivity</p>
-                  <p className="text-[11px] text-slate-500">Toggle Wi-Fi connection heartbeat</p>
+                  <p className="font-bold text-slate-800 dark:text-zinc-200">ESP32 Device Connectivity</p>
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-400">Toggle Wi-Fi connection heartbeat</p>
                 </div>
                 <button
                   onClick={() => { setIsNodeOnline(!isNodeOnline); handlePushTelemetry(); }}
-                  className={`px-3 py-1.5 rounded-lg font-bold text-xs ${
+                  className={`px-3 py-1.5 rounded-lg font-bold text-xs transition-all cursor-pointer ${
                     isNodeOnline ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
                   }`}
                 >
@@ -300,46 +300,46 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
             </div>
 
             {/* RFID Scanner & Electronic Lock Demonstration */}
-            <div className="pt-4 border-t border-[#ebd7cc] space-y-3">
-              <h4 className="text-xs font-bold text-[#8b1e3f] uppercase tracking-wider flex items-center gap-2">
-                <Lock className="w-4 h-4" /> Smart Attendance & Electronic Lock Demo
+            <div className="pt-4 border-t border-slate-200 dark:border-[#222228] space-y-3">
+              <h4 className="text-xs font-bold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider flex items-center gap-2">
+                <Lock className="w-4 h-4 text-[#FFD000]" /> Smart Attendance & Electronic Lock Demo
               </h4>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-3.5 bg-white border border-[#ebd7cc] rounded-xl flex items-center justify-between">
+                <div className="p-3.5 bg-white dark:bg-[#18181E] border border-slate-200 dark:border-[#2C2C34] rounded-xl flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-bold text-slate-800">Simulate RFID Card Tap</p>
-                    <p className="text-[11px] text-slate-500 truncate mt-0.5">{rfidLog}</p>
+                    <p className="text-xs font-bold text-slate-800 dark:text-zinc-200">Simulate RFID Card Tap</p>
+                    <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate mt-0.5">{rfidLog}</p>
                   </div>
                   <div className="flex gap-1.5">
                     <button
                       onClick={() => handleSimulateRfidTap(true)}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
                     >
                       Valid Card
                     </button>
                     <button
                       onClick={() => handleSimulateRfidTap(false)}
-                      className="bg-rose-600 hover:bg-rose-700 text-white px-2 py-1.5 rounded-lg text-xs font-bold"
+                      className="bg-rose-600 hover:bg-rose-700 text-white px-2 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
                     >
                       Unknown
                     </button>
                   </div>
                 </div>
 
-                <div className="p-3.5 bg-white border border-[#ebd7cc] rounded-xl flex items-center justify-between">
+                <div className="p-3.5 bg-white dark:bg-[#18181E] border border-slate-200 dark:border-[#2C2C34] rounded-xl flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${demoLock ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-700'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${demoLock ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300'}`}>
                       {demoLock ? <Unlock className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-800">Electronic Demo Lock</p>
-                      <p className="text-[11px] font-semibold text-slate-500">
+                      <p className="text-xs font-bold text-slate-800 dark:text-zinc-200">Electronic Demo Lock</p>
+                      <p className="text-[11px] font-semibold text-slate-500 dark:text-zinc-400">
                         Relay Pin: GPIO 2 / 21
                       </p>
                     </div>
                   </div>
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${demoLock ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 text-slate-800'}`}>
+                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${demoLock ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-200 dark:bg-zinc-800 text-slate-800 dark:text-zinc-200'}`}>
                     {demoLock ? 'UNLOCKED' : 'LOCKED'}
                   </span>
                 </div>
@@ -351,25 +351,25 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
         {/* Live Evaluation & JSON Telemetry Column */}
         <div className="space-y-5">
           {/* Evaluated Operational State Card */}
-          <div className="bg-[#fff7f2] p-5 rounded-2xl border border-[#ebd7cc] shadow-sm">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <div className="bg-[#FEF9C3]/20 dark:bg-[#18181E] p-5 rounded-2xl border border-[#FDE047]/40 dark:border-[#222228] shadow-sm">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-500">
               Evaluated Operational State
             </span>
-            <div className="mt-2 p-3 bg-white rounded-xl border border-[#ebd7cc]">
+            <div className="mt-2 p-3 bg-white dark:bg-[#121217] rounded-xl border border-slate-200 dark:border-[#222228]">
               <span
                 className={`text-xs font-extrabold px-3 py-1 rounded-full inline-block ${
                   calculatedState === 'Available'
-                    ? 'bg-emerald-100 text-emerald-800'
+                    ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300'
                     : calculatedState === 'Occupied – Open Use'
-                    ? 'bg-amber-100 text-amber-800'
+                    ? 'bg-[#FEF9C3] dark:bg-amber-950/40 text-[#713F12] dark:text-amber-300'
                     : calculatedState === 'Class in Session – Unavailable'
-                    ? 'bg-rose-100 text-rose-800'
-                    : 'bg-slate-100 text-slate-700'
+                    ? 'bg-rose-100 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300'
+                    : 'bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300'
                 }`}
               >
                 {calculatedState}
               </span>
-              <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">
+              <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-2 leading-relaxed">
                 {calculatedState === 'Available' && 'No timetable booking exists and sensors detect no movement. Classroom is free for student project work.'}
                 {calculatedState === 'Occupied – Open Use' && 'No scheduled lecture, but human presence is detected. Students are using this space for study/projects.'}
                 {calculatedState === 'Class in Session – Unavailable' && 'An official faculty class is currently active. The room cannot be booked for open use.'}
@@ -379,7 +379,7 @@ export default function IoTSimulator({ classrooms, onUpdateRoomTelemetry }) {
 
             <button
               onClick={handlePushTelemetry}
-              className="w-full mt-4 bg-[#8b1e3f] hover:bg-[#6c1b31] text-white py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition-all"
+              className="w-full mt-4 bg-[#FFD000] hover:bg-[#F0C400] text-black py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(255,208,0,0.25)] transition-all cursor-pointer"
             >
               <Send className="w-3.5 h-3.5" />
               Sync Telemetry to System

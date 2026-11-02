@@ -6,35 +6,46 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     // 1. Prioritize URL query param e.g. ?theme=dark or ?theme=light
     if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const urlTheme = params.get('theme');
-      if (urlTheme === 'dark' || urlTheme === 'light') {
-        localStorage.setItem('campuson_theme', urlTheme);
-        return urlTheme;
-      }
-      // 2. Local storage
-      const stored = localStorage.getItem('campuson_theme');
-      if (stored === 'dark' || stored === 'light') {
-        return stored;
-      }
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlTheme = params.get('theme');
+        if (urlTheme === 'dark' || urlTheme === 'light') {
+          localStorage.setItem('campuson_theme', urlTheme);
+          return urlTheme;
+        }
+        // 2. Local storage
+        const stored = localStorage.getItem('campuson_theme');
+        if (stored === 'dark' || stored === 'light') {
+          return stored;
+        }
+      } catch (e) {}
     }
-    return 'light';
+    // Default theme matching Pro Skilll (Obsidian Dark with Golden Yellow)
+    return 'dark';
   });
 
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'dark') {
       root.classList.add('dark');
+      root.classList.remove('light');
       root.setAttribute('data-theme', 'dark');
+      root.style.colorScheme = 'dark';
       document.body.classList.add('dark');
+      document.body.classList.remove('light');
     } else {
       root.classList.remove('dark');
+      root.classList.add('light');
       root.setAttribute('data-theme', 'light');
+      root.style.colorScheme = 'light';
       document.body.classList.remove('dark');
+      document.body.classList.add('light');
     }
-    localStorage.setItem('campuson_theme', theme);
+    try {
+      localStorage.setItem('campuson_theme', theme);
+    } catch (e) {}
 
-    // Sync URL parameter without reload
+    // Sync URL parameter without page reload
     try {
       const url = new URL(window.location.href);
       if (url.searchParams.get('theme') !== theme) {
@@ -44,14 +55,16 @@ export function ThemeProvider({ children }) {
     } catch (e) {}
   }, [theme]);
 
-  // Listen for browser popstate or manual search param changes
+  // Listen for browser navigation changes or search param modifications
   useEffect(() => {
     const handleUrlChange = () => {
-      const params = new URLSearchParams(window.location.search);
-      const urlTheme = params.get('theme');
-      if (urlTheme && (urlTheme === 'dark' || urlTheme === 'light') && urlTheme !== theme) {
-        setTheme(urlTheme);
-      }
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const urlTheme = params.get('theme');
+        if (urlTheme && (urlTheme === 'dark' || urlTheme === 'light') && urlTheme !== theme) {
+          setTheme(urlTheme);
+        }
+      } catch (e) {}
     };
     window.addEventListener('popstate', handleUrlChange);
     return () => window.removeEventListener('popstate', handleUrlChange);

@@ -2,32 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%238b1e3f'><circle cx='12' cy='12' r='10'/></svg>" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFD000'><circle cx='12' cy='12' r='10'/></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CampusOn — Intelligent Campus Operating System | MITS Gwalior</title>
-    <!-- Inter Font -->
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
       (function() {
         try {
           const params = new URLSearchParams(window.location.search);
           const urlTheme = params.get('theme');
           const stored = localStorage.getItem('campuson_theme');
-          const theme = urlTheme === 'dark' || urlTheme === 'light' ? urlTheme : (stored || 'light');
+          const theme = urlTheme === 'dark' || urlTheme === 'light' ? urlTheme : (stored || 'dark');
           if (theme === 'dark') {
             document.documentElement.classList.add('dark');
             document.documentElement.setAttribute('data-theme', 'dark');
+            document.documentElement.style.colorScheme = 'dark';
           } else {
             document.documentElement.classList.remove('dark');
             document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.style.colorScheme = 'light';
           }
         } catch (e) {}
       })();
     </script>
   </head>
-  <body class="bg-[#F8F9FA] text-slate-800 antialiased selection:bg-[#ffd8be] selection:text-[#8b1e3f]">
+  <body class="bg-[#FFFDF0] dark:bg-[#08080A] text-[#191919] dark:text-[#F4F4F5] antialiased selection:bg-[#FFD000] selection:text-[#08080A] transition-colors duration-200">
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

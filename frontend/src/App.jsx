@@ -71,8 +71,8 @@ export default function App() {
   const effectiveRole = currentUser?.role || 'student';
 
   return (
-    <div className="flex h-screen bg-[#F8F9FA] dark:bg-[#0b0f19] overflow-hidden font-sans">
-      {/* Light Peach Sidebar with Strict Role-Based Access Control */}
+    <div className="flex h-screen bg-[#FFFDF0] dark:bg-[#08080A] text-[#191919] dark:text-[#F4F4F5] overflow-hidden font-sans">
+      {/* Light / Dark Sidebar with Pro Skilll Yellow Brand Accents */}
       <Sidebar
         currentUser={currentUser}
         activeTab={activeTab}
@@ -93,7 +93,7 @@ export default function App() {
         />
 
         {/* Scrollable Main Workspace */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-[#FFFDF0] dark:bg-[#08080A]">
           <div className="max-w-7xl mx-auto">
             {/* Virtual IoT Simulator View */}
             {activeTab === 'iot_simulator' && (

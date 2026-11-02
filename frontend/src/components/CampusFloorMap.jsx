@@ -27,22 +27,22 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-[#ebd7cc]">
         <div>
           <div className="flex items-center gap-2">
-            <Compass className="w-5 h-5 text-[#8b1e3f]" />
-            <h3 className="text-base font-bold text-slate-900">Indoor Campus Navigation & Floor Map</h3>
+            <Compass className="w-5 h-5 text-[#CA8A04] dark:text-[#FFD000]" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white">Indoor Campus Navigation & Floor Map</h3>
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-[#A1A1AA] mt-0.5">
             Academic Block B — 2nd Floor (Department of Electrical & Computer Engineering)
           </p>
         </div>
 
         {/* QR Scan Starting Location Selector */}
-        <div className="flex items-center gap-2 bg-[#fdf3ed] px-3 py-1.5 rounded-xl border border-[#edd5c6]">
-          <MapPin className="w-4 h-4 text-[#8b1e3f]" />
-          <span className="text-xs text-slate-600 font-medium">Scanned Waypoint:</span>
+        <div className="flex items-center gap-2 bg-[#FEF9C3] dark:bg-[#121217] px-3 py-1.5 rounded-xl border border-[#FDE047] dark:border-[#222228]">
+          <MapPin className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
+          <span className="text-xs text-slate-700 dark:text-[#A1A1AA] font-medium">Scanned Waypoint:</span>
           <select
             value={currentScanPoint}
             onChange={(e) => setCurrentScanPoint(e.target.value)}
-            className="text-xs font-bold text-[#8b1e3f] bg-transparent outline-none cursor-pointer"
+            className="text-xs font-bold text-[#CA8A04] dark:text-[#FFD000] bg-transparent outline-none cursor-pointer"
           >
             <option value="West Entrance QR #02">West Staircase QR #02</option>
             <option value="Central Elevator QR #05">Central Elevator QR #05</option>
@@ -93,7 +93,7 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
                     height="120"
                     rx="10"
                     fill={colors.fill}
-                    stroke={isSel ? '#8b1e3f' : colors.stroke}
+                    stroke={isSel ? '#FFD000' : colors.stroke}
                     strokeWidth={isSel ? 4 : 2}
                   />
                   <text x="85" y="40" fill="#1e293b" fontSize="14" fontWeight="bold" textAnchor="middle">AB-204</text>
@@ -103,7 +103,7 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
                     {r.status || 'Active'}
                   </text>
                   {isSel && (
-                    <circle cx="150" cy="20" r="6" fill="#8b1e3f" className="animate-ping" />
+                    <circle cx="150" cy="20" r="6" fill="#FFD000" className="animate-ping" />
                   )}
                 </g>
               );
@@ -125,7 +125,7 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
                     height="120"
                     rx="10"
                     fill={colors.fill}
-                    stroke={isSel ? '#8b1e3f' : colors.stroke}
+                    stroke={isSel ? '#FFD000' : colors.stroke}
                     strokeWidth={isSel ? 4 : 2}
                   />
                   <text x="85" y="40" fill="#1e293b" fontSize="14" fontWeight="bold" textAnchor="middle">AB-205</text>
@@ -140,10 +140,10 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
 
             {/* Room 3: Faculty Cabins AB-208 */}
             <g transform="translate(490, 40)">
-              <rect width="160" height="120" rx="10" fill="#fdf2f4" stroke="#e5778f" strokeWidth="2" />
-              <text x="80" y="45" fill="#8b1e3f" fontSize="13" fontWeight="bold" textAnchor="middle">AB-208</text>
-              <text x="80" y="65" fill="#6c1b31" fontSize="10" textAnchor="middle">ECE Faculty Cabins</text>
-              <text x="80" y="85" fill="#6c1b31" fontSize="9" textAnchor="middle">(Dr. Murli Manohar)</text>
+              <rect width="160" height="120" rx="10" fill="#FEF9C3" stroke="#FDE047" strokeWidth="2" />
+              <text x="80" y="45" fill="#713F12" fontSize="13" fontWeight="bold" textAnchor="middle">AB-208</text>
+              <text x="80" y="65" fill="#854D0E" fontSize="10" textAnchor="middle">ECE Faculty Cabins</text>
+              <text x="80" y="85" fill="#854D0E" fontSize="9" textAnchor="middle">(Dr. Murli Manohar)</text>
             </g>
 
             {/* Lower Row Rooms */}
@@ -163,7 +163,7 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
                     height="120"
                     rx="10"
                     fill={colors.fill}
-                    stroke={isSel ? '#8b1e3f' : colors.stroke}
+                    stroke={isSel ? '#FFD000' : colors.stroke}
                     strokeWidth={isSel ? 4 : 2}
                   />
                   <text x="110" y="40" fill="#1e293b" fontSize="14" fontWeight="bold" textAnchor="middle">AB-101</text>
@@ -192,7 +192,7 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
                     height="120"
                     rx="10"
                     fill={colors.fill}
-                    stroke={isSel ? '#8b1e3f' : colors.stroke}
+                    stroke={isSel ? '#FFD000' : colors.stroke}
                     strokeWidth={isSel ? 4 : 2}
                   />
                   <text x="120" y="40" fill="#1e293b" fontSize="14" fontWeight="bold" textAnchor="middle">AB-102</text>
@@ -211,12 +211,12 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
                 <path
                   d="M 90 210 L 195 210 L 195 165"
                   fill="none"
-                  stroke="#8b1e3f"
+                  stroke="#FFD000"
                   strokeWidth="4"
                   strokeDasharray="6 4"
                   className="animate-pulse"
                 />
-                <circle cx="195" cy="165" r="5" fill="#8b1e3f" />
+                <circle cx="195" cy="165" r="5" fill="#FFD000" />
               </g>
             )}
           </svg>
@@ -239,10 +239,10 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
         </div>
 
         {/* Selected Room Telemetry & Navigation Panel */}
-        <div className="bg-[#fff7f2] p-5 rounded-xl border border-[#ebd7cc] flex flex-col justify-between">
+        <div className="bg-[#FEFDF8] dark:bg-[#121217] p-5 rounded-xl border border-[#FEF08A] dark:border-[#222228] flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-bold text-[#8b1e3f] bg-[#ffd8be] px-2 py-0.5 rounded">
+              <span className="text-xs font-mono font-bold text-black bg-[#FFD000] px-2 py-0.5 rounded shadow-xs">
                 {selectedRoom.id}
               </span>
               <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${getStatusColor(selectedRoom.status).badge}`}>
@@ -250,50 +250,50 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
               </span>
             </div>
 
-            <h4 className="text-base font-bold text-slate-900 mt-2">{selectedRoom.name}</h4>
-            <p className="text-xs text-slate-500">{selectedRoom.building} • {selectedRoom.floor}</p>
-            <p className="text-xs text-slate-600 font-medium mt-1">Seating Capacity: {selectedRoom.capacity} Students</p>
+            <h4 className="text-base font-bold text-slate-900 dark:text-white mt-2">{selectedRoom.name}</h4>
+            <p className="text-xs text-slate-500 dark:text-[#A1A1AA]">{selectedRoom.building} • {selectedRoom.floor}</p>
+            <p className="text-xs text-slate-600 dark:text-[#A1A1AA] font-medium mt-1">Seating Capacity: {selectedRoom.capacity} Students</p>
 
             {/* Real-time ESP32 Sensor Readings */}
-            <div className="mt-4 pt-4 border-t border-[#ebd7cc] space-y-2.5 text-xs">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <div className="mt-4 pt-4 border-t border-[#FEF08A] dark:border-[#222228] space-y-2.5 text-xs">
+              <p className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 dark:text-[#71717A]">
                 Live Sensor Telemetry
               </p>
 
-              <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-[#ebd7cc]">
-                <span className="flex items-center gap-2 text-slate-600">
+              <div className="flex items-center justify-between bg-white dark:bg-[#0D0D11] p-2.5 rounded-lg border border-[#FEF08A] dark:border-[#222228]">
+                <span className="flex items-center gap-2 text-slate-600 dark:text-[#A1A1AA]">
                   <Thermometer className="w-4 h-4 text-rose-500" /> Temperature:
                 </span>
-                <span className="font-mono font-bold text-slate-800">
+                <span className="font-mono font-bold text-slate-900 dark:text-white">
                   {selectedRoom.temperature ? `${selectedRoom.temperature}°C` : 'N/A'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-[#ebd7cc]">
-                <span className="flex items-center gap-2 text-slate-600">
+              <div className="flex items-center justify-between bg-white dark:bg-[#0D0D11] p-2.5 rounded-lg border border-[#FEF08A] dark:border-[#222228]">
+                <span className="flex items-center gap-2 text-slate-600 dark:text-[#A1A1AA]">
                   <Wind className="w-4 h-4 text-blue-500" /> Humidity:
                 </span>
-                <span className="font-mono font-bold text-slate-800">
+                <span className="font-mono font-bold text-slate-900 dark:text-white">
                   {selectedRoom.humidity ? `${selectedRoom.humidity}%` : 'N/A'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between bg-white p-2.5 rounded-lg border border-[#ebd7cc]">
-                <span className="flex items-center gap-2 text-slate-600">
+              <div className="flex items-center justify-between bg-white dark:bg-[#0D0D11] p-2.5 rounded-lg border border-[#FEF08A] dark:border-[#222228]">
+                <span className="flex items-center gap-2 text-slate-600 dark:text-[#A1A1AA]">
                   <Activity className="w-4 h-4 text-emerald-500" /> PIR Motion:
                 </span>
-                <span className="font-bold text-slate-800">
+                <span className="font-bold text-slate-900 dark:text-white">
                   {selectedRoom.pirDetected ? 'Motion Active' : 'No Movement'}
                 </span>
               </div>
             </div>
 
             {/* Navigation directions */}
-            <div className="mt-4 bg-white p-3 rounded-lg border border-[#ebd7cc] text-xs">
-              <p className="font-bold text-[#8b1e3f] flex items-center gap-1.5">
-                <Navigation className="w-3.5 h-3.5" /> Turn-by-Turn Route:
+            <div className="mt-4 bg-white dark:bg-[#0D0D11] p-3 rounded-lg border border-[#FEF08A] dark:border-[#222228] text-xs">
+              <p className="font-bold text-[#CA8A04] dark:text-[#FFD000] flex items-center gap-1.5">
+                <Navigation className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" /> Turn-by-Turn Route:
               </p>
-              <p className="text-slate-600 text-[11px] mt-1 leading-relaxed">
+              <p className="text-slate-600 dark:text-[#A1A1AA] text-[11px] mt-1 leading-relaxed">
                 From <b>{currentScanPoint}</b>, walk 15 meters along the central corridor, then turn left into Door 204.
               </p>
             </div>
@@ -301,7 +301,7 @@ export default function CampusFloorMap({ classrooms, onSelectRoom }) {
 
           <button
             onClick={() => onSelectRoom && onSelectRoom(selectedRoom)}
-            className="w-full mt-4 bg-[#8b1e3f] hover:bg-[#6c1b31] text-white py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-sm"
+            className="w-full mt-4 bg-[#FFD000] hover:bg-[#F0C400] text-black py-2.5 px-4 rounded-xl text-xs font-bold transition-all shadow-[0_0_15px_rgba(255,208,0,0.35)] cursor-pointer"
           >
             Request Access or View Details
           </button>

@@ -606,35 +606,35 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
   return (
     <div className="space-y-6">
       {/* Top Banner & Tab Navigation */}
-      <div className="bg-white rounded-2xl border border-[#edd7ca] p-5 shadow-xs">
+      <div className="bg-white dark:bg-[#121217] rounded-2xl border border-[#FEF08A] dark:border-[#222228] p-5 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#fdf3ed] text-[#8b1e3f] border border-[#edd7ca] uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 uppercase tracking-wider">
                 Edge Biometrics & Access Control
               </span>
-              <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+              <span className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                 ESP32-CAM Node: Online
               </span>
             </div>
-            <h2 className="text-xl font-bold text-slate-800 mt-1 flex items-center gap-2">
-              <ScanFace className="w-6 h-6 text-[#8b1e3f]" />
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-1 flex items-center gap-2">
+              <ScanFace className="w-6 h-6 text-[#CA8A04] dark:text-[#FFD000]" />
               3D Multi-Angle Face Recognition & Automated Attendance
             </h2>
-            <p className="text-xs text-slate-500">
-              Captures Left (-35°), Front (0°), and Right (+35°) facial depth contours to verify identity and unlock <span className="font-semibold text-slate-700">{roomId} ({roomName})</span>.
+            <p className="text-xs text-slate-500 dark:text-[#A1A1AA]">
+              Captures Left (-35°), Front (0°), and Right (+35°) facial depth contours to verify identity and unlock <span className="font-semibold text-slate-700 dark:text-white">{roomId} ({roomName})</span>.
             </p>
           </div>
 
           {/* Tab Buttons */}
-          <div className="flex items-center bg-[#fdf3ed] p-1.5 rounded-xl border border-[#edd7ca] gap-1 self-start md:self-auto">
+          <div className="flex items-center bg-[#FEF9C3] dark:bg-[#0D0D11] p-1.5 rounded-xl border border-[#FDE047] dark:border-[#222228] gap-1 self-start md:self-auto">
             <button
               onClick={() => setActiveTab('live_scanner')}
-              className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'live_scanner'
-                  ? 'bg-[#8b1e3f] text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#FFD000] text-black shadow-xs font-bold'
+                  : 'text-slate-700 dark:text-[#A1A1AA] hover:text-black dark:hover:text-white'
               }`}
             >
               <Camera className="w-3.5 h-3.5" />
@@ -642,10 +642,10 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
             </button>
             <button
               onClick={() => setActiveTab('enroll_3d')}
-              className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'enroll_3d'
-                  ? 'bg-[#8b1e3f] text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#FFD000] text-black shadow-xs font-bold'
+                  : 'text-slate-700 dark:text-[#A1A1AA] hover:text-black dark:hover:text-white'
               }`}
             >
               <UserPlus className="w-3.5 h-3.5" />
@@ -653,10 +653,10 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
             </button>
             <button
               onClick={() => setActiveTab('logs')}
-              className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'logs'
-                  ? 'bg-[#8b1e3f] text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#FFD000] text-black shadow-xs font-bold'
+                  : 'text-slate-700 dark:text-[#A1A1AA] hover:text-black dark:hover:text-white'
               }`}
             >
               <Activity className="w-3.5 h-3.5" />
@@ -754,7 +754,7 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                   <select
                     value={streamSource}
                     onChange={(e) => setStreamSource(e.target.value)}
-                    className="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 text-xs focus:outline-hidden focus:border-[#8b1e3f]"
+                    className="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 text-xs focus:outline-hidden focus:border-[#FFD000]"
                   >
                     <option value="webcam">Laptop / PC Webcam (Instant Test)</option>
                     <option value="esp32_ip">ESP32-CAM Wi-Fi Stream (IP)</option>
@@ -768,7 +768,7 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                       type="checkbox"
                       checked={autoScan}
                       onChange={(e) => setAutoScan(e.target.checked)}
-                      className="rounded border-slate-700 text-[#8b1e3f] focus:ring-[#8b1e3f]"
+                      className="rounded border-slate-700 text-[#FFD000] focus:ring-[#FFD000]"
                     />
                     <span className="text-slate-300 font-medium">Auto-Scan (2.5s)</span>
                   </label>
@@ -776,13 +776,13 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                   <button
                     onClick={handlePerformRecognition}
                     disabled={isScanning}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold text-white transition-all flex items-center gap-1.5 shadow-md ${
+                    className={`px-4 py-2 rounded-xl text-xs font-bold text-black transition-all flex items-center gap-1.5 shadow-[0_0_15px_rgba(255,208,0,0.35)] cursor-pointer ${
                       isScanning
-                        ? 'bg-slate-700 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-[#8b1e3f] to-[#b83252] hover:opacity-95'
+                        ? 'bg-slate-700 text-slate-300 cursor-not-allowed'
+                        : 'bg-[#FFD000] hover:bg-[#F0C400]'
                     }`}
                   >
-                    <ScanFace className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} />
+                    <ScanFace className={`w-4 h-4 text-black ${isScanning ? 'animate-spin' : ''}`} />
                     {isScanning ? 'Verifying 3D Biometrics...' : 'Scan & Verify Face'}
                   </button>
                 </div>
@@ -795,17 +795,17 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
             {/* Door Actuator & Relay HUD Card */}
             <div className={`p-5 rounded-2xl border transition-all ${
               relayUnlocked
-                ? 'bg-emerald-50 border-emerald-200 shadow-emerald-100 shadow-md'
-                : 'bg-white border-[#edd7ca] shadow-xs'
+                ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800 shadow-emerald-100 shadow-md'
+                : 'bg-white dark:bg-[#121217] border-[#FEF08A] dark:border-[#222228] shadow-xs'
             }`}>
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-[#A1A1AA]">
                   Electronic Door Solenoid Lock
                 </span>
                 <span className={`px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 ${
                   relayUnlocked
                     ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                    : 'bg-slate-100 text-slate-600 border border-slate-200'
+                    : 'bg-slate-100 dark:bg-[#181820] text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-[#27272A]'
                 }`}>
                   {relayUnlocked ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
                   {relayUnlocked ? 'UNLOCKED' : 'LOCKED'}
@@ -816,15 +816,15 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
                   relayUnlocked
                     ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30 animate-pulse'
-                    : 'bg-slate-100 text-slate-400'
+                    : 'bg-slate-100 dark:bg-[#181820] text-slate-400'
                 }`}>
                   {relayUnlocked ? <Unlock className="w-7 h-7" /> : <Lock className="w-7 h-7" />}
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-slate-800">
+                  <h4 className="text-sm font-bold text-slate-800 dark:text-white">
                     {relayUnlocked ? 'Access Granted (Relay Energized)' : 'Classroom Door Secured'}
                   </h4>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-slate-500 dark:text-[#A1A1AA] mt-0.5">
                     Triggered via GPIO 12 on ESP32-CAM upon verified 3D face biometric match.
                   </p>
                 </div>
@@ -832,34 +832,34 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
             </div>
 
             {/* Edge Node Hardware Diagnostics Card */}
-            <div className="bg-white rounded-2xl border border-[#edd7ca] p-5 shadow-xs space-y-3.5">
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-[#8b1e3f]" />
+            <div className="bg-white dark:bg-[#121217] rounded-2xl border border-[#FEF08A] dark:border-[#222228] p-5 shadow-xs space-y-3.5">
+              <h3 className="text-xs font-mono font-extrabold uppercase tracking-wider text-slate-700 dark:text-[#A1A1AA] flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
                 ESP32-CAM Hardware Diagnostics
               </h3>
 
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2.5 rounded-xl bg-[#fdf3ed]/60 border border-[#edd7ca]/70">
-                  <span className="text-[10px] text-slate-500 block uppercase font-bold">Camera Sensor</span>
-                  <span className="font-bold text-slate-800">OmniVision OV2640</span>
+                <div className="p-2.5 rounded-xl bg-[#FEF9C3] dark:bg-[#0D0D11] border border-[#FDE047] dark:border-[#222228]">
+                  <span className="text-[10px] text-slate-500 dark:text-[#71717A] block uppercase font-bold">Camera Sensor</span>
+                  <span className="font-bold text-slate-900 dark:text-white">OmniVision OV2640</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-[#fdf3ed]/60 border border-[#edd7ca]/70">
-                  <span className="text-[10px] text-slate-500 block uppercase font-bold">Face Mesh Depth</span>
-                  <span className="font-bold text-emerald-700">±1.2mm Accuracy</span>
+                <div className="p-2.5 rounded-xl bg-[#FEF9C3] dark:bg-[#0D0D11] border border-[#FDE047] dark:border-[#222228]">
+                  <span className="text-[10px] text-slate-500 dark:text-[#71717A] block uppercase font-bold">Face Mesh Depth</span>
+                  <span className="font-bold text-emerald-700 dark:text-emerald-400">±1.2mm Accuracy</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-[#fdf3ed]/60 border border-[#edd7ca]/70">
-                  <span className="text-[10px] text-slate-500 block uppercase font-bold">Relay Output</span>
-                  <span className="font-bold text-slate-800">GPIO 12 (5V Active)</span>
+                <div className="p-2.5 rounded-xl bg-[#FEF9C3] dark:bg-[#0D0D11] border border-[#FDE047] dark:border-[#222228]">
+                  <span className="text-[10px] text-slate-500 dark:text-[#71717A] block uppercase font-bold">Relay Output</span>
+                  <span className="font-bold text-slate-900 dark:text-white">GPIO 12 (5V Active)</span>
                 </div>
-                <div className="p-2.5 rounded-xl bg-[#fdf3ed]/60 border border-[#edd7ca]/70">
-                  <span className="text-[10px] text-slate-500 block uppercase font-bold">Flash Assist LED</span>
-                  <span className="font-bold text-amber-600">GPIO 4 (High Bright)</span>
+                <div className="p-2.5 rounded-xl bg-[#FEF9C3] dark:bg-[#0D0D11] border border-[#FDE047] dark:border-[#222228]">
+                  <span className="text-[10px] text-slate-500 dark:text-[#71717A] block uppercase font-bold">Flash Assist LED</span>
+                  <span className="font-bold text-amber-600 dark:text-[#FFD000]">GPIO 4 (High Bright)</span>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <div className="pt-2 border-t border-slate-100 dark:border-[#222228] flex items-center justify-between text-xs text-slate-500 dark:text-[#A1A1AA]">
                 <span>Enrolled Profiles in Mesh:</span>
-                <span className="font-bold text-[#8b1e3f]">{enrolledStudents.length} Students Active</span>
+                <span className="font-bold text-[#CA8A04] dark:text-[#FFD000]">{enrolledStudents.length} Students Active</span>
               </div>
             </div>
           </div>
@@ -870,26 +870,26 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
       {activeTab === 'enroll_3d' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Enrollment Form */}
-          <div className="lg:col-span-8 bg-white rounded-2xl border border-[#edd7ca] p-6 shadow-xs space-y-6">
+          <div className="lg:col-span-8 bg-white dark:bg-[#121217] rounded-2xl border border-[#FEF08A] dark:border-[#222228] p-6 shadow-xs space-y-6">
             <div>
-              <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-[#8b1e3f]" />
+              <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-[#CA8A04] dark:text-[#FFD000]" />
                 Submit 3-Dimensional / Multi-Angle Face Biometrics
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 dark:text-[#A1A1AA] mt-1">
                 To guarantee reliable authentication from any angle, submit 3 photos: <strong>Left Profile (-35°)</strong>, <strong>Front View (0°)</strong>, and <strong>Right Profile (+35°)</strong>.
               </p>
             </div>
 
             {/* Notifications */}
             {enrollSuccessMsg && (
-              <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+              <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-semibold flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 {enrollSuccessMsg}
               </div>
             )}
             {enrollErrorMsg && (
-              <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-xs font-semibold flex items-center gap-2">
+              <div className="p-3.5 bg-rose-50 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300 rounded-xl text-xs font-semibold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                 {enrollErrorMsg}
               </div>
@@ -899,7 +899,7 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
               {/* Student Metadata Inputs */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] uppercase tracking-wider mb-1.5">
                     Student Full Name *
                   </label>
                   <input
@@ -908,12 +908,12 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                     placeholder="e.g. Shubhi Mathur"
                     value={enrollForm.studentName}
                     onChange={(e) => setEnrollForm({ ...enrollForm, studentName: e.target.value })}
-                    className="w-full bg-[#fdf3ed]/50 border border-[#edd7ca] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-hidden focus:border-[#8b1e3f]"
+                    className="w-full bg-[#FEFDF8] dark:bg-[#141419] border border-[#FEF08A] dark:border-[#27272A] rounded-xl px-3.5 py-2 text-xs text-slate-800 dark:text-white focus:outline-hidden focus:border-[#FFD000]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] uppercase tracking-wider mb-1.5">
                     Student ID / Roll Number *
                   </label>
                   <input
@@ -922,47 +922,47 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                     placeholder="e.g. BTEC25O1060"
                     value={enrollForm.studentId}
                     onChange={(e) => setEnrollForm({ ...enrollForm, studentId: e.target.value })}
-                    className="w-full bg-[#fdf3ed]/50 border border-[#edd7ca] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-hidden focus:border-[#8b1e3f]"
+                    className="w-full bg-[#FEFDF8] dark:bg-[#141419] border border-[#FEF08A] dark:border-[#27272A] rounded-xl px-3.5 py-2 text-xs text-slate-800 dark:text-white focus:outline-hidden focus:border-[#FFD000]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] uppercase tracking-wider mb-1.5">
                     Department
                   </label>
                   <input
                     type="text"
                     value={enrollForm.department}
                     onChange={(e) => setEnrollForm({ ...enrollForm, department: e.target.value })}
-                    className="w-full bg-[#fdf3ed]/50 border border-[#edd7ca] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-hidden focus:border-[#8b1e3f]"
+                    className="w-full bg-[#FEFDF8] dark:bg-[#141419] border border-[#FEF08A] dark:border-[#27272A] rounded-xl px-3.5 py-2 text-xs text-slate-800 dark:text-white focus:outline-hidden focus:border-[#FFD000]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] uppercase tracking-wider mb-1.5">
                     Semester
                   </label>
                   <input
                     type="text"
                     value={enrollForm.semester}
                     onChange={(e) => setEnrollForm({ ...enrollForm, semester: e.target.value })}
-                    className="w-full bg-[#fdf3ed]/50 border border-[#edd7ca] rounded-xl px-3.5 py-2 text-xs text-slate-800 focus:outline-hidden focus:border-[#8b1e3f]"
+                    className="w-full bg-[#FEFDF8] dark:bg-[#141419] border border-[#FEF08A] dark:border-[#27272A] rounded-xl px-3.5 py-2 text-xs text-slate-800 dark:text-white focus:outline-hidden focus:border-[#FFD000]"
                   />
                 </div>
               </div>
 
               {/* The 3 Angle Photo Capture Cards */}
               <div className="space-y-2">
-                <span className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <span className="block text-xs font-bold text-slate-700 dark:text-[#A1A1AA] uppercase tracking-wider">
                   3-Angle Biometric Capture Cards (Left, Front, Right) *
                 </span>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {/* 1. Left Profile Angle */}
                   <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${
-                    enrollForm.leftImage ? 'bg-emerald-50/50 border-emerald-300' : 'bg-[#fdf3ed]/40 border-[#edd7ca]'
+                    enrollForm.leftImage ? 'bg-emerald-50/50 border-emerald-300' : 'bg-[#FEFDF8] dark:bg-[#0D0D11] border-[#FEF08A] dark:border-[#222228]'
                   }`}>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8b1e3f]/10 text-[#8b1e3f] uppercase mb-2">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 uppercase mb-2">
                       Angle 1: Left Profile (-35°)
                     </span>
 
@@ -974,8 +974,8 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                         </span>
                       </div>
                     ) : (
-                      <div className="w-32 h-32 rounded-xl bg-slate-100 border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 mb-3">
-                        <ScanFace className="w-8 h-8 text-slate-300 mb-1" />
+                      <div className="w-32 h-32 rounded-xl bg-slate-100 dark:bg-[#181820] border border-dashed border-slate-300 dark:border-[#27272A] flex flex-col items-center justify-center text-slate-400 mb-3">
+                        <ScanFace className="w-8 h-8 text-slate-400 mb-1" />
                         <span className="text-[10px]">Turn head 35° Left</span>
                       </div>
                     )}
@@ -984,12 +984,12 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                       <button
                         type="button"
                         onClick={() => captureAngleSnapshot('leftImage')}
-                        className="w-full px-2.5 py-1.5 rounded-lg text-xs font-bold bg-[#8b1e3f] text-white hover:bg-[#68152e] flex items-center justify-center gap-1"
+                        className="w-full px-2.5 py-1.5 rounded-lg text-xs font-bold bg-[#FFD000] text-black hover:bg-[#F0C400] flex items-center justify-center gap-1 shadow-xs cursor-pointer"
                       >
                         <Camera className="w-3 h-3" />
                         Snapshot Webcam
                       </button>
-                      <label className="w-full px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white border border-[#edd7ca] text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1 cursor-pointer">
+                      <label className="w-full px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-[#181820] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-slate-200 hover:bg-slate-50 flex items-center justify-center gap-1 cursor-pointer">
                         <Upload className="w-3 h-3" />
                         Upload File
                         <input
@@ -1004,9 +1004,9 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
 
                   {/* 2. Front Face Angle */}
                   <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${
-                    enrollForm.frontImage ? 'bg-emerald-50/50 border-emerald-300' : 'bg-[#fdf3ed]/40 border-[#edd7ca]'
+                    enrollForm.frontImage ? 'bg-emerald-50/50 border-emerald-300' : 'bg-[#FEFDF8] dark:bg-[#0D0D11] border-[#FEF08A] dark:border-[#222228]'
                   }`}>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8b1e3f]/10 text-[#8b1e3f] uppercase mb-2">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 uppercase mb-2">
                       Angle 2: Front View (0°)
                     </span>
 
@@ -1018,8 +1018,8 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                         </span>
                       </div>
                     ) : (
-                      <div className="w-32 h-32 rounded-xl bg-slate-100 border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 mb-3">
-                        <ScanFace className="w-8 h-8 text-slate-300 mb-1" />
+                      <div className="w-32 h-32 rounded-xl bg-slate-100 dark:bg-[#181820] border border-dashed border-slate-300 dark:border-[#27272A] flex flex-col items-center justify-center text-slate-400 mb-3">
+                        <ScanFace className="w-8 h-8 text-slate-400 mb-1" />
                         <span className="text-[10px]">Look straight ahead</span>
                       </div>
                     )}
@@ -1028,12 +1028,12 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                       <button
                         type="button"
                         onClick={() => captureAngleSnapshot('frontImage')}
-                        className="w-full px-2.5 py-1.5 rounded-lg text-xs font-bold bg-[#8b1e3f] text-white hover:bg-[#68152e] flex items-center justify-center gap-1"
+                        className="w-full px-2.5 py-1.5 rounded-lg text-xs font-bold bg-[#FFD000] text-black hover:bg-[#F0C400] flex items-center justify-center gap-1 shadow-xs cursor-pointer"
                       >
                         <Camera className="w-3 h-3" />
                         Snapshot Webcam
                       </button>
-                      <label className="w-full px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white border border-[#edd7ca] text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1 cursor-pointer">
+                      <label className="w-full px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-[#181820] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-slate-200 hover:bg-slate-50 flex items-center justify-center gap-1 cursor-pointer">
                         <Upload className="w-3 h-3" />
                         Upload File
                         <input
@@ -1048,9 +1048,9 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
 
                   {/* 3. Right Profile Angle */}
                   <div className={`p-4 rounded-2xl border flex flex-col items-center text-center transition-all ${
-                    enrollForm.rightImage ? 'bg-emerald-50/50 border-emerald-300' : 'bg-[#fdf3ed]/40 border-[#edd7ca]'
+                    enrollForm.rightImage ? 'bg-emerald-50/50 border-emerald-300' : 'bg-[#FEFDF8] dark:bg-[#0D0D11] border-[#FEF08A] dark:border-[#222228]'
                   }`}>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8b1e3f]/10 text-[#8b1e3f] uppercase mb-2">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 uppercase mb-2">
                       Angle 3: Right Profile (+35°)
                     </span>
 
@@ -1062,8 +1062,8 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                         </span>
                       </div>
                     ) : (
-                      <div className="w-32 h-32 rounded-xl bg-slate-100 border border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 mb-3">
-                        <ScanFace className="w-8 h-8 text-slate-300 mb-1" />
+                      <div className="w-32 h-32 rounded-xl bg-slate-100 dark:bg-[#181820] border border-dashed border-slate-300 dark:border-[#27272A] flex flex-col items-center justify-center text-slate-400 mb-3">
+                        <ScanFace className="w-8 h-8 text-slate-400 mb-1" />
                         <span className="text-[10px]">Turn head 35° Right</span>
                       </div>
                     )}
@@ -1072,12 +1072,12 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                       <button
                         type="button"
                         onClick={() => captureAngleSnapshot('rightImage')}
-                        className="w-full px-2.5 py-1.5 rounded-lg text-xs font-bold bg-[#8b1e3f] text-white hover:bg-[#68152e] flex items-center justify-center gap-1"
+                        className="w-full px-2.5 py-1.5 rounded-lg text-xs font-bold bg-[#FFD000] text-black hover:bg-[#F0C400] flex items-center justify-center gap-1 shadow-xs cursor-pointer"
                       >
                         <Camera className="w-3 h-3" />
                         Snapshot Webcam
                       </button>
-                      <label className="w-full px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white border border-[#edd7ca] text-slate-700 hover:bg-slate-50 flex items-center justify-center gap-1 cursor-pointer">
+                      <label className="w-full px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-white dark:bg-[#181820] border border-slate-200 dark:border-[#27272A] text-slate-700 dark:text-slate-200 hover:bg-slate-50 flex items-center justify-center gap-1 cursor-pointer">
                         <Upload className="w-3 h-3" />
                         Upload File
                         <input
@@ -1093,17 +1093,17 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
               </div>
 
               {/* Submit Enrollment Button */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-end">
+              <div className="pt-3 border-t border-slate-100 dark:border-[#222228] flex items-center justify-end">
                 <button
                   type="submit"
                   disabled={isEnrolling}
-                  className={`px-6 py-2.5 rounded-xl text-xs font-bold text-white transition-all flex items-center gap-2 shadow-md ${
+                  className={`px-6 py-2.5 rounded-xl text-xs font-bold text-black transition-all flex items-center gap-2 shadow-[0_0_18px_rgba(255,208,0,0.35)] cursor-pointer ${
                     isEnrolling
-                      ? 'bg-slate-400 cursor-not-allowed'
-                      : 'bg-[#8b1e3f] hover:bg-[#68152e]'
+                      ? 'bg-slate-400 text-slate-700 cursor-not-allowed'
+                      : 'bg-[#FFD000] hover:bg-[#F0C400]'
                   }`}
                 >
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4 text-black" />
                   {isEnrolling ? 'Processing 3D Biometrics...' : 'Enroll 3D Face Profile into Database'}
                 </button>
               </div>
@@ -1111,15 +1111,15 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
           </div>
 
           {/* Registered Students Directory */}
-          <div className="lg:col-span-4 bg-white rounded-2xl border border-[#edd7ca] p-5 shadow-xs space-y-4">
+          <div className="lg:col-span-4 bg-white dark:bg-[#121217] rounded-2xl border border-[#FEF08A] dark:border-[#222228] p-5 shadow-xs space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-2">
-                <Users className="w-4 h-4 text-[#8b1e3f]" />
+              <h4 className="text-xs font-mono font-extrabold uppercase tracking-wider text-slate-700 dark:text-[#A1A1AA] flex items-center gap-2">
+                <Users className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
                 Enrolled Students ({enrolledStudents.length})
               </h4>
               <button
                 onClick={fetchEnrolledStudents}
-                className="text-slate-400 hover:text-slate-600 p-1"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 cursor-pointer"
                 title="Refresh"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
@@ -1130,24 +1130,24 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
               {enrolledStudents.map((s) => (
                 <div
                   key={s.studentId}
-                  className="p-3 rounded-xl bg-[#fdf3ed]/60 border border-[#edd7ca]/80 flex items-center justify-between"
+                  className="p-3 rounded-xl bg-[#FEFDF8] dark:bg-[#0D0D11] border border-[#FEF08A] dark:border-[#222228] flex items-center justify-between"
                 >
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-800 text-xs">{s.studentName}</span>
-                      <span className="text-[10px] font-mono text-slate-500">({s.studentId})</span>
+                      <span className="font-bold text-slate-900 dark:text-white text-xs">{s.studentName}</span>
+                      <span className="text-[10px] font-mono text-slate-500 dark:text-[#71717A]">({s.studentId})</span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="px-1.5 py-0.2 rounded text-[9px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
                         3D Multi-Angle
                       </span>
-                      <span className="text-[10px] text-slate-500">{s.department || 'ECE'} • {s.semester || '3rd Sem'}</span>
+                      <span className="text-[10px] text-slate-500 dark:text-[#A1A1AA]">{s.department || 'ECE'} • {s.semester || '3rd Sem'}</span>
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleDeleteStudent(s.studentId)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition-all cursor-pointer"
                     title="Delete profile"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -1161,20 +1161,20 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
 
       {/* TAB 3: ATTENDANCE RECORDS & LOGS */}
       {activeTab === 'logs' && (
-        <div className="bg-white rounded-2xl border border-[#edd7ca] p-5 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-[#121217] rounded-2xl border border-[#FEF08A] dark:border-[#222228] p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#8b1e3f]" />
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Activity className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
                 Live Automated Biometric Attendance Stream
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-500 dark:text-[#A1A1AA]">
                 Verified attendance packets received from ESP32-CAM nodes and browser scanners.
               </p>
             </div>
             <button
               onClick={fetchAttendanceRecords}
-              className="px-3 py-1.5 rounded-lg border border-[#edd7ca] text-xs font-semibold text-slate-700 hover:bg-[#fdf3ed] flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-lg border border-[#FEF08A] dark:border-[#27272A] bg-white dark:bg-[#181820] text-xs font-semibold text-slate-700 dark:text-white hover:bg-[#FEF9C3] flex items-center gap-1.5 cursor-pointer"
             >
               <RefreshCw className="w-3 h-3" />
               Refresh
@@ -1183,7 +1183,7 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#fdf3ed] text-slate-600 font-bold uppercase tracking-wider text-[10px] border-b border-[#edd7ca]">
+              <thead className="bg-[#FEF9C3] dark:bg-[#0D0D11] text-slate-800 dark:text-slate-200 font-bold uppercase tracking-wider text-[10px] border-b border-[#FEF08A] dark:border-[#222228]">
                 <tr>
                   <th className="py-2.5 px-3">Student Name</th>
                   <th className="py-2.5 px-3">Roll Number</th>
@@ -1195,13 +1195,13 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                   <th className="py-2.5 px-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+              <tbody className="divide-y divide-slate-100 dark:divide-[#222228] font-medium text-slate-700 dark:text-slate-300">
                 {attendanceRecords.length > 0 ? (
                   attendanceRecords.map((rec, idx) => (
-                    <tr key={rec.id || idx} className="hover:bg-[#fdf3ed]/30 transition-all">
-                      <td className="py-2.5 px-3 font-bold text-slate-900">{rec.studentName}</td>
-                      <td className="py-2.5 px-3 font-mono text-slate-600">{rec.studentId}</td>
-                      <td className="py-2.5 px-3 font-bold text-[#8b1e3f]">{rec.roomId || roomId}</td>
+                    <tr key={rec.id || idx} className="hover:bg-[#FEF9C3]/30 dark:hover:bg-[#181820] transition-all">
+                      <td className="py-2.5 px-3 font-bold text-slate-900 dark:text-white">{rec.studentName}</td>
+                      <td className="py-2.5 px-3 font-mono text-slate-600 dark:text-[#A1A1AA]">{rec.studentId}</td>
+                      <td className="py-2.5 px-3 font-bold text-[#CA8A04] dark:text-[#FFD000]">{rec.roomId || roomId}</td>
                       <td className="py-2.5 px-3 text-slate-500">{rec.timestamp}</td>
                       <td className="py-2.5 px-3">
                         <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-800 bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">

@@ -39,32 +39,32 @@ export default function ParentDashboard({ user, subjects }) {
   return (
     <div className="space-y-6">
       {/* Top Banner with Linked Student Details */}
-      <div className="bg-gradient-to-r from-white via-[#fff7f2] to-[#faebe0] p-6 rounded-2xl border border-[#ebd7cc] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-white dark:from-[#121217] via-[#FEF9C3]/20 dark:via-[#18181E] to-[#FFFDF0] dark:to-[#08080A] p-6 rounded-2xl border border-slate-200 dark:border-[#222228] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <img
             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
             alt="Shubhi Mathur"
-            className="w-16 h-16 rounded-2xl object-cover border-2 border-[#8b1e3f] shadow-md"
+            className="w-16 h-16 rounded-2xl object-cover border-2 border-[#FFD000] shadow-[0_0_15px_rgba(255,208,0,0.3)]"
           />
           <div>
-            <span className="text-[10px] font-bold text-[#8b1e3f] uppercase tracking-wider bg-[#ffd8be] px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider bg-[#FEF9C3] dark:bg-[#222228] border border-[#FDE047]/50 dark:border-[#2C2C34] px-2 py-0.5 rounded">
               Linked Student Profile
             </span>
-            <h3 className="text-lg font-extrabold text-slate-900 mt-1">Shubhi Mathur</h3>
-            <p className="text-xs text-slate-600 font-mono">
+            <h3 className="text-lg font-extrabold text-slate-900 dark:text-white mt-1">Shubhi Mathur</h3>
+            <p className="text-xs text-slate-600 dark:text-zinc-400 font-mono">
               Enrolment: BTEC25O1060 • B.Tech Electrical & Computer Engineering (3rd Sem)
             </p>
           </div>
         </div>
 
         {/* Confidentiality Privacy Assurance Pill */}
-        <div className="bg-white p-3 rounded-xl border border-purple-200 text-xs flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 shrink-0">
+        <div className="bg-white dark:bg-[#18181E] p-3 rounded-xl border border-purple-200 dark:border-purple-900/40 text-xs flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-950/60 flex items-center justify-center text-purple-700 dark:text-purple-300 shrink-0">
             <Lock className="w-4 h-4" />
           </div>
           <div>
-            <p className="font-bold text-slate-800">Student Privacy Shield Active</p>
-            <p className="text-[10px] text-slate-500">
+            <p className="font-bold text-slate-800 dark:text-zinc-200">Student Privacy Shield Active</p>
+            <p className="text-[10px] text-slate-500 dark:text-zinc-400">
               Personal counseling conversations & sensitive grievance files are protected by institutional policy.
             </p>
           </div>
@@ -85,7 +85,7 @@ export default function ParentDashboard({ user, subjects }) {
           label="Previous SGPA"
           value="8.74 / 10"
           subtext="Class Rank: Top 5%"
-          statusColor="maroon"
+          statusColor="yellow"
         />
         <HexagonBadge
           icon={CreditCard}
@@ -105,40 +105,40 @@ export default function ParentDashboard({ user, subjects }) {
 
       {/* Attendance & Performance Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6">
-          <h3 className="text-base font-bold text-slate-900 mb-1">
+        <div className="lg:col-span-2 bg-white dark:bg-[#121217] rounded-2xl border border-slate-200 dark:border-[#222228] shadow-sm p-6">
+          <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1">
             Subject-wise Academic Attendance Records
           </h3>
-          <p className="text-xs text-slate-500 mb-5">
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mb-5">
             Verified by RFID classroom check-in and dynamic QR reader terminals.
           </p>
 
           <div className="space-y-4">
             {subjects.map((sub) => (
-              <div key={sub.code} className="p-3.5 rounded-xl border border-[#ebd7cc] bg-[#fffaf7]">
+              <div key={sub.code} className="p-3.5 rounded-xl border border-slate-200 dark:border-[#222228] bg-white dark:bg-[#18181E]">
                 <div className="flex justify-between items-center mb-1">
                   <div>
-                    <span className="text-[10px] font-mono font-bold text-[#8b1e3f] bg-[#ffd8be] px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] font-mono font-bold text-[#713F12] dark:text-[#FFD000] bg-[#FEF9C3] dark:bg-[#222228] border border-[#FDE047]/50 dark:border-[#2C2C34] px-1.5 py-0.5 rounded">
                       {sub.code}
                     </span>
-                    <span className="text-xs font-bold text-slate-800 ml-2">{sub.name}</span>
+                    <span className="text-xs font-bold text-slate-800 dark:text-zinc-200 ml-2">{sub.name}</span>
                   </div>
-                  <span className="text-xs font-extrabold text-[#8b1e3f]">{sub.percentage}%</span>
+                  <span className="text-xs font-extrabold text-[#713F12] dark:text-[#FFD000]">{sub.percentage}%</span>
                 </div>
 
-                <div className="w-full bg-slate-200 rounded-full h-2 my-2 overflow-hidden">
+                <div className="w-full bg-slate-200 dark:bg-[#222228] rounded-full h-2 my-2 overflow-hidden">
                   <div
                     className="h-full rounded-full"
                     style={{
                       width: `${sub.percentage}%`,
-                      backgroundColor: sub.percentage >= 85 ? '#10b981' : sub.percentage >= 75 ? '#f97316' : '#ef4444'
+                      backgroundColor: sub.percentage >= 85 ? '#FFD000' : sub.percentage >= 75 ? '#f97316' : '#ef4444'
                     }}
                   />
                 </div>
 
-                <div className="flex justify-between text-[11px] text-slate-500">
+                <div className="flex justify-between text-[11px] text-slate-500 dark:text-zinc-400">
                   <span>Attended {sub.attended} out of {sub.total} conducted sessions</span>
-                  <span className="font-medium text-slate-700">Faculty: {sub.faculty}</span>
+                  <span className="font-medium text-slate-700 dark:text-zinc-300">Faculty: {sub.faculty}</span>
                 </div>
               </div>
             ))}
@@ -146,23 +146,23 @@ export default function ParentDashboard({ user, subjects }) {
         </div>
 
         {/* Official College Notices */}
-        <div className="bg-white rounded-2xl border border-[#ebd7cc] shadow-sm p-6 flex flex-col justify-between">
+        <div className="bg-white dark:bg-[#121217] rounded-2xl border border-slate-200 dark:border-[#222228] shadow-sm p-6 flex flex-col justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
-              <Bell className="w-4 h-4 text-[#8b1e3f]" />
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
+              <Bell className="w-4 h-4 text-[#FFD000]" />
               Official Announcements
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mb-4">
               Verified notices issued by the Dean's office
             </p>
 
             <div className="space-y-3">
               {announcements.map((ann) => (
-                <div key={ann.id} className="p-3 rounded-xl border border-[#ebd7cc] bg-[#fffaf7] text-xs">
-                  <span className="text-[10px] text-slate-400 font-mono">{ann.date}</span>
-                  <h4 className="font-bold text-slate-900 mt-0.5">{ann.title}</h4>
-                  <p className="text-[11px] text-slate-600 mt-1">{ann.summary}</p>
-                  <p className="text-[10px] text-[#8b1e3f] font-semibold mt-2">{ann.department}</p>
+                <div key={ann.id} className="p-3 rounded-xl border border-slate-200 dark:border-[#222228] bg-white dark:bg-[#18181E] text-xs">
+                  <span className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono">{ann.date}</span>
+                  <h4 className="font-bold text-slate-900 dark:text-white mt-0.5">{ann.title}</h4>
+                  <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-1">{ann.summary}</p>
+                  <p className="text-[10px] text-[#713F12] dark:text-[#FFD000] font-bold mt-2">{ann.department}</p>
                 </div>
               ))}
             </div>

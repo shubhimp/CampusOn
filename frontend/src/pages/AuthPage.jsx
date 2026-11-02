@@ -442,47 +442,51 @@ export default function AuthPage({ onLoginSuccess }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fdf7f4] via-[#f7e6db] to-[#f4dcd0] flex flex-col justify-between py-8 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="min-h-screen bg-[#FFFDF0] dark:bg-[#08080A] bg-pixel-grid flex flex-col justify-between py-8 px-4 sm:px-6 lg:px-8 font-sans transition-colors">
       {/* Top Campus Branding & Theme Toggle */}
       <div className="max-w-4xl mx-auto w-full text-center mb-6">
         <div className="flex items-center justify-between gap-3 mb-3 max-w-2xl mx-auto px-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-800/90 border border-[#edd5c6] dark:border-slate-700 shadow-xs">
-            <Shield className="w-3.5 h-3.5 text-emerald-600" />
-            <span className="text-xs font-semibold text-[#8b1e3f] dark:text-rose-400 uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#121217] border border-[#FEF08A] dark:border-[#222228] shadow-xs">
+            <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-[#FFD000]" />
+            <span className="text-xs font-mono font-bold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider">
               MITS Gwalior Secure Identity Gateway
             </span>
           </div>
 
-          {/* Quick Direct Theme Switcher Pill */}
+          {/* Pro Skilll Direct Theme Switcher Pill */}
           <button
             type="button"
             onClick={toggleTheme}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800 border border-[#edd5c6] dark:border-slate-700 text-xs font-bold text-slate-800 dark:text-amber-300 shadow-xs hover:border-[#8b1e3f] dark:hover:border-amber-400 cursor-pointer transition-all"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#121217] border border-[#E9E9E7] dark:border-[#27272A] text-xs font-bold text-[#191919] dark:text-[#FFD000] shadow-xs hover:border-[#FFD000] dark:hover:border-[#FFD000] cursor-pointer transition-all"
             title={`Switch to ${isDark ? 'Light' : 'Dark'} Theme (or open with ?theme=${isDark ? 'light' : 'dark'})`}
           >
             {isDark ? (
               <>
-                <Sun className="w-3.5 h-3.5 text-amber-400" />
-                <span>☀️ Light Theme</span>
+                <Sun className="w-3.5 h-3.5 text-[#FFD000]" />
+                <span className="font-mono text-[11px] font-bold text-white">Light Theme</span>
               </>
             ) : (
               <>
-                <Moon className="w-3.5 h-3.5 text-[#8b1e3f]" />
-                <span>🌙 Dark Theme</span>
+                <Moon className="w-3.5 h-3.5 text-[#191919]" />
+                <span className="font-mono text-[11px] font-bold text-[#191919]">Dark Theme</span>
               </>
             )}
           </button>
         </div>
 
         <div className="flex items-center justify-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-[#8b1e3f] text-white flex items-center justify-center shadow-md">
-            <Cpu className="w-7 h-7" />
+          <div className="w-12 h-12 rounded-2xl bg-[#FFD000] text-black flex items-center justify-center shadow-[0_0_22px_rgba(255,208,0,0.38)] font-bold">
+            <Cpu className="w-7 h-7 text-black animate-pulse" />
           </div>
           <div className="text-left">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#8b1e3f] dark:text-rose-400 tracking-tight">
-              CampusOn OS
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5">
+              <span>Campus</span>
+              <span className="text-[#CA8A04] dark:text-[#FFD000]">On</span>
+              <span className="font-mono text-xs font-bold text-black bg-[#FFD000] px-1.5 py-0.5 rounded">
+                v2.0
+              </span>
             </h1>
-            <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <p className="text-xs font-semibold text-slate-600 dark:text-[#A1A1AA]">
               Department of Electrical & Computer Engg. | Centre for Internet of Things
             </p>
           </div>
@@ -490,18 +494,18 @@ export default function AuthPage({ onLoginSuccess }) {
       </div>
 
       {/* Main Authentication Card */}
-      <div className="max-w-3xl mx-auto w-full bg-white rounded-3xl shadow-xl border border-[#ebd7cc] overflow-hidden">
+      <div className="max-w-3xl mx-auto w-full bg-white dark:bg-[#121217] rounded-3xl shadow-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.8)] border border-[#FEF08A] dark:border-[#222228] overflow-hidden transition-colors">
         {/* Institutional Sign-In Header Banner */}
-        <div className="px-6 py-4 border-b border-[#ebd7cc] bg-[#fbf3ee] flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-[#FEF08A] dark:border-[#222228] bg-[#FEFDF8] dark:bg-[#0D0D11] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#8b1e3f] text-white flex items-center justify-center shadow-xs">
-              <Lock className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-xl bg-[#FFD000] text-black flex items-center justify-center shadow-xs font-bold">
+              <Lock className="w-4 h-4 text-black" />
             </div>
             <div>
-              <h2 className="text-sm font-extrabold text-[#8b1e3f] uppercase tracking-wider">
+              <h2 className="text-sm font-extrabold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider">
                 {mode === 'forgot' ? 'Account Password Recovery' : 'Institutional Single Sign-On'}
               </h2>
-              <p className="text-[11px] font-medium text-slate-500">
+              <p className="text-[11px] font-medium text-slate-500 dark:text-[#A1A1AA]">
                 {mode === 'forgot'
                   ? 'Verify via 6-digit email OTP to set a new password'
                   : 'Auto-provisioned student, faculty, admin & parent accounts'}
@@ -516,7 +520,7 @@ export default function AuthPage({ onLoginSuccess }) {
                 setErrorMsg('');
                 setSuccessMsg('');
               }}
-              className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:border-[#8b1e3f] text-slate-700 text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-white dark:bg-[#181820] border border-slate-200 dark:border-[#27272A] hover:border-[#FFD000] text-slate-700 dark:text-white text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to Sign In</span>
@@ -527,16 +531,16 @@ export default function AuthPage({ onLoginSuccess }) {
         <div className="p-6 sm:p-8">
           {/* Allotted Smart Tag Identity Notice */}
           {!showOtpScreen && mode !== 'forgot' && (
-            <div className="mb-5 p-4 rounded-2xl bg-gradient-to-r from-[#fdf6f0] via-[#faede3] to-[#f7e3d6] border border-[#ecd5c6] flex items-center justify-between shadow-2xs">
+            <div className="mb-5 p-4 rounded-2xl bg-[#FEF9C3] dark:bg-[#0D0D11] border border-[#FDE047] dark:border-[#222228] flex items-center justify-between shadow-2xs">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#8b1e3f] text-white flex items-center justify-center shadow-xs">
-                  <Radio className="w-5 h-5 animate-pulse" />
+                <div className="w-10 h-10 rounded-xl bg-[#FFD000] text-black flex items-center justify-center shadow-xs font-bold">
+                  <Radio className="w-5 h-5 text-black animate-pulse" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-[#8b1e3f] uppercase tracking-wider">
+                  <h3 className="text-xs font-bold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider">
                     Allotted Campus Smart Tag & ID Gateway
                   </h3>
-                  <p className="text-[11px] text-slate-600 mt-0.5">
+                  <p className="text-[11px] text-slate-700 dark:text-[#A1A1AA] mt-0.5">
                     Enter your allotted RFID Smart Tag UID, Institute ID, or Email. Your single authorized dashboard will be loaded automatically.
                   </p>
                 </div>
@@ -546,14 +550,14 @@ export default function AuthPage({ onLoginSuccess }) {
 
           {/* If In Sign-In Mode, offer Password vs OTP toggle */}
           {mode === 'signin' && !showOtpScreen && (
-            <div className="flex items-center gap-2 p-1 bg-slate-100 rounded-xl mb-5 w-fit">
+            <div className="flex items-center gap-2 p-1 bg-slate-100 dark:bg-[#0D0D11] border border-slate-200 dark:border-[#222228] rounded-xl mb-5 w-fit">
               <button
                 type="button"
                 onClick={() => setAuthMethod('password')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   authMethod === 'password'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-[#FFD000] text-black shadow-xs'
+                    : 'text-slate-600 dark:text-[#A1A1AA] hover:text-black dark:hover:text-white'
                 }`}
               >
                 Password Login
@@ -561,10 +565,10 @@ export default function AuthPage({ onLoginSuccess }) {
               <button
                 type="button"
                 onClick={() => setAuthMethod('otp')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                   authMethod === 'otp'
-                    ? 'bg-[#8b1e3f] text-white shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-[#FFD000] text-black shadow-xs'
+                    : 'text-slate-600 dark:text-[#A1A1AA] hover:text-black dark:hover:text-white'
                 }`}
               >
                 <Smartphone className="w-3.5 h-3.5" />
@@ -628,7 +632,7 @@ export default function AuthPage({ onLoginSuccess }) {
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="e.g. shubhi.btec25o1060@mitsgwalior.in"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#8b1e3f] focus:ring-2 focus:ring-[#8b1e3f]/20 outline-none text-xs text-slate-800"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#141419] focus:border-[#FFD000] focus:ring-2 focus:ring-[#FFD000]/25 outline-none text-xs text-slate-800 dark:text-white"
                         required
                       />
                     </div>
@@ -647,9 +651,9 @@ export default function AuthPage({ onLoginSuccess }) {
                       type="button"
                       onClick={handleRequestResetOtp}
                       disabled={loading}
-                      className="py-3 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition-all disabled:opacity-50 cursor-pointer"
+                      className="py-3 px-4 rounded-xl bg-[#FFD000] hover:bg-[#F0C400] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_18px_rgba(255,208,0,0.32)] transition-all disabled:opacity-50 cursor-pointer border border-[#FFD000]"
                     >
-                      <Smartphone className="w-4 h-4 text-amber-300" />
+                      <Smartphone className="w-4 h-4 text-black" />
                       <span>Reset via 6-Digit OTP</span>
                     </button>
 
@@ -658,9 +662,9 @@ export default function AuthPage({ onLoginSuccess }) {
                       type="button"
                       onClick={handleSendResetLink}
                       disabled={loading}
-                      className="py-3 px-4 rounded-xl bg-white hover:bg-slate-50 border-2 border-slate-200 hover:border-[#8b1e3f] text-slate-800 font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
+                      className="py-3 px-4 rounded-xl bg-white dark:bg-[#121217] hover:bg-slate-50 dark:hover:bg-[#181820] border-2 border-slate-200 dark:border-[#27272A] hover:border-[#FFD000] text-slate-800 dark:text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
                     >
-                      <Send className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                      <Send className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                       <span>Send Email Magic Link</span>
                     </button>
                   </div>
@@ -669,7 +673,7 @@ export default function AuthPage({ onLoginSuccess }) {
                     <button
                       type="button"
                       onClick={() => setMode('signin')}
-                      className="text-xs font-semibold text-slate-500 hover:text-slate-800 underline cursor-pointer"
+                      className="text-xs font-semibold text-slate-500 hover:text-slate-800 dark:hover:text-white underline cursor-pointer"
                     >
                       Remembered your password? Return to Sign In
                     </button>
@@ -681,23 +685,23 @@ export default function AuthPage({ onLoginSuccess }) {
               {forgotStep === 'verify' && (
                 <form onSubmit={handleConfirmResetSubmit} className="space-y-4">
                   {/* Clean Password Reset Email Notice (No OTP displayed on screen) */}
-                  <div className="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-emerald-950 text-xs flex items-center gap-3.5 shadow-xs">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
-                      <Mail className="w-5 h-5 text-emerald-700" />
+                  <div className="p-4 bg-emerald-50 dark:bg-emerald-950/20 rounded-2xl border border-emerald-200 dark:border-emerald-900 text-emerald-950 dark:text-emerald-300 text-xs flex items-center gap-3.5 shadow-xs">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center shrink-0">
+                      <Mail className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
                     </div>
                     <div className="text-left">
-                      <p className="font-bold text-emerald-900 text-sm">Reset Code Sent to Your Email</p>
-                      <p className="text-[11px] text-emerald-800 mt-0.5">
-                        A 6-digit password reset code has been sent to <span className="font-bold text-emerald-950 underline">{resetEmail}</span>.
+                      <p className="font-bold text-emerald-900 dark:text-emerald-200 text-sm">Reset Code Sent to Your Email</p>
+                      <p className="text-[11px] text-emerald-800 dark:text-emerald-300 mt-0.5">
+                        A 6-digit password reset code has been sent to <span className="font-bold underline">{resetEmail}</span>.
                       </p>
-                      <p className="text-[10px] text-emerald-600 mt-0.5">
+                      <p className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-0.5">
                         Please check your inbox (and spam folder) and enter the 6 digits below to set a new password.
                       </p>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 text-center mb-2">
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-[#A1A1AA] text-center mb-2">
                       Enter 6-Digit Password Reset Code
                     </label>
                     <div className="flex justify-center items-center gap-2 sm:gap-3">
@@ -711,7 +715,7 @@ export default function AuthPage({ onLoginSuccess }) {
                           value={digit}
                           onChange={(e) => handleResetDigitChange(idx, e.target.value)}
                           onKeyDown={(e) => handleResetDigitKeyDown(idx, e)}
-                          className="w-10 h-12 sm:w-11 sm:h-13 text-center font-mono text-lg sm:text-xl font-extrabold text-slate-900 border-2 rounded-xl focus:border-[#8b1e3f] outline-none shadow-xs bg-slate-50"
+                          className="w-10 h-12 sm:w-11 sm:h-13 text-center font-mono text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white border-2 rounded-xl focus:border-[#FFD000] focus:ring-2 focus:ring-[#FFD000]/25 outline-none shadow-xs bg-slate-50 dark:bg-[#141419] dark:border-[#27272A]"
                           autoFocus={idx === 0}
                         />
                       ))}
@@ -720,7 +724,7 @@ export default function AuthPage({ onLoginSuccess }) {
                       <button
                         type="button"
                         onClick={handleAutoFillResetOtp}
-                        className="text-[#8b1e3f] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+                        className="text-[#CA8A04] dark:text-[#FFD000] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-amber-500" />
                         <span>Didn't receive code? Auto-Fill Master Code (123456)</span>
@@ -728,7 +732,7 @@ export default function AuthPage({ onLoginSuccess }) {
                       <button
                         type="button"
                         onClick={handleRequestResetOtp}
-                        className="text-slate-500 hover:text-slate-800 underline cursor-pointer"
+                        className="text-slate-500 hover:text-slate-800 dark:hover:text-white underline cursor-pointer"
                       >
                         Resend Code
                       </button>
@@ -737,7 +741,7 @@ export default function AuthPage({ onLoginSuccess }) {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      <label className="block text-[11px] font-semibold text-slate-700 dark:text-[#A1A1AA] mb-1">
                         New Password
                       </label>
                       <div className="relative">
@@ -747,14 +751,14 @@ export default function AuthPage({ onLoginSuccess }) {
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           placeholder="Min. 6 characters"
-                          className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
+                          className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#141419] text-xs focus:border-[#FFD000] outline-none"
                           required
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      <label className="block text-[11px] font-semibold text-slate-700 dark:text-[#A1A1AA] mb-1">
                         Confirm New Password
                       </label>
                       <div className="relative">
@@ -764,7 +768,7 @@ export default function AuthPage({ onLoginSuccess }) {
                           value={confirmNewPassword}
                           onChange={(e) => setConfirmNewPassword(e.target.value)}
                           placeholder="Re-enter password"
-                          className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 text-xs focus:border-[#8b1e3f] outline-none"
+                          className="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#141419] text-xs focus:border-[#FFD000] outline-none"
                           required
                         />
                       </div>
@@ -774,10 +778,10 @@ export default function AuthPage({ onLoginSuccess }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                    className="w-full py-3.5 px-4 rounded-xl bg-[#FFD000] hover:bg-[#F0C400] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,208,0,0.35)] transition-all disabled:opacity-50 cursor-pointer border border-[#FFD000]"
                   >
                     {loading ? (
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                     ) : (
                       <>
                         <span>Update Password & Enter Portal</span>
@@ -790,7 +794,7 @@ export default function AuthPage({ onLoginSuccess }) {
                     <button
                       type="button"
                       onClick={() => setForgotStep('request')}
-                      className="text-xs text-slate-500 hover:text-slate-800 underline cursor-pointer"
+                      className="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-white underline cursor-pointer"
                     >
                       ← Back to Change Email
                     </button>
@@ -849,7 +853,7 @@ export default function AuthPage({ onLoginSuccess }) {
                       value={digit}
                       onChange={(e) => handleDigitChange(idx, e.target.value)}
                       onKeyDown={(e) => handleDigitKeyDown(idx, e)}
-                      className="w-11 h-13 sm:w-12 sm:h-14 text-center font-mono text-xl sm:text-2xl font-extrabold text-slate-900 border-2 rounded-xl focus:border-[#8b1e3f] focus:ring-2 focus:ring-[#8b1e3f]/20 outline-none transition-all shadow-xs bg-slate-50"
+                      className="w-11 h-13 sm:w-12 sm:h-14 text-center font-mono text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white border-2 rounded-xl focus:border-[#FFD000] focus:ring-2 focus:ring-[#FFD000]/25 outline-none transition-all shadow-xs bg-slate-50 dark:bg-[#141419] dark:border-[#27272A]"
                       autoFocus={idx === 0}
                     />
                   ))}
@@ -863,7 +867,7 @@ export default function AuthPage({ onLoginSuccess }) {
                       <button
                         type="button"
                         onClick={() => handleInitiateOtp(otpTargetEmail, otpActionType)}
-                        className="text-[#8b1e3f] font-bold hover:underline cursor-pointer"
+                        className="text-[#CA8A04] dark:text-[#FFD000] font-bold hover:underline cursor-pointer"
                       >
                         Resend OTP Code
                       </button>
@@ -873,7 +877,7 @@ export default function AuthPage({ onLoginSuccess }) {
                   <button
                     type="button"
                     onClick={() => setShowOtpScreen(false)}
-                    className="text-slate-400 hover:text-slate-600 underline cursor-pointer"
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-white underline cursor-pointer"
                   >
                     Change Email / Details
                   </button>
@@ -882,10 +886,10 @@ export default function AuthPage({ onLoginSuccess }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                  className="w-full py-3.5 px-4 rounded-xl bg-[#FFD000] hover:bg-[#F0C400] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,208,0,0.35)] transition-all disabled:opacity-50 cursor-pointer border border-[#FFD000]"
                 >
                   {loading ? (
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                   ) : (
                     <>
                       <span>Confirm OTP & Access Platform</span>
@@ -899,22 +903,22 @@ export default function AuthPage({ onLoginSuccess }) {
                   <button
                     type="button"
                     onClick={() => setShowPasskeyHelper(prev => !prev)}
-                    className="text-xs text-slate-500 hover:text-[#8b1e3f] inline-flex items-center gap-1 font-medium cursor-pointer"
+                    className="text-xs text-slate-500 hover:text-[#CA8A04] dark:hover:text-[#FFD000] inline-flex items-center gap-1 font-medium cursor-pointer"
                   >
                     <span>Didn't receive the email within 1 minute?</span>
                     <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showPasskeyHelper ? 'rotate-180' : ''}`} />
                   </button>
 
                   {showPasskeyHelper && (
-                    <div className="mt-3 p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left space-y-3 animate-in fade-in">
+                    <div className="mt-3 p-4 bg-slate-50 dark:bg-[#141419] rounded-2xl border border-slate-200 dark:border-[#27272A] text-left space-y-3 animate-in fade-in">
                       <div className="flex items-start gap-2.5">
-                        <Key className="w-4 h-4 text-[#8b1e3f] shrink-0 mt-0.5" />
+                        <Key className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000] shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-xs font-bold text-slate-800">
+                          <p className="text-xs font-bold text-slate-800 dark:text-white">
                             Viva & Testing Passkey Bypass
                           </p>
-                          <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">
-                            Supabase Free Tier limits automated emails to 3 per hour. If your email was delayed or throttled, enter master test passkey <span className="font-mono font-bold text-[#8b1e3f] bg-[#8b1e3f]/10 px-1 py-0.5 rounded">123456</span> or use the 1-click button below:
+                          <p className="text-[11px] text-slate-600 dark:text-[#A1A1AA] mt-0.5 leading-relaxed">
+                            Supabase Free Tier limits automated emails to 3 per hour. If your email was delayed or throttled, enter master test passkey <span className="font-mono font-bold text-black bg-[#FFD000] px-1 py-0.5 rounded">123456</span> or use the 1-click button below:
                           </p>
                         </div>
                       </div>
@@ -923,9 +927,9 @@ export default function AuthPage({ onLoginSuccess }) {
                         <button
                           type="button"
                           onClick={handleAutoFillOtp}
-                          className="px-3 py-1.5 rounded-lg bg-white border border-[#8b1e3f]/40 hover:bg-[#fdf3ed] text-[#8b1e3f] text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg bg-white dark:bg-[#181820] border border-[#FFD000]/40 hover:bg-[#FEF9C3] dark:hover:bg-[#222228] text-slate-900 dark:text-[#FFD000] text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
                         >
-                          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                          <Sparkles className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                           <span>Auto-Fill Passcode (123456)</span>
                         </button>
 
@@ -942,9 +946,9 @@ export default function AuthPage({ onLoginSuccess }) {
                               setLoading(false);
                             }
                           }}
-                          className="px-3 py-1.5 rounded-lg bg-[#8b1e3f] hover:bg-[#721832] text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg bg-[#FFD000] hover:bg-[#F0C400] text-black text-xs font-bold flex items-center gap-1.5 shadow-2xs transition-all cursor-pointer border border-[#FFD000]"
                         >
-                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <ShieldCheck className="w-3.5 h-3.5 text-black" />
                           <span>Direct Instant Launch</span>
                         </button>
                       </div>
@@ -959,7 +963,7 @@ export default function AuthPage({ onLoginSuccess }) {
               {/* Allotted Smart Tag / ID / Email & Password */}
               <div className={`grid grid-cols-1 ${authMethod === 'password' ? 'sm:grid-cols-2' : ''} gap-4`}>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-[#A1A1AA] mb-1">
                     Allotted RFID Smart Tag UID / Institute ID / Email
                   </label>
                   <div className="relative">
@@ -970,7 +974,7 @@ export default function AuthPage({ onLoginSuccess }) {
                       value={formData.email}
                       onChange={handleInputChange}
                       placeholder="e.g. RFID-9A-4F-2C-11, BTEC25O1060, FAC-ECE-208, or shubhimp13@gmail.com"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#8b1e3f] focus:ring-2 focus:ring-[#8b1e3f]/20 outline-none text-xs text-slate-800"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#141419] focus:border-[#FFD000] focus:ring-2 focus:ring-[#FFD000]/25 outline-none text-xs text-slate-800 dark:text-white"
                       required
                     />
                   </div>
@@ -979,7 +983,7 @@ export default function AuthPage({ onLoginSuccess }) {
                 {authMethod === 'password' && (
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <label className="block text-xs font-semibold text-slate-700">
+                      <label className="block text-xs font-semibold text-slate-700 dark:text-[#A1A1AA]">
                         Password
                       </label>
                       <button
@@ -991,7 +995,7 @@ export default function AuthPage({ onLoginSuccess }) {
                           setErrorMsg('');
                           setSuccessMsg('');
                         }}
-                        className="text-[11px] font-semibold text-[#8b1e3f] hover:underline cursor-pointer"
+                        className="text-[11px] font-semibold text-[#CA8A04] dark:text-[#FFD000] hover:underline cursor-pointer"
                       >
                         Forgot Password?
                       </button>
@@ -1004,7 +1008,7 @@ export default function AuthPage({ onLoginSuccess }) {
                         value={formData.password}
                         onChange={handleInputChange}
                         placeholder="••••••••"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#8b1e3f] focus:ring-2 focus:ring-[#8b1e3f]/20 outline-none text-xs text-slate-800"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-[#27272A] bg-white dark:bg-[#141419] focus:border-[#FFD000] focus:ring-2 focus:ring-[#FFD000]/25 outline-none text-xs text-slate-800 dark:text-white"
                         required
                       />
                     </div>
@@ -1016,10 +1020,10 @@ export default function AuthPage({ onLoginSuccess }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#FFD000] hover:bg-[#F0C400] text-black font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,208,0,0.35)] hover:shadow-[0_0_30px_rgba(255,208,0,0.55)] border border-[#FFD000] transition-all disabled:opacity-50 cursor-pointer"
               >
                 {loading ? (
-                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                 ) : (
                   <>
                     <span>
@@ -1027,15 +1031,15 @@ export default function AuthPage({ onLoginSuccess }) {
                         ? 'Send 6-Digit Login OTP'
                         : 'Authenticate Smart Tag & Launch Portal'}
                     </span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 text-black" />
                   </>
                 )}
               </button>
 
               {/* Institutional Notice for Auto-Generated Accounts */}
-              <div className="text-center pt-3 border-t border-slate-100 mt-2">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-[11px]">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#8b1e3f]" />
+              <div className="text-center pt-3 border-t border-slate-100 dark:border-[#222228] mt-2">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FEF9C3] dark:bg-[#0D0D11] border border-[#FDE047] dark:border-[#222228] text-slate-800 dark:text-[#A1A1AA] text-[11px]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                   <span>MITS Smart Campus OS: All user profiles are pre-allotted with dedicated IoT tags & IDs.</span>
                 </div>
               </div>
@@ -1043,21 +1047,21 @@ export default function AuthPage({ onLoginSuccess }) {
           )}
 
           {/* 🎓 Examiner & Viva Evaluation Master Credentials (4 Dummy Dashboards) */}
-          <div className="mt-8 pt-6 border-t border-[#edd7ca]">
+          <div className="mt-8 pt-6 border-t border-[#FEF08A] dark:border-[#222228]">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
               <div className="flex items-center gap-2">
-                <span className="p-1 rounded-lg bg-[#8b1e3f] text-white">
-                  <ShieldCheck className="w-3.5 h-3.5" />
+                <span className="p-1 rounded-lg bg-[#FFD000] text-black font-bold">
+                  <ShieldCheck className="w-3.5 h-3.5 text-black" />
                 </span>
-                <span className="text-xs font-extrabold text-[#8b1e3f] uppercase tracking-wider">
+                <span className="text-xs font-mono font-bold text-[#713F12] dark:text-[#FFD000] uppercase tracking-wider">
                   Examiner & Viva Demo Credentials (4 Single Dashboards)
                 </span>
               </div>
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold self-start sm:self-auto">
+              <span className="text-[10px] bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 px-2 py-0.5 rounded font-mono font-bold self-start sm:self-auto">
                 EVALUATION READY • PASS: Password@123
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 mb-3.5">
+            <p className="text-[11px] text-slate-600 dark:text-[#A1A1AA] mb-3.5">
               Each dummy profile is locked strictly to its dedicated dashboard with zero unauthorized role switching. Click <strong>Launch</strong> to enter immediately or <strong>Auto-Fill</strong> to inspect:
             </p>
 
@@ -1065,43 +1069,43 @@ export default function AuthPage({ onLoginSuccess }) {
               {EXAMINER_CREDENTIALS.map((cred) => (
                 <div
                   key={cred.role}
-                  className="p-3.5 rounded-2xl bg-gradient-to-b from-white to-[#fdf9f6] border border-[#ebd7cc] hover:border-[#8b1e3f] transition-all shadow-2xs flex flex-col justify-between"
+                  className="p-3.5 rounded-2xl bg-[#FEFDF8] dark:bg-[#0D0D11] border border-[#FEF08A] dark:border-[#222228] hover:border-[#FFD000] dark:hover:border-[#FFD000] transition-all shadow-2xs flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#8b1e3f] bg-[#ffd8be] px-2 py-0.5 rounded">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-black bg-[#FFD000] px-2 py-0.5 rounded">
                         {cred.role.toUpperCase()}
                       </span>
-                      <span className="text-[9px] font-mono text-slate-400 font-bold">
+                      <span className="text-[9px] font-mono text-slate-500 dark:text-[#71717A] font-bold">
                         {cred.allottedId}
                       </span>
                     </div>
 
-                    <h4 className="text-xs font-bold text-slate-900 line-clamp-1">{cred.name}</h4>
-                    <p className="text-[10px] text-slate-600 font-mono mt-0.5 truncate select-all" title={cred.email}>
+                    <h4 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">{cred.name}</h4>
+                    <p className="text-[10px] text-slate-600 dark:text-[#A1A1AA] font-mono mt-0.5 truncate select-all" title={cred.email}>
                       {cred.email}
                     </p>
-                    <p className="text-[10px] text-slate-500 font-mono mt-0.5">
-                      Pass: <span className="font-bold text-slate-800">{cred.password}</span>
+                    <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5">
+                      Pass: <span className="font-bold text-slate-900 dark:text-white">{cred.password}</span>
                     </p>
                   </div>
 
-                  <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center gap-1.5">
+                  <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-[#222228] flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={() => handleLaunchExaminerCred(cred)}
                       disabled={loading}
-                      className="flex-1 py-1.5 px-2 rounded-lg bg-[#8b1e3f] hover:bg-[#721832] text-white font-bold text-[10px] flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50"
+                      className="flex-1 py-1.5 px-2 rounded-lg bg-[#FFD000] hover:bg-[#F0C400] text-black font-bold text-[10px] flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer disabled:opacity-50 border border-[#FFD000]"
                     >
                       <span>Launch</span>
-                      <ArrowRight className="w-3 h-3" />
+                      <ArrowRight className="w-3 h-3 text-black" />
                     </button>
 
                     <button
                       type="button"
                       onClick={() => handleAutoFillExaminer(cred)}
                       disabled={loading}
-                      className="py-1.5 px-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] transition-all cursor-pointer"
+                      className="py-1.5 px-2 rounded-lg bg-white dark:bg-[#181820] hover:bg-[#FEF9C3] text-slate-800 dark:text-slate-200 font-bold text-[10px] border border-slate-200 dark:border-[#27272A] transition-all cursor-pointer"
                       title="Fill into Sign In Form"
                     >
                       Auto-Fill
@@ -1113,13 +1117,13 @@ export default function AuthPage({ onLoginSuccess }) {
           </div>
 
           {/* Quick Simulated Smart Card Tap */}
-          <div className="mt-6 pt-5 border-t border-[#edd7ca]">
+          <div className="mt-6 pt-5 border-t border-[#FEF08A] dark:border-[#222228]">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider flex items-center gap-1.5">
-                <Radio className="w-3.5 h-3.5 text-[#8b1e3f] animate-pulse" />
+              <span className="text-[11px] font-bold text-slate-700 dark:text-[#A1A1AA] uppercase tracking-wider flex items-center gap-1.5">
+                <Radio className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000] animate-pulse" />
                 Simulate Smart Card Tap (Pre-Allotted Hardware Tags)
               </span>
-              <span className="text-[10px] bg-[#8b1e3f]/10 text-[#8b1e3f] px-2 py-0.5 rounded font-mono font-bold">
+              <span className="text-[10px] bg-[#FEF9C3] dark:bg-[#FFD000]/15 text-[#713F12] dark:text-[#FFD000] border border-[#FDE047] dark:border-[#FFD000]/30 px-2 py-0.5 rounded font-mono font-bold">
                 AUTO-IDENTIFY
               </span>
             </div>
@@ -1129,56 +1133,56 @@ export default function AuthPage({ onLoginSuccess }) {
                 type="button"
                 onClick={() => handleQuickDemoLogin('student')}
                 disabled={loading}
-                className="px-2.5 py-2.5 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer shadow-2xs"
+                className="px-2.5 py-2.5 rounded-xl bg-white dark:bg-[#0D0D11] hover:bg-[#FEF9C3] dark:hover:bg-[#181820] border border-[#FEF08A] dark:border-[#222228] hover:border-[#FFD000] dark:hover:border-[#FFD000] text-left transition-all text-xs cursor-pointer shadow-2xs"
               >
-                <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1">
-                  <GraduationCap className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                <p className="font-bold text-slate-900 dark:text-white text-[11px] flex items-center gap-1">
+                  <GraduationCap className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                   <span>Tap Student Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">RFID-9A-4F-2C-11</p>
-                <p className="text-[9px] text-[#8b1e3f] font-semibold truncate">Shubhi Mathur</p>
+                <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">RFID-9A-4F-2C-11</p>
+                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Shubhi Mathur</p>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('faculty')}
                 disabled={loading}
-                className="px-2.5 py-2.5 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer shadow-2xs"
+                className="px-2.5 py-2.5 rounded-xl bg-white dark:bg-[#0D0D11] hover:bg-[#FEF9C3] dark:hover:bg-[#181820] border border-[#FEF08A] dark:border-[#222228] hover:border-[#FFD000] dark:hover:border-[#FFD000] text-left transition-all text-xs cursor-pointer shadow-2xs"
               >
-                <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1">
-                  <BookOpen className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                <p className="font-bold text-slate-900 dark:text-white text-[11px] flex items-center gap-1">
+                  <BookOpen className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                   <span>Tap Faculty Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">FAC-ECE-208</p>
-                <p className="text-[9px] text-[#8b1e3f] font-semibold truncate">Dr. M. Manohar</p>
+                <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">FAC-ECE-208</p>
+                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Dr. M. Manohar</p>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('admin')}
                 disabled={loading}
-                className="px-2.5 py-2.5 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer shadow-2xs"
+                className="px-2.5 py-2.5 rounded-xl bg-white dark:bg-[#0D0D11] hover:bg-[#FEF9C3] dark:hover:bg-[#181820] border border-[#FEF08A] dark:border-[#222228] hover:border-[#FFD000] dark:hover:border-[#FFD000] text-left transition-all text-xs cursor-pointer shadow-2xs"
               >
-                <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                <p className="font-bold text-slate-900 dark:text-white text-[11px] flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                   <span>Tap Admin Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">ADM-MITS-02</p>
-                <p className="text-[9px] text-[#8b1e3f] font-semibold truncate">Shubhi Mathur</p>
+                <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">ADM-MITS-02</p>
+                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Shubhi Mathur</p>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleQuickDemoLogin('parent')}
                 disabled={loading}
-                className="px-2.5 py-2.5 rounded-xl bg-slate-50 hover:bg-[#fdf3ed] border border-slate-200 hover:border-[#8b1e3f] text-left transition-all text-xs cursor-pointer shadow-2xs"
+                className="px-2.5 py-2.5 rounded-xl bg-white dark:bg-[#0D0D11] hover:bg-[#FEF9C3] dark:hover:bg-[#181820] border border-[#FEF08A] dark:border-[#222228] hover:border-[#FFD000] dark:hover:border-[#FFD000] text-left transition-all text-xs cursor-pointer shadow-2xs"
               >
-                <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1">
-                  <Users className="w-3.5 h-3.5 text-[#8b1e3f]" />
+                <p className="font-bold text-slate-900 dark:text-white text-[11px] flex items-center gap-1">
+                  <Users className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FFD000]" />
                   <span>Tap Parent Tag</span>
                 </p>
-                <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">rkmathur.gwalior</p>
-                <p className="text-[9px] text-[#8b1e3f] font-semibold truncate">Mr. R. K. Mathur</p>
+                <p className="text-[10px] text-slate-500 dark:text-[#71717A] font-mono mt-0.5 truncate">rkmathur.gwalior</p>
+                <p className="text-[9px] text-[#CA8A04] dark:text-[#FFD000] font-semibold truncate">Mr. R. K. Mathur</p>
               </button>
             </div>
           </div>
@@ -1186,11 +1190,11 @@ export default function AuthPage({ onLoginSuccess }) {
       </div>
 
       {/* Footer Security Specs */}
-      <div className="max-w-4xl mx-auto w-full text-center mt-6 text-[11px] text-slate-500">
+      <div className="max-w-4xl mx-auto w-full text-center mt-6 text-[11px] text-slate-500 dark:text-[#71717A]">
         <p>
-          Integrated with <span className="font-semibold text-slate-700">Supabase Cloud 2FA & PostgreSQL Database</span> | Google OR-Tools CP-SAT Timetable Engine
+          Integrated with <span className="font-semibold text-slate-700 dark:text-slate-300">Supabase Cloud 2FA & PostgreSQL Database</span> | Google OR-Tools CP-SAT Timetable Engine
         </p>
-        <p className="text-[10px] text-slate-400 mt-1">
+        <p className="text-[10px] text-slate-400 dark:text-[#52525B] mt-1 font-mono">
           Developed by Shubhi Mathur (BTEC25O1060) & Tamanna Sharma (BTEC25O1063) | Mentor: Dr. Murli Manohar
         </p>
       </div>
