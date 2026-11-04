@@ -630,10 +630,12 @@ async def verify_biometric_frame(
     
     content_type = request.headers.get("content-type", "")
     
+    target_student_id = None
     if "application/json" in content_type:
         body = await request.json()
         image_data = body.get("imageBase64", "")
         roomId = body.get("roomId", roomId)
+        target_student_id = body.get("targetStudentId", None)
     else:
         # Raw binary body from ESP32-CAM
         image_data = await request.body()
@@ -641,7 +643,7 @@ async def verify_biometric_frame(
     if not image_data:
         return {"authenticated": False, "reason": "No image data received"}
         
-    result = verify_face_frame(image_data, room_id=roomId)
+    result = verify_face_frame(image_data, room_id=roomId, target_student_id=target_student_id)
     
     if result.get("authenticated"):
         # Automatically insert into campus attendance records

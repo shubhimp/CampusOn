@@ -30,7 +30,7 @@ export const SAMPLE_CREDENTIALS = [
     department: 'Electrical & Computer Engineering',
     semester: '3rd Semester',
     badge: 'Student / ECE Major',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+    avatar: '/faces/tamanna_sharma.jpg',
     description: 'Timetable, 3D face biometric sync, attendance analytics & AI mentor.'
   },
   {
@@ -45,7 +45,7 @@ export const SAMPLE_CREDENTIALS = [
     department: 'Electrical & Computer Engineering',
     semester: '3rd Semester',
     badge: 'Student / IoT Major',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    avatar: '/faces/shubhi_mathur.jpg',
     description: 'Timetable, 3D face biometric sync, attendance analytics & AI mentor.'
   },
   {

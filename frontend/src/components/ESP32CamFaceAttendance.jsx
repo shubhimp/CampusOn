@@ -30,51 +30,12 @@ const API_BASE = (typeof window !== 'undefined' && (window.location.hostname ===
 
 const INITIAL_ENROLLED_STUDENTS = [
   {
-    studentId: '25EC1SH60',
-    studentName: 'Shubhi',
-    department: 'ECE',
-    semester: '3rd Semester',
-    enrolledAt: '2026-10-31T10:00:00',
-    angles: ['left_profile', 'front_face', 'right_profile'],
-    depthConfidence: 99.4,
-    status: 'Active'
-  },
-  {
-    studentId: '25EC1TA63',
-    studentName: 'Tamanna',
-    department: 'ECE',
-    semester: '3rd Semester',
-    enrolledAt: '2026-10-31T10:05:00',
-    angles: ['left_profile', 'front_face', 'right_profile'],
-    depthConfidence: 98.7,
-    status: 'Active'
-  },
-  {
-    studentId: '25EC1SH59',
-    studentName: 'Shubh',
-    department: 'ECE',
-    semester: '3rd Semester',
-    enrolledAt: '2026-10-31T10:10:00',
-    angles: ['left_profile', 'front_face', 'right_profile'],
-    depthConfidence: 97.9,
-    status: 'Active'
-  },
-  {
-    studentId: '25EC1SH58',
-    studentName: 'Shourya',
-    department: 'ECE',
-    semester: '3rd Semester',
-    enrolledAt: '2026-10-31T10:15:00',
-    angles: ['left_profile', 'front_face', 'right_profile'],
-    depthConfidence: 98.2,
-    status: 'Active'
-  },
-  {
     studentId: 'BTEC25O1060',
     studentName: 'Shubhi Mathur',
     department: 'ECE',
     semester: '3rd Semester',
-    enrolledAt: '2026-10-31T10:00:00',
+    avatar: '/faces/shubhi_mathur.jpg',
+    enrolledAt: '2026-11-02T16:08:00',
     angles: ['left_profile', 'front_face', 'right_profile'],
     depthConfidence: 99.4,
     status: 'Active'
@@ -84,7 +45,8 @@ const INITIAL_ENROLLED_STUDENTS = [
     studentName: 'Tamanna Sharma',
     department: 'ECE',
     semester: '3rd Semester',
-    enrolledAt: '2026-10-31T10:05:00',
+    avatar: '/faces/tamanna_sharma.jpg',
+    enrolledAt: '2026-11-02T16:08:00',
     angles: ['left_profile', 'front_face', 'right_profile'],
     depthConfidence: 98.7,
     status: 'Active'
@@ -100,11 +62,12 @@ const INITIAL_ATTENDANCE_RECORDS = [
     roomId: 'AB-204',
     timestamp: '09:02 AM',
     date: 'Today',
-    verificationMethod: 'ESP32-CAM 3D Face Biometric',
+    verificationMethod: 'Faculty Cam Face Biometric',
     confidence: 99.4,
-    status: 'Present',
+    status: 'Verified Present',
     relayActuated: true,
-    matchedAngle: 'front_face'
+    matchedAngle: 'front_face',
+    avatar: '/faces/shubhi_mathur.jpg'
   },
   {
     id: 'att-002',
@@ -114,11 +77,12 @@ const INITIAL_ATTENDANCE_RECORDS = [
     roomId: 'AB-204',
     timestamp: '09:05 AM',
     date: 'Today',
-    verificationMethod: 'ESP32-CAM 3D Face Biometric',
+    verificationMethod: 'Faculty Cam Face Biometric',
     confidence: 98.7,
-    status: 'Present',
+    status: 'Verified Present',
     relayActuated: true,
-    matchedAngle: 'left_profile'
+    matchedAngle: 'front_face',
+    avatar: '/faces/tamanna_sharma.jpg'
   }
 ];
 
@@ -419,7 +383,7 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
   }, [relayUnlocked, isScanning]);
 
   // Execute Face Recognition Verification against Backend or Resilient Client Engine
-  const handlePerformRecognition = async () => {
+  const handlePerformRecognition = async (studentOverride = null) => {
     setIsScanning(true);
 
     try {
@@ -438,7 +402,8 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
           body: JSON.stringify({
             imageBase64: imageBase64 || '',
             roomId,
-            streamSource
+            streamSource,
+            targetStudentId: studentOverride || null
           }),
           signal: controller.signal
         });
@@ -453,6 +418,9 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
             setLastMatch(data);
             if (data.record) {
               persistAttendanceRecord(data.record);
+              try {
+                localStorage.setItem(`campuson_attendance_${data.studentId}`, JSON.stringify(data.record));
+              } catch (e) {}
             }
             fetchAttendanceRecords();
             setTimeout(() => {
@@ -470,8 +438,14 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
       // If backend was offline or on Vercel deployment: run client recognition
       if (!backendSucceeded) {
         const pool = enrolledStudents.length > 0 ? enrolledStudents : INITIAL_ENROLLED_STUDENTS;
-        // Select student (first student or random from pool for demonstration)
-        const matched = pool[Math.floor(Math.random() * Math.min(pool.length, 2))] || pool[0];
+        let matched = null;
+        if (studentOverride) {
+          matched = pool.find(s => s.studentId === studentOverride);
+        }
+        if (!matched) {
+          // Select student (cycle through or pick first)
+          matched = pool[Math.floor(Math.random() * Math.min(pool.length, 2))] || pool[0];
+        }
         
         playBiometricChime();
         setRelayUnlocked(true);
@@ -483,10 +457,11 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
           semester: matched.semester || '3rd Semester',
           confidence: matched.depthConfidence || 99.4,
           matchedAngle: 'front_face',
-          distanceScore: 0.284,
+          avatar: matched.avatar,
+          distanceScore: 0.208,
           timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           doorRelay: 'ACTUATED_UNLOCKED',
-          message: `Biometric Match Verified for ${matched.studentName} (front_face)`
+          message: `Biometric Match Verified for ${matched.studentName} (${matched.studentId})`
         };
         setLastMatch(matchData);
 
@@ -498,13 +473,19 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
           roomId,
           timestamp: matchData.timestamp,
           date: 'Today',
-          verificationMethod: streamSource === 'esp32_ip' ? 'ESP32-CAM 3D Face Biometric' : (streamSource === 'webcam' ? 'Webcam 3D Biometric (Live)' : 'ESP32-CAM Virtual Stream'),
+          verificationMethod: streamSource === 'webcam' ? 'Faculty Cam Face Biometric' : (streamSource === 'esp32_ip' ? 'ESP32-CAM 3D Face Biometric' : 'Virtual Classroom Sensor'),
           confidence: matchData.confidence,
-          status: 'Present',
+          status: 'Verified Present',
           relayActuated: true,
-          matchedAngle: 'front_face'
+          matchedAngle: 'front_face',
+          avatar: matched.avatar
         };
         persistAttendanceRecord(newRec);
+
+        try {
+          localStorage.setItem(`campuson_attendance_${matched.studentId}`, JSON.stringify(newRec));
+        } catch (e) {}
+
         setTimeout(() => setRelayUnlocked(false), 4000);
       }
     } catch (err) {
@@ -730,11 +711,11 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 flex flex-col items-center justify-center text-center p-6">
                     <img 
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&auto=format&fit=crop&q=80" 
+                      src="/faces/shubhi_mathur.jpg" 
                       alt="Student Face Reference"
-                      className="w-48 h-48 rounded-2xl object-cover border-2 border-slate-700 shadow-2xl opacity-80"
+                      className="w-48 h-48 rounded-2xl object-cover border-2 border-[#FEF08A] shadow-2xl"
                     />
-                    <p className="text-xs text-slate-400 mt-3 font-mono">Simulated Classroom Feed (Shubhi Mathur - BTEC25O1060)</p>
+                    <p className="text-xs text-[#FFD000] mt-3 font-mono font-bold">Classroom Student Profile: Shubhi Mathur (BTEC25O1060)</p>
                   </div>
                 )}
 
@@ -760,7 +741,7 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                         </span>
                       </div>
                       <p className="text-[11px] text-emerald-300/80 font-mono">
-                        ID: {lastMatch.studentId} • Angle: {lastMatch.matchedAngle || 'Front'} • Door Unlocked!
+                        ID: {lastMatch.studentId} • Angle: {lastMatch.matchedAngle || 'Front'} • Attendance Logged!
                       </p>
                     </div>
                   </div>
@@ -794,7 +775,7 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                   </label>
 
                   <button
-                    onClick={handlePerformRecognition}
+                    onClick={() => handlePerformRecognition()}
                     disabled={isScanning}
                     className={`px-4 py-2 rounded-xl text-xs font-bold text-black transition-all flex items-center gap-1.5 shadow-[0_0_15px_rgba(255,208,0,0.35)] cursor-pointer ${
                       isScanning
@@ -804,6 +785,113 @@ export default function ESP32CamFaceAttendance({ roomId = 'AB-204', roomName = '
                   >
                     <ScanFace className={`w-4 h-4 text-black ${isScanning ? 'animate-spin' : ''}`} />
                     {isScanning ? 'Verifying 3D Biometrics...' : 'Scan & Verify Face'}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Classroom Students Live Authentication & Roster Panel */}
+            <div className="bg-white dark:bg-[#121217] rounded-2xl border border-[#FEF08A] dark:border-[#222228] p-5 shadow-xs">
+              <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-slate-100 dark:border-[#222228]">
+                <div>
+                  <h3 className="text-xs font-bold font-mono uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-2">
+                    <Users className="w-4 h-4 text-[#CA8A04] dark:text-[#FFD000]" />
+                    Classroom Students Biometric Face Authentication
+                  </h3>
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-0.5">
+                    Course: <strong className="text-slate-700 dark:text-white">ECE-305P (IoT Systems Lab)</strong> • Target Room: <strong className="text-slate-700 dark:text-white">{roomId}</strong>
+                  </p>
+                </div>
+                <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  Facial Recognition Ready
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {/* Student 1: Shubhi Mathur */}
+                <div className={`p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 ${
+                  attendanceRecords.some(r => r.studentId === 'BTEC25O1060')
+                    ? 'bg-emerald-50/70 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800 shadow-xs'
+                    : 'bg-[#FEFDF8] dark:bg-[#18181E] border-slate-200 dark:border-[#2C2C34]'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src="/faces/shubhi_mathur.jpg"
+                      alt="Shubhi Mathur"
+                      className="w-12 h-12 rounded-xl object-cover border-2 border-[#FEF08A] dark:border-[#FFD000]/40 shadow-xs"
+                    />
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1">
+                        Shubhi Mathur
+                      </h4>
+                      <span className="text-[10px] font-mono font-semibold text-slate-500 dark:text-zinc-400 block">
+                        ID: BTEC25O1060 (ECE 3rd Sem)
+                      </span>
+                      <span className={`inline-flex items-center gap-1 mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        attendanceRecords.some(r => r.studentId === 'BTEC25O1060')
+                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300'
+                          : 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300'
+                      }`}>
+                        {attendanceRecords.some(r => r.studentId === 'BTEC25O1060') ? (
+                          <>✓ Present (Verified)</>
+                        ) : (
+                          <>• Awaiting Camera Scan</>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handlePerformRecognition('BTEC25O1060')}
+                    disabled={isScanning}
+                    className="px-3 py-2 rounded-lg text-xs font-bold bg-[#FFD000] hover:bg-[#F0C400] text-black shadow-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50"
+                  >
+                    <ScanFace className="w-3.5 h-3.5 text-black" />
+                    Verify Shubhi
+                  </button>
+                </div>
+
+                {/* Student 2: Tamanna Sharma */}
+                <div className={`p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 ${
+                  attendanceRecords.some(r => r.studentId === 'BTEC25O1063')
+                    ? 'bg-emerald-50/70 dark:bg-emerald-950/20 border-emerald-300 dark:border-emerald-800 shadow-xs'
+                    : 'bg-[#FEFDF8] dark:bg-[#18181E] border-slate-200 dark:border-[#2C2C34]'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src="/faces/tamanna_sharma.jpg"
+                      alt="Tamanna Sharma"
+                      className="w-12 h-12 rounded-xl object-cover border-2 border-[#FEF08A] dark:border-[#FFD000]/40 shadow-xs"
+                    />
+                    <div>
+                      <h4 className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1">
+                        Tamanna Sharma
+                      </h4>
+                      <span className="text-[10px] font-mono font-semibold text-slate-500 dark:text-zinc-400 block">
+                        ID: BTEC25O1063 (ECE 3rd Sem)
+                      </span>
+                      <span className={`inline-flex items-center gap-1 mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        attendanceRecords.some(r => r.studentId === 'BTEC25O1063')
+                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300'
+                          : 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300'
+                      }`}>
+                        {attendanceRecords.some(r => r.studentId === 'BTEC25O1063') ? (
+                          <>✓ Present (Verified)</>
+                        ) : (
+                          <>• Awaiting Camera Scan</>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handlePerformRecognition('BTEC25O1063')}
+                    disabled={isScanning}
+                    className="px-3 py-2 rounded-lg text-xs font-bold bg-[#FFD000] hover:bg-[#F0C400] text-black shadow-xs transition-all flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50"
+                  >
+                    <ScanFace className="w-3.5 h-3.5 text-black" />
+                    Verify Tamanna
                   </button>
                 </div>
               </div>

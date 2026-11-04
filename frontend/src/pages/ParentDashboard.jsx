@@ -42,7 +42,7 @@ export default function ParentDashboard({ user, subjects }) {
       <div className="bg-gradient-to-r from-white dark:from-[#121217] via-[#FEF9C3]/20 dark:via-[#18181E] to-[#FFFDF0] dark:to-[#08080A] p-6 rounded-2xl border border-slate-200 dark:border-[#222228] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
+            src="/faces/shubhi_mathur.jpg"
             alt="Shubhi Mathur"
             className="w-16 h-16 rounded-2xl object-cover border-2 border-[#FFD000] shadow-[0_0_15px_rgba(255,208,0,0.3)]"
           />

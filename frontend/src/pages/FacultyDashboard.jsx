@@ -12,7 +12,9 @@ import {
   FileText, 
   AlertCircle, 
   LifeBuoy,
-  Plus
+  Plus,
+  ScanFace,
+  Users
 } from 'lucide-react';
 import HexagonBadge from '../components/HexagonBadge';
 import ESP32CamFaceAttendance from '../components/ESP32CamFaceAttendance';
@@ -40,6 +42,8 @@ export default function FacultyDashboard({
 
   // Camera Audit Log
   const [selectedCameraRoom, setSelectedCameraRoom] = useState(classrooms[0]);
+  const [selectedClassRoom, setSelectedClassRoom] = useState('AB-204');
+  const [selectedCourseName, setSelectedCourseName] = useState('ECE-305P: IoT Systems Lab');
   const [cameraAuditLogs, setCameraAuditLogs] = useState([
     { user: 'Dr. Murli Manohar', room: 'AB-204', reason: 'Pre-lecture Lab Equipment Check', timestamp: '10:05 AM' },
     { user: 'Campus Security Office', room: 'AB-101', reason: 'Routine Egress Verification', timestamp: '09:20 AM' }
@@ -172,7 +176,17 @@ export default function FacultyDashboard({
                 </div>
                 <div className="mt-3 pt-3 border-t border-slate-100 dark:border-[#222228] flex justify-between items-center text-[11px]">
                   <span className="text-slate-500 dark:text-zinc-400">{slot.type}</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">Classroom Ready</span>
+                  <button
+                    onClick={() => {
+                      setSelectedClassRoom(slot.room);
+                      setSelectedCourseName(slot.course);
+                      setActiveTab('face_attendance');
+                    }}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-[#FFD000] hover:bg-[#F0C400] text-black shadow-xs transition-all cursor-pointer"
+                  >
+                    <ScanFace className="w-3 h-3 text-black" />
+                    Take Face Attendance
+                  </button>
                 </div>
               </div>
             ))}
@@ -183,8 +197,8 @@ export default function FacultyDashboard({
       {/* Tab: ESP32-CAM 3D Face Recognition Attendance */}
       {activeTab === 'face_attendance' && (
         <ESP32CamFaceAttendance 
-          roomId="AB-204" 
-          roomName="IoT & Embedded Systems Laboratory" 
+          roomId={selectedClassRoom || "AB-204"} 
+          roomName={selectedCourseName || "IoT & Embedded Systems Laboratory"} 
         />
       )}
 

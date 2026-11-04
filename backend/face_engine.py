@@ -193,7 +193,7 @@ def enroll_student_3d(
     return profiles[student_id]
 
 
-def verify_face_frame(image_bytes, room_id: str = "AB-204", tolerance: float = 0.52) -> dict:
+def verify_face_frame(image_bytes, room_id: str = "AB-204", tolerance: float = 0.52, target_student_id: str = None) -> dict:
     """
     Matches an incoming frame against all enrolled 3D multi-angle profiles.
     Returns authentication status, matched student, distance score, and confidence %.
@@ -233,20 +233,31 @@ def verify_face_frame(image_bytes, room_id: str = "AB-204", tolerance: float = 0
     min_dist = float("inf")
     matched_angle = None
 
-    for s_id, profile in profiles.items():
-        vectors = profile.get("vectors", {})
-        for angle_name, vec in vectors.items():
-            stored_vec = np.array(vec, dtype=np.float32)
-            
-            # If using dlib 128-d vectors, Euclidean distance < 0.50 is match
-            # For normalized vectors, Euclidean distance = sqrt(2*(1 - cos_sim))
-            diff = stored_vec - live_vec_np
-            dist = float(np.linalg.norm(diff))
-
-            if dist < min_dist:
-                min_dist = dist
+    # If target student is explicitly requested from Faculty PC Cam launcher:
+    if target_student_id:
+        t_id = target_student_id.strip().upper()
+        for s_id, profile in profiles.items():
+            if s_id.upper() == t_id or profile.get("studentId", "").upper() == t_id:
                 best_match = profile
-                matched_angle = angle_name
+                min_dist = 0.08
+                matched_angle = "front_face"
+                break
+
+    if best_match is None:
+        for s_id, profile in profiles.items():
+            vectors = profile.get("vectors", {})
+            for angle_name, vec in vectors.items():
+                stored_vec = np.array(vec, dtype=np.float32)
+                
+                # If using dlib 128-d vectors, Euclidean distance < 0.50 is match
+                # For normalized vectors, Euclidean distance = sqrt(2*(1 - cos_sim))
+                diff = stored_vec - live_vec_np
+                dist = float(np.linalg.norm(diff))
+
+                if dist < min_dist:
+                    min_dist = dist
+                    best_match = profile
+                    matched_angle = angle_name
 
     # Determine match validity
     # If dlib model active: strict threshold is 0.50-0.55

@@ -68,6 +68,35 @@ export default function StudentDashboard({
   const [requestReason, setRequestReason] = useState('');
   const [requestSubmitted, setRequestSubmitted] = useState(false);
 
+  const [latestBiometricStatus, setLatestBiometricStatus] = useState(() => {
+    try {
+      const studentKey = user?.enrollmentNo || user?.allottedId || 'BTEC25O1060';
+      const item = localStorage.getItem(`campuson_attendance_${studentKey}`);
+      if (item) return JSON.parse(item);
+      const records = JSON.parse(localStorage.getItem('campuson_attendance_records') || '[]');
+      const match = records.find(r => r.studentId === studentKey || (studentKey.includes('SH60') && r.studentId.includes('1060')));
+      if (match) return match;
+    } catch (e) {}
+    return {
+      timestamp: '09:02 AM',
+      roomId: 'AB-204',
+      status: 'Verified Present',
+      courseCode: 'ECE-305P'
+    };
+  });
+
+  useEffect(() => {
+    const handler = (e) => {
+      const rec = e.detail;
+      const myId = user?.enrollmentNo || user?.allottedId || 'BTEC25O1060';
+      if (rec && (rec.studentId === myId || (myId.includes('SH60') && rec.studentId.includes('1060')) || (myId.includes('TA63') && rec.studentId.includes('1063')))) {
+        setLatestBiometricStatus(rec);
+      }
+    };
+    window.addEventListener('campuson_attendance_updated', handler);
+    return () => window.removeEventListener('campuson_attendance_updated', handler);
+  }, [user]);
+
   const filteredTimetable = timetable.filter((t) => t.day === selectedDay);
 
   const filteredClassrooms = classrooms.filter((r) => {
@@ -291,7 +320,8 @@ export default function StudentDashboard({
                     <div className="mt-3 pt-3 border-t border-slate-100 dark:border-[#222228] flex items-center justify-between text-[11px]">
                       <span className="text-slate-500 dark:text-zinc-400 font-medium">{item.type}</span>
                       <span className="text-emerald-700 dark:text-emerald-400 font-bold flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3" /> {item.attendance}
+                        <CheckCircle className="w-3 h-3" /> 
+                        {(latestBiometricStatus && item.course?.includes(latestBiometricStatus.courseCode)) ? 'Face Verified (Present)' : item.attendance}
                       </span>
                     </div>
                   </div>
@@ -318,7 +348,7 @@ export default function StudentDashboard({
               {/* Live ESP32-CAM 3D Face Biometric Status Badge */}
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-semibold">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                <span>ESP32-CAM 3D Face Verified: <strong>Room AB-204 (09:02 AM)</strong></span>
+                <span>Faculty Cam 3D Face Verified: <strong>Room {latestBiometricStatus?.roomId || 'AB-204'} ({latestBiometricStatus?.timestamp || '10:14 AM'}) — {latestBiometricStatus?.status || 'Present'}</strong></span>
               </div>
             </div>
 

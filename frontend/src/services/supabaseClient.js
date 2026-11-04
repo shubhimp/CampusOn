@@ -37,7 +37,7 @@ const INITIAL_DIRECTORY = [
     enrollmentNo: '25EC1TA63',
     department: 'Electrical & Computer Engineering',
     semester: '3rd Semester',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+    avatar: '/faces/tamanna_sharma.jpg',
     rfidTag: 'RFID-TA-63-EC-01',
     createdAt: '2026-10-28T09:00:00Z',
     status: 'Verified Student'
@@ -51,7 +51,7 @@ const INITIAL_DIRECTORY = [
     enrollmentNo: '25EC1SH60',
     department: 'Electrical & Computer Engineering',
     semester: '3rd Semester',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    avatar: '/faces/shubhi_mathur.jpg',
     rfidTag: 'RFID-SH-60-EC-02',
     createdAt: '2026-10-28T09:00:00Z',
     status: 'Verified Student'

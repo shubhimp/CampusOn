@@ -51,7 +51,7 @@ export default function DynamicStudentCard({ user }) {
         <div className="flex gap-4 items-center">
           <div className="relative">
             <img
-              src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}
+              src={user?.avatar || (user?.name?.toLowerCase().includes('tamanna') ? '/faces/tamanna_sharma.jpg' : '/faces/shubhi_mathur.jpg')}
               alt={user?.name}
               className="w-20 h-24 object-cover rounded-xl border-2 border-[#FFD000] shadow-md"
             />
